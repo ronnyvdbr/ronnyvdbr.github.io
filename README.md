@@ -1,9 +1,12 @@
 # Raspberry-Wifi-Router:
 
 Welcome to the Raspberry-Wifi-Router project.
+
 This project aims to build a descent Wifi Router out of a Raspberry Pi which is easily configurable via
 a dynamic web interface designed in HTML/PHP.
+
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
+
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
 #Licensing:
