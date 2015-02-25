@@ -44,11 +44,33 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 * Reboot your Raspberry Pi - sudo reboot
 
 
-#### Installing all the needed Packages:
-* sudo apt-get install lighttpd
+#### Installing and configuring the needed Packages:
+Login to your Raspberry Pi using pi as username
 * sudo apt-get install git-core (in my version of Raspbian already installed per default)
+* sudo apt-get -y install lighttpd
+* sudo apt-get -y install php5-common php5-cgi php5
+* sudo lighty-enable-mod fastcgi-php
+* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
+* sudo rm -R /var/www
+* sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
+* sudo chown www-data:www-data /var/www
+* sudo chmod 775 /var/www
+* sudo usermod -a -G www-data pi
+Modify the default index page of lighttpd
+* sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
+* sudo /etc/init.d/lighttpd force-reload
 
-Setting
+Let's grab a copy of the latest version of hostapd from the website and compile it:
+* wget http://w1.fi/releases/hostapd-2.3.tar.gz
+* tar -zxvf hostapd-2.3.tar.gz
+* cd hostapd-2.3/hostapd
+* cp defconfig .config
+* sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config
+* sudo apt-get install libnl-3-dev
+* sudo apt-get install libnl-genl-3-dev
+* ma
+
+
 
 
 
