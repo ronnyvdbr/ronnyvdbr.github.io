@@ -59,7 +59,9 @@ Login to your Raspberry Pi using pi as username.
 ###### reconfigure lighttpd to serve our web gui and set some permissions:
 * sudo rm -R /var/www
 * sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
-* sudo chown www-data:www-data /var/www
+* sudo chown pi:www-data /var/www
+* sudo chown -R pi:www-data /home/pi/Raspberry-Wifi-Router/www
+* sudo chmod g+w /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
 * sudo chmod 775 /var/www
 * sudo usermod -a -G www-data pi
 * sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
@@ -103,6 +105,16 @@ Login to your Raspberry Pi using pi as username.
 * sudo chmod 664 /etc/hostapd/hostapd.conf
 
 ##### Now let's set the rest of some configuration bits which are needed to function correctly:
+
+TODO put default interfaces file with correct content
+TODO modify php ini file to include flush directiveifconfig
+TODO copy a working hostapd.conf to the etc hostapd
+TODO rework routersettings.ini with default values
+
+
+* sudo chgrp www-data /etc/network/interfaces
+* sudo chmod g+w /etc/network/interfaces
+* 
 
 ###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
 * sudo umount /dev/mmcblk0p1 
