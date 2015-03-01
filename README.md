@@ -109,6 +109,20 @@ Login to your Raspberry Pi using pi as username.
 * sudo sed -i 's/\/dev\/mmcblk0p1  \/boot           vfat    defaults          0       2/\/dev\/mmcblk0p1  \/boot           vfat    rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro          0       2/g' /etc/fstab
 * sudo mount /dev/mmcblk0p1
 
-###### 
+###### Let's create a sudoers file which determines which commands our webserver can execute to make configuration changes for the router
+* sudo touch /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifconfig *" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /sbin/brctl *" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /sbin/service *" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifdown *" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifup *" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" >> /etc/sudoers.d/wr_commands
+* sudo echo "www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" >> /etc/sudoers.d/wr_commands
 
 
