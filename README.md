@@ -43,24 +43,30 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 * sudo rpi-update
 * Reboot your Raspberry Pi - sudo reboot
 
-
 #### Installing and configuring the needed Packages:
-Login to your Raspberry Pi using pi as username
+Login to your Raspberry Pi using pi as username.
+
+###### Install Git:
 * sudo apt-get install git-core (in my version of Raspbian already installed per default)
-* sudo apt-get -y install lighttpd
-* sudo apt-get -y install php5-common php5-cgi php5
+
+###### Install our web server lighttpd and enable php on it:
+* sudo apt-get -y install lighttpd php5-common php5-cgi php5
 * sudo lighty-enable-mod fastcgi-php
+###### Clone our git repository with the web gui onto our Raspberry Pi:
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
+###### reconfigure lighttpd to serve our web gui and set some permissions:
 * sudo rm -R /var/www
 * sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
 * sudo chown www-data:www-data /var/www
 * sudo chmod 775 /var/www
 * sudo usermod -a -G www-data pi
-Modify the default index page of lighttpd
 * sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
 * sudo /etc/init.d/lighttpd force-reload
 
-Let's grab a copy of the latest version of hostapd from the website and compile it:
+We're building an access point, so we need hostapd, we're first going to set-up the Rasbian hostapd package:
+* sudo apt-get -y install hostapd
+
+Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
 First install some dependencies:
 * sudo apt-get install libnl-3-dev
 * sudo apt-get install libnl-genl-3-dev
@@ -81,3 +87,9 @@ Let's configure some things before we start compiling:
 * make
 * sudo make install
 
+* sudo mkdir /etc/hostapd
+* sudo cp ~/hostapd-2.3/hostapd/hostapd.conf /etc/hostapd/hostapd.conf
+* sudo chgrp -R www-data /etc/hostapd
+* sudo chmod 755 /etc/hostapd
+* sudo chmod 664 /etc/hostapd/hostapd.conf
+* 
