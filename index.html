@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ronnyvdbr.GitHub.io by ronnyvdbr</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ronnyvdbr.GitHub.io</h1>
+        <p>Raspberry Pi - Wifi Router Project</p>
+        <p class="view"><a href="https://github.com/ronnyvdbr">View the Project on GitHub <small>ronnyvdbr</small></a></p>
+        <ul>
+          <li class="single"><a href="https://github.com/ronnyvdbr/ronnyvdbr.github.io">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="raspberry-wifi-router" class="anchor" href="#raspberry-wifi-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry-Wifi-Router:</h1>
+
+<h3>
+<a id="welcome-to-the-raspberry-wifi-router-project" class="anchor" href="#welcome-to-the-raspberry-wifi-router-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to the Raspberry-Wifi-Router project.</h3>
+
+<p>This project aims to build a descent Wifi Router out of a Raspberry Pi which is easily configurable via
+a dynamic web interface designed in HTML/PHP.
+This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
+I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.</p>
+
+<h4>
+<a id="licensing" class="anchor" href="#licensing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licensing:</h4>
+
+<p>This software is released as free software under the General Public License, everyone is free to do with it what he wants.</p>
+
+<h4>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started:</h4>
+
+<p>Before getting started, make sure you have the right equipment at hand:</p>
+
+<ul>
+<li>Raspberry Pi - Model B - other models might work but are untested.</li>
+<li>Ssd card loaded with the latest Raspbian version -  can be downloaded from <a href="http://downloads.raspberrypi.org/raspbian_latest">http://downloads.raspberrypi.org/raspbian_latest</a>
+</li>
+<li>In my case 2015-02-16-raspbian-wheezy (put on ssd card with win32diskimager).</li>
+<li>A wifi adapter which has a compatible cfg80211 driver.
+Go to <a href="https://wireless.wiki.kernel.org/en/users/drivers">https://wireless.wiki.kernel.org/en/users/drivers</a>
+Search for a usb wifi driver which is cfg80211 compatible, and is capable of doing AP and PHY mode B/G/N.
+Based on that driver, look for a physical device which will work with that driver.
+This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapter: <a href="http://www.alfa.com.tw/products_show.php?pc=34&amp;ps=22">http://www.alfa.com.tw/products_show.php?pc=34&amp;ps=22</a>
+</li>
+</ul>
+
+<h4>
+<a id="preparing-your-raspberry-pi" class="anchor" href="#preparing-your-raspberry-pi" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing your Raspberry Pi:</h4>
+
+<ul>
+<li>Boot up your Raspberry Pi with the Raspbian ssd. </li>
+<li>Select 8 - advanced options, then A0 - Update this tool to the latest version.</li>
+<li>Select 1 - Expand Filesysem.</li>
+<li>Select 2 - Change User Password - set your password :-p.</li>
+<li>Select 3 - enable boot to command line.</li>
+<li>Select 4 - I1 - change localisation to your flavour, in my case en_US.UTF-8 UTF-8.</li>
+<li>Select 4 - I3 - change keyboard layout to Generic 102-key (Intl) PC - Belgian - Belgian (alternative, latin-9 only).</li>
+<li>Select 8 - advanced options, then A2 - Set the visible name for this Pi on a network - in my case RaspberryWAP.</li>
+<li>Select 8 - advanced options, then A3 - Change the amount of memory made available to the GPU - in my case 16 Mb.</li>
+<li>Select 8 - advanced options, then A4 - Enable/Disable remote command line access to your Pi using SSH - enable.</li>
+<li>Reboot your Raspberry Pi - sudo reboot</li>
+<li>Note down the ip address of your Raspberry Pi, it will appear above the login prompt on first boot after configuration.</li>
+<li>You are now able to use a terminal emulator like 'putty' to ssh into your Raspberry Pi, using pi as username, and your password.</li>
+<li>Update your Rasbian Os to the latest version:</li>
+<li>sudo apt-get update</li>
+<li>sudo apt-get upgrade</li>
+<li>Update the kernel and firmware:</li>
+<li>sudo rpi-update</li>
+<li>Reboot your Raspberry Pi - sudo reboot</li>
+</ul>
+
+<h4>
+<a id="installing-and-configuring-the-needed-packages" class="anchor" href="#installing-and-configuring-the-needed-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing and configuring the needed Packages:</h4>
+
+<p>Login to your Raspberry Pi using pi as username.</p>
+
+<h5>
+<a id="install-git" class="anchor" href="#install-git" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Git:</h5>
+
+<ul>
+<li>sudo apt-get install git-core (in my version of Raspbian already installed per default)</li>
+</ul>
+
+<h5>
+<a id="install-our-web-server-lighttpd-and-enable-php-on-it" class="anchor" href="#install-our-web-server-lighttpd-and-enable-php-on-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install our web server lighttpd and enable php on it:</h5>
+
+<ul>
+<li>sudo apt-get -y install lighttpd php5-common php5-cgi php5</li>
+<li>sudo lighty-enable-mod fastcgi-php</li>
+</ul>
+
+<h6>
+<a id="clone-our-git-repository-with-the-web-gui-onto-our-raspberry-pi" class="anchor" href="#clone-our-git-repository-with-the-web-gui-onto-our-raspberry-pi" aria-hidden="true"><span class="octicon octicon-link"></span></a>Clone our git repository with the web gui onto our Raspberry Pi:</h6>
+
+<ul>
+<li>git clone <a href="https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git">https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git</a>
+</li>
+</ul>
+
+<h6>
+<a id="reconfigure-lighttpd-to-serve-our-web-gui-and-set-some-permissions" class="anchor" href="#reconfigure-lighttpd-to-serve-our-web-gui-and-set-some-permissions" aria-hidden="true"><span class="octicon octicon-link"></span></a>reconfigure lighttpd to serve our web gui and set some permissions:</h6>
+
+<ul>
+<li>sudo rm -R /var/www</li>
+<li>sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www</li>
+<li>sudo chown www-data:www-data /var/www</li>
+<li>sudo chmod 775 /var/www</li>
+<li>sudo usermod -a -G www-data pi</li>
+<li>sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf</li>
+<li>sudo /etc/init.d/lighttpd force-reload</li>
+</ul>
+
+<h5>
+<a id="were-building-an-access-point-so-we-need-hostapd-were-first-going-to-set-up-the-rasbian-hostapd-package" class="anchor" href="#were-building-an-access-point-so-we-need-hostapd-were-first-going-to-set-up-the-rasbian-hostapd-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>We're building an access point, so we need hostapd, we're first going to set-up the Rasbian hostapd package:</h5>
+
+<ul>
+<li>sudo apt-get -y install hostapd</li>
+<li>sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd</li>
+</ul>
+
+<h6>
+<a id="now-we-are-going-to-update-the-hostapd-binaries-to-the-latest-version--lets-grab-a-copy-of-the-latest-version-of-hostapd-from-the-website-and-compile-it" class="anchor" href="#now-we-are-going-to-update-the-hostapd-binaries-to-the-latest-version--lets-grab-a-copy-of-the-latest-version-of-hostapd-from-the-website-and-compile-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:</h6>
+
+<h6>
+<a id="first-install-some-dependencies" class="anchor" href="#first-install-some-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>First install some dependencies:</h6>
+
+<ul>
+<li>sudo apt-get install libnl-3-dev</li>
+<li>sudo apt-get install libnl-genl-3-dev</li>
+<li>sudo apt-get install libssl-dev</li>
+</ul>
+
+<h6>
+<a id="lets-download-our-source-code-from-the-website" class="anchor" href="#lets-download-our-source-code-from-the-website" aria-hidden="true"><span class="octicon octicon-link"></span></a>Let's download our source code from the website:</h6>
+
+<ul>
+<li>wget <a href="http://w1.fi/releases/hostapd-2.3.tar.gz">http://w1.fi/releases/hostapd-2.3.tar.gz</a>
+</li>
+<li>tar -zxvf hostapd-2.3.tar.gz</li>
+<li>cd ~/hostapd-2.3/hostapd</li>
+</ul>
+
+<h6>
+<a id="lets-configure-some-things-before-we-start-compiling" class="anchor" href="#lets-configure-some-things-before-we-start-compiling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Let's configure some things before we start compiling:</h6>
+
+<ul>
+<li>cp defconfig .config</li>
+<li>sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config</li>
+<li>sed -i 's/#CFLAGS += -I$/CFLAGS += -I\/usr\/include\/libnl3/g' .config</li>
+<li>sed -i 's/#LIBS += -L$/LIBS += -L\/lib\/arm-linux-gnueabihf/g' .config</li>
+<li>cd /lib/arm-linux-gnueabihf</li>
+<li>sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so</li>
+<li>sudo ln -s libnl-3.so.200.5.2 libnl.so</li>
+<li>cd ~/hostapd-2.3/hostapd</li>
+<li>make</li>
+</ul>
+
+<h6>
+<a id="now-overwrite-the-old-hostapd-files-with-the-newly-compiled-ones" class="anchor" href="#now-overwrite-the-old-hostapd-files-with-the-newly-compiled-ones" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now overwrite the old hostapd files with the newly compiled ones:</h6>
+
+<ul>
+<li>sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd</li>
+<li>sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli</li>
+<li>sudo cp ~/hostapd-2.3/hostapd/hostapd.conf /etc/hostapd/hostapd.conf</li>
+</ul>
+
+<h6>
+<a id="set-permissions-so-our-web-gui-can-modify-the-config-files" class="anchor" href="#set-permissions-so-our-web-gui-can-modify-the-config-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Set permissions so our web gui can modify the config files:</h6>
+
+<ul>
+<li>sudo chgrp -R www-data /etc/hostapd</li>
+<li>sudo chmod 755 /etc/hostapd</li>
+<li>sudo chmod 664 /etc/hostapd/hostapd.conf</li>
+</ul>
+
+<h5>
+<a id="now-lets-set-the-rest-of-some-configuration-bits-which-are-needed-to-function-correctly" class="anchor" href="#now-lets-set-the-rest-of-some-configuration-bits-which-are-needed-to-function-correctly" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now let's set the rest of some configuration bits which are needed to function correctly:</h5>
+
+<h6>
+<a id="we-modify-etcfstab-to-remount-the-root-partition-with-write-rights-this-is-needed-to-write-configuration-changes-to-cmdlinetxt" class="anchor" href="#we-modify-etcfstab-to-remount-the-root-partition-with-write-rights-this-is-needed-to-write-configuration-changes-to-cmdlinetxt" aria-hidden="true"><span class="octicon octicon-link"></span></a>We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt</h6>
+
+<ul>
+<li>sudo umount /dev/mmcblk0p1 </li>
+<li>sudo sed -i 's/\/dev\/mmcblk0p1  \/boot           vfat    defaults          0       2/\/dev\/mmcblk0p1  \/boot           vfat    rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro          0       2/g' /etc/fstab</li>
+<li>sudo mount /dev/mmcblk0p1</li>
+</ul>
+
+<h6>
+<a id="lets-create-a-sudoers-file-which-determines-which-commands-our-webserver-can-execute-to-make-configuration-changes-for-the-router" class="anchor" href="#lets-create-a-sudoers-file-which-determines-which-commands-our-webserver-can-execute-to-make-configuration-changes-for-the-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Let's create a sudoers file which determines which commands our webserver can execute to make configuration changes for the router</h6>
+
+<ul>
+<li>sudo touch /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifconfig *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/brctl *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/service *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifdown *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifup *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
