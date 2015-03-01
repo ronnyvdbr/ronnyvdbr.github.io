@@ -102,4 +102,13 @@ Login to your Raspberry Pi using pi as username.
 * sudo chmod 755 /etc/hostapd
 * sudo chmod 664 /etc/hostapd/hostapd.conf
 
+##### Now let's set the rest of some configuration bits which are needed to function correctly:
+
+###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
+* sudo umount /dev/mmcblk0p1 
+* sudo sed -i 's/\/dev\/mmcblk0p1  \/boot           vfat    defaults          0       2/\/dev\/mmcblk0p1  \/boot           vfat    rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro          0       2/g' /etc/fstab
+* sudo mount /dev/mmcblk0p1
+
+###### 
+
 
