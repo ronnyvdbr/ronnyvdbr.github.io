@@ -88,33 +88,32 @@ Login to your Raspberry Pi using pi as username.
 * sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config
 * sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
 * sed -i 's/#LIBS += -L$<path to libnl library files>/LIBS += -L\/lib\/arm-linux-gnueabihf/g' .config
+* sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' .config
 * cd /lib/arm-linux-gnueabihf
 * sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so
 * sudo ln -s libnl-3.so.200.5.2 libnl.so
 * cd ~/hostapd-2.3/hostapd
 * make
 
-###### Now overwrite the old hostapd files with the newly compiled ones:
+###### Now overwrite the old hostapd binaries with the newly compiled ones:
 * sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 * sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
-* sudo cp ~/hostapd-2.3/hostapd/hostapd.conf /etc/hostapd/hostapd.conf
-
-###### Set permissions so our web gui can modify the config files:
-* sudo chgrp -R www-data /etc/hostapd
-* sudo chmod 755 /etc/hostapd
-* sudo chmod 664 /etc/hostapd/hostapd.conf
 
 ##### Now let's set the rest of some configuration bits which are needed to function correctly:
 
-TODO put default interfaces file with correct content
-TODO modify php ini file to include flush directiveifconfig
-TODO copy a working hostapd.conf to the etc hostapd
-TODO rework routersettings.ini with default values
-
-
+###### Copy some default config files into place, warning, taking below actions will change your ip address on next reboot:
+* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 * sudo chgrp www-data /etc/network/interfaces
 * sudo chmod g+w /etc/network/interfaces
-* 
+
+* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
+* sudo chgrp www-data /etc/hostapd/hostapd.conf
+* sudo chmod g+w /etc/hostapd/hostapd.conf
+* sudo /etc/init.d/hostapd start
+
+* sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
+* sudo /etc/init.d/lighttpd force-reload
+
 
 ###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
 * sudo umount /dev/mmcblk0p1 
@@ -140,6 +139,3 @@ TODO rework routersettings.ini with default values
 * www-data ALL = (root) NOPASSWD: /sbin/ifup *
 * www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
 * www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-
-
-
