@@ -53,10 +53,10 @@ Login to your Raspberry Pi using pi as username.
 * sudo apt-get -y install lighttpd php5-common php5-cgi php5
 * sudo lighty-enable-mod fastcgi-php
 
-##### Clone our git repository with the web gui onto our Raspberry Pi:
+###### Clone our git repository with the web gui onto our Raspberry Pi:
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
 
-##### reconfigure lighttpd to serve our web gui and set some permissions:
+###### reconfigure lighttpd to serve our web gui and set some permissions:
 * sudo rm -R /var/www
 * sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
 * sudo chown www-data:www-data /var/www
@@ -69,7 +69,8 @@ Login to your Raspberry Pi using pi as username.
 * sudo apt-get -y install hostapd
 * sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd
 
-##### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
+###### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
+
 ###### First install some dependencies:
 * sudo apt-get install libnl-3-dev
 * sudo apt-get install libnl-genl-3-dev
