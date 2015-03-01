@@ -52,8 +52,10 @@ Login to your Raspberry Pi using pi as username.
 ##### Install our web server lighttpd and enable php on it:
 * sudo apt-get -y install lighttpd php5-common php5-cgi php5
 * sudo lighty-enable-mod fastcgi-php
+
 ##### Clone our git repository with the web gui onto our Raspberry Pi:
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
+
 ##### reconfigure lighttpd to serve our web gui and set some permissions:
 * sudo rm -R /var/www
 * sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
