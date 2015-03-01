@@ -1,32 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Ronnyvdbr.GitHub.io : Raspberry Pi - Wifi Router Project">
+    <title>Ronnyvdbr.GitHub.io by ronnyvdbr</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <title>Ronnyvdbr.GitHub.io</title>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/ronnyvdbr">View on GitHub</a>
-
-          <h1 id="project_title">Ronnyvdbr.GitHub.io</h1>
-          <h2 id="project_tagline">Raspberry Pi - Wifi Router Project</h2>
-
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+    <div class="wrapper">
+      <header>
+        <h1>Ronnyvdbr.GitHub.io</h1>
+        <p>Raspberry Pi - Wifi Router Project</p>
+        <p class="view"><a href="https://github.com/ronnyvdbr">View the Project on GitHub <small>ronnyvdbr</small></a></p>
+        <ul>
+          <li class="single"><a href="https://github.com/ronnyvdbr/ronnyvdbr.github.io">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         <h1>
 <a id="raspberry-wifi-router" class="anchor" href="#raspberry-wifi-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry-Wifi-Router:</h1>
 
@@ -207,30 +205,31 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 
 <ul>
 <li>sudo touch /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifconfig *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/brctl *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/service *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifdown *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /sbin/ifup *" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
-<li>sudo echo "www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate" &gt;&gt; /etc/sudoers.d/wr_commands</li>
+<li>sudo nano /etc/sudoers.d/wr_commands</li>
 </ul>
+
+<h6>
+<a id="paste-all-the-below-commands-in-the-file-and-save-it-by-pressing-ctrl-x-and-pressing-y" class="anchor" href="#paste-all-the-below-commands-in-the-file-and-save-it-by-pressing-ctrl-x-and-pressing-y" aria-hidden="true"><span class="octicon octicon-link"></span></a>Paste all the below commands in the file and save it by pressing Ctrl-X and pressing y</h6>
+
+<p>www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
+www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
+www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
+www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
+www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart
+www-data ALL = (root) NOPASSWD: /sbin/ifconfig *
+www-data ALL = (root) NOPASSWD: /sbin/brctl *
+www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+www-data ALL = (root) NOPASSWD: /sbin/service *
+www-data ALL = (root) NOPASSWD: /sbin/ifdown *
+www-data ALL = (root) NOPASSWD: /sbin/ifup *
+www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate</p>
       </section>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
+    <footer>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -241,7 +240,6 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
