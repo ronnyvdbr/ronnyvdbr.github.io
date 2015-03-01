@@ -115,19 +115,19 @@ Login to your Raspberry Pi using pi as username.
 
 ###### Paste all the below commands in the file and save it by pressing Ctrl-X and pressing y
 
-www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
-www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
-www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
-www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
-www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart
-www-data ALL = (root) NOPASSWD: /sbin/ifconfig *
-www-data ALL = (root) NOPASSWD: /sbin/brctl *
-www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-www-data ALL = (root) NOPASSWD: /sbin/service *
-www-data ALL = (root) NOPASSWD: /sbin/ifdown *
-www-data ALL = (root) NOPASSWD: /sbin/ifup *
-www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+* www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
+* www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
+* www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
+* www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
+* www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart
+* www-data ALL = (root) NOPASSWD: /sbin/ifconfig *
+* www-data ALL = (root) NOPASSWD: /sbin/brctl *
+* www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+* www-data ALL = (root) NOPASSWD: /sbin/service *
+* www-data ALL = (root) NOPASSWD: /sbin/ifdown *
+* www-data ALL = (root) NOPASSWD: /sbin/ifup *
+* www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+* www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
 
 
 
