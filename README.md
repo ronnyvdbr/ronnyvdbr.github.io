@@ -46,15 +46,15 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 #### Installing and configuring the needed Packages:
 Login to your Raspberry Pi using pi as username.
 
-###### Install Git:
+##### Install Git:
 * sudo apt-get install git-core (in my version of Raspbian already installed per default)
 
-###### Install our web server lighttpd and enable php on it:
+##### Install our web server lighttpd and enable php on it:
 * sudo apt-get -y install lighttpd php5-common php5-cgi php5
 * sudo lighty-enable-mod fastcgi-php
-###### Clone our git repository with the web gui onto our Raspberry Pi:
+##### Clone our git repository with the web gui onto our Raspberry Pi:
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
-###### reconfigure lighttpd to serve our web gui and set some permissions:
+##### reconfigure lighttpd to serve our web gui and set some permissions:
 * sudo rm -R /var/www
 * sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
 * sudo chown www-data:www-data /var/www
@@ -63,19 +63,20 @@ Login to your Raspberry Pi using pi as username.
 * sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
 * sudo /etc/init.d/lighttpd force-reload
 
-We're building an access point, so we need hostapd, we're first going to set-up the Rasbian hostapd package:
+##### We're building an access point, so we need hostapd, we're first going to set-up the Rasbian hostapd package:
 * sudo apt-get -y install hostapd
+* sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd
 
-Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
-First install some dependencies:
+##### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
+###### First install some dependencies:
 * sudo apt-get install libnl-3-dev
 * sudo apt-get install libnl-genl-3-dev
 * sudo apt-get install libssl-dev
-Let's ownload our source code from the website:
+###### Let's ownload our source code from the website:
 * wget http://w1.fi/releases/hostapd-2.3.tar.gz
 * tar -zxvf hostapd-2.3.tar.gz
 * cd cd ~/hostapd-2.3/hostapd
-Let's configure some things before we start compiling:
+###### Let's configure some things before we start compiling:
 * cp defconfig .config
 * sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config
 * sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
@@ -85,11 +86,12 @@ Let's configure some things before we start compiling:
 * sudo ln -s libnl-3.so.200.5.2 libnl.so
 * cd ~/hostapd-2.3/hostapd
 * make
-* sudo make install
-
-* sudo mkdir /etc/hostapd
+###### Now overwrite the old hostapd files with the newly compiled ones:
+* sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
+* sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 * sudo cp ~/hostapd-2.3/hostapd/hostapd.conf /etc/hostapd/hostapd.conf
+###### Set permissions so our web gui can modify the config files:
 * sudo chgrp -R www-data /etc/hostapd
 * sudo chmod 755 /etc/hostapd
 * sudo chmod 664 /etc/hostapd/hostapd.conf
-* 
+
