@@ -110,6 +110,7 @@ Login to your Raspberry Pi using pi as username.
 * sudo chgrp www-data /etc/hostapd/hostapd.conf
 * sudo chmod g+w /etc/hostapd/hostapd.conf
 * sudo /etc/init.d/hostapd start
+* sudo update-rc.d hostapd defaults
 
 * sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
 * sudo /etc/init.d/lighttpd force-reload
