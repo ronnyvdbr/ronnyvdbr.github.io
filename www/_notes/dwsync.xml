@@ -21,4 +21,5 @@
 <file name="routersettings.ini" server="192.168.20.177//var/www/" local="130691075400000000" remote="130691075400000000" Dst="1" />
 <file name="Configuration-NetworkSettings.php" server="192.168.20.178//var/www/" local="130687602830290604" remote="130687602600000000" Dst="1" />
 <file name="functions.php" server="192.168.20.178//var/www/" local="130685775777032899" remote="130685894400000000" Dst="1" />
+<file name="functions.php" server="192.168.20.177//home/pi/Raspberry-Wifi-Router/www/" local="130698756580987012" remote="130698757650000000" Dst="1" />
 </dwsync>

@@ -110,7 +110,7 @@
 			}
 			$arrdata = str_replace("\n","",$arrdata);
 			file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
-			array_push($networksettings,"auto wlan0\n");
+			//array_push($networksettings,"auto wlan0\n");
 			array_push($networksettings,"iface wlan0 inet static\n");
 			array_push($networksettings,"address " . $configurationsettings['wifiip'] . "\n");
 			array_push($networksettings,"netmask " . $configurationsettings['wifimask'] . "\n");
