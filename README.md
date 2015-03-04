@@ -118,6 +118,11 @@ Login to your Raspberry Pi using pi as username.
 * sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
 * sudo /etc/init.d/lighttpd force-reload
 
+* sudo chgrp www-data /etc/dhcp/dhclient.conf
+* sudo chmod g+w /etc/dhcp/dhclient.conf
+
+* sudo chgrp www-data /etc/ntp.conf
+* sudo chmod g+w /etc/ntp.conf
 
 ###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
 * sudo umount /dev/mmcblk0p1 
