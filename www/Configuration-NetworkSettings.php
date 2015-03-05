@@ -181,8 +181,12 @@ function ReturnFailurePppoe(error) {
 		  }
 		}
 		file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
+		$macchange = false;
 		if(strcmp($mac,$configurationsettings['lanmac']) !== 0) {$macchange = true;}
-		$configurationsettings['lanmac'] = $mac;
+		if(empty($mac))
+			$configurationsettings['lanmac'] = '';
+		else 
+			$configurationsettings['lanmac'] = $mac;
 		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
@@ -261,10 +265,10 @@ function ReturnFailurePppoe(error) {
 		else
 			$configurationsettings['lanmtu'] = "";
 
-		if(!empty($macaddress)) 
-			$configurationsettings['lanmac'] = $macaddress;
-		else
-			$configurationsettings['lanmac'] = "";
+		if(empty($mac))
+			$configurationsettings['lanmac'] = '';
+		else 
+			$configurationsettings['lanmac'] = $mac;
 		
 		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 		update_interfaces_file($configurationsettings['operationmode']);

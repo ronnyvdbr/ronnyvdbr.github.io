@@ -91,7 +91,9 @@ function ReturnFailure(error) {
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
 <!-- ********************************************************************************************************************** -->
-  <?php date_default_timezone_set(trim(file_get_contents("/etc/timezone"),"\n"));?>
+  <?php date_default_timezone_set(trim(file_get_contents("/etc/timezone"),"\n"));
+  		$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+  ?>
 <!-- ********************************************************************************************************************** -->
   <?php
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttontimezone'])) {
@@ -104,7 +106,6 @@ function ReturnFailure(error) {
 	$timeserver1 = $timeserver2 = $timeserver3 = $timeserver4 = "";
 	$timeserver1err = $timeserver2err = $timeserver3err = $timeserver4err = "";
 	// uitlezen en valideren van formulier
-	$timesyncenabled = $_POST["timesync_checkbox"];
 	if (!empty($_POST["timeserver1"])) {
 		$timeserver1 = test_input($_POST["timeserver1"]);
 		if (!preg_match("/^[0-9a-zA-Z.]*$/",$timeserver1)) {
@@ -131,6 +132,10 @@ function ReturnFailure(error) {
 	  }
 	// if the form was validated ok execute the rest
 	if (empty($timeserver1err) && empty($timeserver2err) && empty($timeserver3err) && empty($timeserver4err)) {
+		if 	(array_key_exists ("timesync_checkbox" , $_POST))
+		  $configurationsettings['ntpclient'] = "enabled";
+		else
+		  $configurationsettings['ntpclient'] = "disabled";
 		$splice = 0;
 		$insertservers = array();
 		$strconfigfile = "/etc/ntp.conf";
@@ -152,6 +157,8 @@ function ReturnFailure(error) {
 		}
 		array_splice($arrconfigfilecontents,20,0,$insertservers);
 		file_put_contents("/etc/ntp.conf", implode($arrconfigfilecontents));
+		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+
 	}
   }
   ?>
@@ -209,7 +216,7 @@ function ReturnFailure(error) {
         <table width="100%" border="0">
           <tr>
             <td width="40%" align="right">Enable time Sync:</td>
-            <td width="60%"><input name="timesync_checkbox" type="checkbox" id="timesync_checkbox" form="formtimesync" value="on" <?php if (shell_exec("/etc/init.d/ntp status") == "NTP server is running.\n") {echo "checked";}?>></td>
+            <td width="60%"><input name="timesync_checkbox" type="checkbox" id="timesync_checkbox" form="formtimesync" value="on" <?php if ($configurationsettings['ntpclient'] == "enabled") {echo "checked";}?>></td>
           </tr>
           <tr>
             <td align="right">Time Server 1:</td>
@@ -290,7 +297,7 @@ function ReturnFailure(error) {
 	  if (empty($timeserver1err) && empty($timeserver2err) && empty($timeserver3err) && empty($timeserver4err)) {
 		echo "<script>ReturnProgressTimesync();</script>";
 		flush();
-		if 	($timesyncenabled == "on") {
+		if 	(array_key_exists ("timesync_checkbox" , $_POST)) {
 			shell_exec("sudo /etc/init.d/ntp force-reload");
 		}
 		else {

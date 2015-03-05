@@ -166,8 +166,25 @@ function ReturnReadyOperation() {
 				shell_exec("sudo /sbin/ifdown br0");
 				shell_exec("sudo /sbin/ifconfig br0 down");
 				shell_exec("sudo /sbin/brctl delbr br0");
-				shell_exec("sudo /etc/init.d/networking restart");
-				shell_exec("sudo /etc/init.d/hostapd restart");
+
+				shell_exec("sudo service ifplugd stop");
+				shell_exec("sudo ifconfig eth0 down");
+				if(empty($configurationsettings['lanmac'])) {
+					shell_exec("sudo ifconfig eth0 hw ether 00:11:22:33:44:55");}
+				else
+					shell_exec("sudo ifconfig eth0 hw ether " . $configurationsettings['lanmac']);
+				shell_exec("sudo ifconfig eth0 up");
+				shell_exec("sudo ifup eth0");
+				shell_exec("sudo service ifplugd start");
+
+				shell_exec("sudo ifup wlan0");
+				shell_exec("sudo /etc/init.d/hostapd start");
+				
+				shell_exec("sudo sysctl -w net.ipv4.ip_forward=1");
+				shell_exec("sudo sysctl enable dnsmasq");
+				shell_exec("sudo /etc/init.d/dnsmasq start");
+				shell_exec("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE");
+				
 				echo "<script>$('#functionstat').text('Router');</script>";
 				echo "<script>$('#selectopsmode').val('Access Point');</script>";
 			}
@@ -175,6 +192,14 @@ function ReturnReadyOperation() {
 				update_interfaces_file("Access Point");
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+				
+				shell_exec("sudo ifconfig eth0 down");
+				shell_exec("sudo ifconfig eth0 hw ether 00:11:22:33:44:56");
+				shell_exec("sudo ifconfig eth0 up");
+				
+				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0");
+				shell_exec("sudo sysctl disable dnsmasq");
+				shell_exec("sudo /etc/init.d/dnsmasq stop");
 				
 				shell_exec("sudo /etc/init.d/networking restart");
 				shell_exec("sudo /etc/init.d/hostapd restart");

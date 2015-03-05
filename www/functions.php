@@ -108,6 +108,10 @@
 			if(!empty($configurationsettings['lanmac'])) {
 			  array_push($arrdata,"smsc95xx.macaddr=" . $configurationsettings['lanmac']);
 			}
+			else {
+			  array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:55");
+			}
+			
 			$arrdata = str_replace("\n","",$arrdata);
 			file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
 			//array_push($networksettings,"auto wlan0\n");
@@ -131,6 +135,19 @@
 				array_push($networksettings,"iface br0 inet dhcp\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
+				else {
+					array_push($networksettings,"hwaddress ether 00:11:22:33:44:55" . "\n");
+					$strdata = file_get_contents ("/boot/cmdline.txt");
+					$arrdata = explode (" ",$strdata);
+					foreach($arrdata as $key => $value) {
+					  if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
+						unset($arrdata[$key]);
+					  }
+					}
+					array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:56");
+					$arrdata = str_replace("\n","",$arrdata);
+					file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
+				}
 				array_push($networksettings,"bridge_ports wlan0 eth0\n");
 				if(!empty($configurationsettings['lanmtu'])) 
 					array_push($networksettings,"post-up ifconfig eth0 mtu " . $configurationsettings['lanmtu'] . "\n");
@@ -141,6 +158,19 @@
 				array_push($networksettings,"iface br0 inet static\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
+				else {
+					array_push($networksettings,"hwaddress ether 00:11:22:33:44:55" . "\n");
+					$strdata = file_get_contents ("/boot/cmdline.txt");
+					$arrdata = explode (" ",$strdata);
+					foreach($arrdata as $key => $value) {
+					  if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
+						unset($arrdata[$key]);
+					  }
+					}
+					array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:56");
+					$arrdata = str_replace("\n","",$arrdata);
+					file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
+				}
 				array_push($networksettings,"bridge_ports wlan0 eth0\n");
 				if(!empty($configurationsettings['lanmtu'])) 
 					array_push($networksettings,"post-up ifconfig eth0 mtu " . $configurationsettings['lanmtu'] . "\n");
