@@ -124,6 +124,11 @@ Login to your Raspberry Pi using pi as username.
 * sudo chgrp www-data /etc/ntp.conf
 * sudo chmod g+w /etc/ntp.conf
 
+* sudo chgrp www-data /etc/timezone
+* sudo chmod g+w /etc/timezone
+ 
+
+
 ###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
 * sudo umount /dev/mmcblk0p1 
 * sudo sed -i 's/\/dev\/mmcblk0p1  \/boot           vfat    defaults          0       2/\/dev\/mmcblk0p1  \/boot           vfat    rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro          0       2/g' /etc/fstab
