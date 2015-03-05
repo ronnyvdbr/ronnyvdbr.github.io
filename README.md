@@ -157,3 +157,4 @@ Login to your Raspberry Pi using pi as username.
 * www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
 * www-data ALL = (root) NOPASSWD: /usr/bin/macchanger
 * www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1
+* www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
