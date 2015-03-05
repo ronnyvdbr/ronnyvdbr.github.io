@@ -71,6 +71,8 @@ Login to your Raspberry Pi using pi as username.
 * sudo apt-get -y install hostapd
 * sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd
 
+* sudo apt-get -y install macchanger
+
 ###### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
 
 ###### First install some dependencies:
@@ -153,4 +155,5 @@ Login to your Raspberry Pi using pi as username.
 * www-data ALL = (root) NOPASSWD: /sbin/ifup *
 * www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
 * www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+* www-data ALL = (root) NOPASSWD: /usr/bin/macchanger
 * www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1
