@@ -71,8 +71,6 @@ Login to your Raspberry Pi using pi as username.
 * sudo apt-get -y install hostapd
 * sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd
 
-* sudo apt-get -y install macchanger
-
 ###### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
 
 ###### First install some dependencies:
@@ -101,8 +99,10 @@ Login to your Raspberry Pi using pi as username.
 * sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 * sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 
-###### Let's setup bridge utils needed for bridging mode:
+###### Let's setup bridge utils, macchanger, and dnsmasq:
 * sudo apt-get -y install bridge-utils
+* sudo apt-get -y install macchanger
+* sudo apt-get -y install dnsmasq
 
 ##### Now let's set the rest of some configuration bits which are needed to function correctly:
 
