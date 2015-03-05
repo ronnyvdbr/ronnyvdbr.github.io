@@ -47,7 +47,7 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 Login to your Raspberry Pi using pi as username.
 
 ##### Install Git:
-* sudo apt-get install git-core (in my version of Raspbian already installed per default)
+* sudo apt-get -y install git-core (in my version of Raspbian already installed per default)
 
 ##### Install our web server lighttpd and enable php on it:
 * sudo apt-get -y install lighttpd php5-common php5-cgi php5
@@ -74,9 +74,9 @@ Login to your Raspberry Pi using pi as username.
 ###### Now we are going to update the hostapd binaries to the latest version.  Let's grab a copy of the latest version of hostapd from the website and compile it:
 
 ###### First install some dependencies:
-* sudo apt-get install libnl-3-dev
-* sudo apt-get install libnl-genl-3-dev
-* sudo apt-get install libssl-dev
+* sudo apt-get -y install libnl-3-dev
+* sudo apt-get -y install libnl-genl-3-dev
+* sudo apt-get -y install libssl-dev
 
 ###### Let's download our source code from the website:
 * wget http://w1.fi/releases/hostapd-2.3.tar.gz
@@ -99,6 +99,11 @@ Login to your Raspberry Pi using pi as username.
 * sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 * sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 
+###### Let's setup bridge utils, macchanger, and dnsmasq:
+* sudo apt-get -y install bridge-utils
+* sudo apt-get -y install macchanger
+* sudo apt-get -y install dnsmasq
+
 ##### Now let's set the rest of some configuration bits which are needed to function correctly:
 
 ###### Copy some default config files into place, warning, taking below actions will change your ip address on next reboot:
@@ -114,6 +119,16 @@ Login to your Raspberry Pi using pi as username.
 
 * sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
 * sudo /etc/init.d/lighttpd force-reload
+
+* sudo chgrp www-data /etc/dhcp/dhclient.conf
+* sudo chmod g+w /etc/dhcp/dhclient.conf
+
+* sudo chgrp www-data /etc/ntp.conf
+* sudo chmod g+w /etc/ntp.conf
+
+* sudo chgrp www-data /etc/timezone
+* sudo chmod g+w /etc/timezone
+ 
 
 
 ###### We modify /etc/fstab to remount the root partition with write rights, this is needed to write configuration changes to cmdline.txt
@@ -140,3 +155,20 @@ Login to your Raspberry Pi using pi as username.
 * www-data ALL = (root) NOPASSWD: /sbin/ifup *
 * www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
 * www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+* www-data ALL = (root) NOPASSWD: /usr/bin/macchanger
+* www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1
+* www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq
+* www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq
+* www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
+* www-data ALL = (root) NOPASSWD: /sbin/iptables
+
+
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo touch /etc/iptables.up.rules
+sudo iptables-save > /etc/iptables.up.rules
+editor /etc/network/if-pre-up.d/iptables
+
+ #!/bin/sh
+ /sbin/iptables-restore < /etc/iptables.up.rules
+
+chmod +x /etc/network/if-pre-up.d/iptables
