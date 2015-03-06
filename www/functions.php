@@ -122,17 +122,22 @@
 		  break;
 		 
 		  case "Access Point":
-			//operationmode access point	
+			//operationmode access point - prepare interfaces file contents	
+			//push the settings for the loopback adapter up the array
 			array_push($networksettings,"auto lo\n");
 			array_push($networksettings,"iface lo inet loopback\n\n");
+			//push the settings for the wlan0 adapter up the array
 			array_push($networksettings,"allow-hotplug wlan0\n");
 			array_push($networksettings,"iface wlan0 inet manual\n");
 			array_push($networksettings,"\n");
+			//push the settings for the eth0 adapter up the array
 			array_push($networksettings,"allow-hotplug eth0\n");
 			array_push($networksettings,"iface eth0 inet manual\n\n");
+			//configure access point for dhcp addressing
 			if (strcmp($configurationsettings['lantype'],"dhcp") == 0) {
 				array_push($networksettings,"auto br0\n");
 				array_push($networksettings,"iface br0 inet dhcp\n");
+				array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
 				else {
@@ -153,9 +158,11 @@
 					array_push($networksettings,"post-up ifconfig eth0 mtu " . $configurationsettings['lanmtu'] . "\n");
 				array_push($networksettings,"\n");
 			}
+			//configure access point for static addressing
 			if (strcmp($configurationsettings['lantype'],"static") == 0) {
 				array_push($networksettings,"auto br0\n");
 				array_push($networksettings,"iface br0 inet static\n");
+				array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
 				else {
