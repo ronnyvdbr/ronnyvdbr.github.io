@@ -4,19 +4,11 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Raspberry Pi - Wifi Router Project : Raspberry Pi - Wifi Router Project">
+    <meta name="description" content="Raspberry Pi - Wifi Router Project : The Raspbian Hard-Float Wireless Router">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Raspberry Pi - Wifi Router Project</title>
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-18361926-2', 'auto');
-  ga('send', 'pageview');
-</script>
   </head>
 
   <body>
@@ -27,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/ronnyvdbr">View on GitHub</a>
 
           <h1 id="project_title">Raspberry Pi - Wifi Router Project</h1>
-          <h2 id="project_tagline">Raspberry Pi - Wifi Router Project</h2>
+          <h2 id="project_tagline">The Raspbian Hard-Float Wireless Router</h2>
 
         </header>
     </div>
@@ -35,10 +27,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>
-<a id="raspberry-wifi-router" class="anchor" href="#raspberry-wifi-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry-Wifi-Router:</h1>
-
-<h3>
+        <h3>
 <a id="welcome-to-the-raspberry-wifi-router-project" class="anchor" href="#welcome-to-the-raspberry-wifi-router-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to the Raspberry-Wifi-Router project.</h3>
 
 <p>This project aims to build a descent Wifi Router out of a Raspberry Pi which is easily configurable via
@@ -46,7 +35,7 @@ a dynamic web interface designed in HTML/PHP.
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.</p>
 
-<p><img src="https://ronnyvdbr.github.io/images/RouterPicture.PNG" alt="Raspberry Pi Wifi Router"></p>
+<p>Download: <a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.gz">Raspberry Pi Wifi Router v1.0</a></p>
 
 <h4>
 <a id="licensing" class="anchor" href="#licensing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licensing:</h4>
@@ -105,7 +94,7 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <a id="install-git" class="anchor" href="#install-git" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Git:</h5>
 
 <ul>
-<li>sudo apt-get install git-core (in my version of Raspbian already installed per default)</li>
+<li>sudo apt-get -y install git-core (in my version of Raspbian already installed per default)</li>
 </ul>
 
 <h5>
@@ -154,9 +143,9 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <a id="first-install-some-dependencies" class="anchor" href="#first-install-some-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>First install some dependencies:</h6>
 
 <ul>
-<li>sudo apt-get install libnl-3-dev</li>
-<li>sudo apt-get install libnl-genl-3-dev</li>
-<li>sudo apt-get install libssl-dev</li>
+<li>sudo apt-get -y install libnl-3-dev</li>
+<li>sudo apt-get -y install libnl-genl-3-dev</li>
+<li>sudo apt-get -y install libssl-dev</li>
 </ul>
 
 <h6>
@@ -193,6 +182,16 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <li>sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli</li>
 </ul>
 
+<h6>
+<a id="lets-setup-iw-bridge-utils-macchanger-and-dnsmasq" class="anchor" href="#lets-setup-iw-bridge-utils-macchanger-and-dnsmasq" aria-hidden="true"><span class="octicon octicon-link"></span></a>Let's setup iw, bridge utils, macchanger, and dnsmasq:</h6>
+
+<ul>
+<li>sudo apt-get -y install iw</li>
+<li>sudo apt-get -y install bridge-utils</li>
+<li>sudo apt-get -y install macchanger</li>
+<li>sudo apt-get -y install dnsmasq</li>
+</ul>
+
 <h5>
 <a id="now-lets-set-the-rest-of-some-configuration-bits-which-are-needed-to-function-correctly" class="anchor" href="#now-lets-set-the-rest-of-some-configuration-bits-which-are-needed-to-function-correctly" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now let's set the rest of some configuration bits which are needed to function correctly:</h5>
 
@@ -203,12 +202,22 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <li>sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces</li>
 <li>sudo chgrp www-data /etc/network/interfaces</li>
 <li><p>sudo chmod g+w /etc/network/interfaces</p></li>
+<li><p>sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf</p></li>
+<li>sudo chgrp www-data /etc/dnsmasq.conf</li>
+<li><p>sudo chmod g+w /etc/dnsmasq.conf</p></li>
 <li><p>sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf</p></li>
 <li>sudo chgrp www-data /etc/hostapd/hostapd.conf</li>
 <li>sudo chmod g+w /etc/hostapd/hostapd.conf</li>
-<li><p>sudo /etc/init.d/hostapd start</p></li>
+<li>sudo /etc/init.d/hostapd start</li>
+<li><p>sudo update-rc.d hostapd defaults</p></li>
 <li><p>sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini</p></li>
-<li>sudo /etc/init.d/lighttpd force-reload</li>
+<li><p>sudo /etc/init.d/lighttpd force-reload</p></li>
+<li><p>sudo chgrp www-data /etc/dhcp/dhclient.conf</p></li>
+<li><p>sudo chmod g+w /etc/dhcp/dhclient.conf</p></li>
+<li><p>sudo chgrp www-data /etc/ntp.conf</p></li>
+<li><p>sudo chmod g+w /etc/ntp.conf</p></li>
+<li><p>sudo chgrp www-data /etc/timezone</p></li>
+<li>sudo chmod g+w /etc/timezone</li>
 </ul>
 
 <h6>
@@ -245,6 +254,12 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <li>www-data ALL = (root) NOPASSWD: /sbin/ifup *</li>
 <li>www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate</li>
 <li>www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate</li>
+<li>www-data ALL = (root) NOPASSWD: /usr/bin/macchanger</li>
+<li>www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1</li>
+<li>www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq</li>
+<li>www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq</li>
+<li>www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq</li>
+<li>www-data ALL = (root) NOPASSWD: /sbin/iptables</li>
 </ul>
       </section>
     </div>
@@ -255,5 +270,18 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-18361926-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
   </body>
 </html>
