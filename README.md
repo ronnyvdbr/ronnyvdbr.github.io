@@ -168,14 +168,3 @@ Login to your Raspberry Pi using pi as username.
 * www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq
 * www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
 * www-data ALL = (root) NOPASSWD: /sbin/iptables
-
-
-sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-sudo touch /etc/iptables.up.rules
-sudo iptables-save > /etc/iptables.up.rules
-editor /etc/network/if-pre-up.d/iptables
-
- #!/bin/sh
- /sbin/iptables-restore < /etc/iptables.up.rules
-
-chmod +x /etc/network/if-pre-up.d/iptables
