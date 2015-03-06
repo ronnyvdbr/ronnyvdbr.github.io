@@ -114,7 +114,9 @@ Login to your Raspberry Pi using pi as username.
 * sudo chgrp www-data /etc/network/interfaces
 * sudo chmod g+w /etc/network/interfaces
 
-* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/network/interfaces
+* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
+* sudo chgrp www-data /etc/dnsmasq.conf
+* sudo chmod g+w /etc/dnsmasq.conf
 
 * sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
 * sudo chgrp www-data /etc/hostapd/hostapd.conf
