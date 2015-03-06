@@ -7,6 +7,8 @@ a dynamic web interface designed in HTML/PHP.
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
+[Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.gz)
+
 ####Licensing:
 This software is released as free software under the General Public License, everyone is free to do with it what he wants.
 
@@ -99,7 +101,8 @@ Login to your Raspberry Pi using pi as username.
 * sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 * sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 
-###### Let's setup bridge utils, macchanger, and dnsmasq:
+###### Let's setup iw, bridge utils, macchanger, and dnsmasq:
+* sudo apt-get -y install iw
 * sudo apt-get -y install bridge-utils
 * sudo apt-get -y install macchanger
 * sudo apt-get -y install dnsmasq
@@ -110,6 +113,10 @@ Login to your Raspberry Pi using pi as username.
 * sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 * sudo chgrp www-data /etc/network/interfaces
 * sudo chmod g+w /etc/network/interfaces
+
+* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
+* sudo chgrp www-data /etc/dnsmasq.conf
+* sudo chmod g+w /etc/dnsmasq.conf
 
 * sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
 * sudo chgrp www-data /etc/hostapd/hostapd.conf
