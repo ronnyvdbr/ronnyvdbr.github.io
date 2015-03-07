@@ -47,4 +47,5 @@ enter
 +700M
 w
 sudo reboot
+sudo resize2fs /dev/mmcblk0p2
 
