@@ -96,7 +96,8 @@ Login to your Raspberry Pi using pi as username.
 * sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so
 * sudo ln -s libnl-3.so.200.5.2 libnl.so
 * cd ~/hostapd-2.3/hostapd
-* make
+* sudo apt-get -y install make
+* sudo make
 
 ###### Now overwrite the old hostapd binaries with the newly compiled ones:
 * sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
