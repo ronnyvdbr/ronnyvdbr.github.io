@@ -35,3 +35,16 @@ sed -i 's/# eval "`dircolors`"/eval "`dircolors`"/g' /etc/passwd
 sed -i 's/# alias ls='ls $LS_OPTIONS'/alias ls='ls $LS_OPTIONS'/g' /etc/passwd
 sed -i 's/# alias ll='ls $LS_OPTIONS -l'/alias ll='ls $LS_OPTIONS -l'/g' /etc/passwd
 sed -i 's/# alias l='ls $LS_OPTIONS -lA'/alias l='ls $LS_OPTIONS -lA'/g' /etc/passwd
+
+sudo fdisk /dev/mmcblk0
+p
+d
+2
+n
+p
+2
+enter
++700M
+w
+sudo reboot
+
