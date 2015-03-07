@@ -1,0 +1,37 @@
+### Preparing an ssd card with a small size Rasbian Installation
+
+Let's not re-invent the wheel and create a minimal installation ourself, there already exist a nice project for that:
+http://sourceforge.net/projects/minibian/
+let's download this image, put it to ssd with w32diskimager.
+
+### Modifying the miniban installation to our needs:
+
+rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
+apt-get update
+apt-get install fake-hwclock
+dpkg-reconfigure tzdata
+apt-get install locales
+dpkg-reconfigure locales
+apt-get install console-setup keyboard-configuration
+dpkg-reconfigure keyboard-configuration
+apt-get update && apt-get dist-upgrade
+apt-get install ntpdate
+ntpdate uk.pool.ntp.org
+rpi-update
+apt-get -y wireless-tools
+apt-get install firmware-ralink
+apt-get install sudo
+useradd pi
+useradd -G sudo pi
+mkdir /home/pi
+cp /root/.profile /home/pi/.profile
+cp /root/.bashrc /home/pi/.bashrc
+chown -R pi /home/pi
+chgrp -R pi /home/pi
+chmod -R 755 /home/pi
+sed -i 's/pi:x:1000:1000::\/home\/pi:\/bin\/sh/pi:x:1000:1000::\/home\/pi:\/bin\/bash/g' /etc/passwd
+sed -i 's/# export LS_OPTIONS='--color=auto'/export LS_OPTIONS='--color=auto'/g' /etc/passwd
+sed -i 's/# eval "`dircolors`"/eval "`dircolors`"/g' /etc/passwd
+sed -i 's/# alias ls='ls $LS_OPTIONS'/alias ls='ls $LS_OPTIONS'/g' /etc/passwd
+sed -i 's/# alias ll='ls $LS_OPTIONS -l'/alias ll='ls $LS_OPTIONS -l'/g' /etc/passwd
+sed -i 's/# alias l='ls $LS_OPTIONS -lA'/alias l='ls $LS_OPTIONS -lA'/g' /etc/passwd
