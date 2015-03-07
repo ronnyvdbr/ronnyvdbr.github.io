@@ -89,8 +89,8 @@ Login to your Raspberry Pi using pi as username.
 ###### Let's configure some things before we start compiling:
 * cp defconfig .config
 * sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config
-* sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
-* sed -i 's/#LIBS += -L$<path to libnl library files>/LIBS += -L\/lib\/arm-linux-gnueabihf/g' .config
+* sed -i 's/#CFLAGS += -I$\<path to libnl include files\>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
+* sed -i 's/#LIBS += -L$\<path to libnl library files\>/LIBS += -L\/lib\/arm-linux-gnueabihf/g' .config
 * sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' .config
 * cd /lib/arm-linux-gnueabihf
 * sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so
