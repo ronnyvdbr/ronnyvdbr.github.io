@@ -151,22 +151,22 @@ Login to your Raspberry Pi using pi as username.
 
 ###### Paste all the below commands in the file and save it by pressing Ctrl-X and pressing y
 
-* www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
-* www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
-* www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
-* www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
-* www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart
-* www-data ALL = (root) NOPASSWD: /sbin/ifconfig *
-* www-data ALL = (root) NOPASSWD: /sbin/brctl *
-* www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-* www-data ALL = (root) NOPASSWD: /sbin/service *
-* www-data ALL = (root) NOPASSWD: /sbin/ifdown *
-* www-data ALL = (root) NOPASSWD: /sbin/ifup *
-* www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-* www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-* www-data ALL = (root) NOPASSWD: /usr/bin/macchanger
-* www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1
-* www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq
-* www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq
-* www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
-* www-data ALL = (root) NOPASSWD: /sbin/iptables
+echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/ifconfig *' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/brctl *' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/service *' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/ifdown *' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/ifup *' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /usr/bin/macchanger' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/iptables' | sudo tee --append /etc/sudoers.d/wr_commands
