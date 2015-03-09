@@ -28,8 +28,8 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 
 ##### After the net-install, login to your Raspberry Pi using root and raspbian as password, then continue the rest of the prep:
 
-sudo apt-get -y install git-core
-git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
+* sudo apt-get -y install git-core
+* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
 
 
 
