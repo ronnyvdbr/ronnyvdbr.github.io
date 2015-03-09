@@ -27,9 +27,9 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 * Credits go out to [Debian Pi](https://github.com/debian-pi/raspbian-ua-netinst), you can grab a copy of their latest net-installer [https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6](https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6).  Format your SSD fat32, and extract the zip onto the ssd.  Put into Raspberry Pi, and boot it up, it's just as simple as that.
 
 ##### After the net-install, login to your Raspberry Pi using root and raspbian as password, then continue the rest of the prep:
-
-* sudo apt-get -y install git-core
-* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git
+* apt-get -y install git-core
+* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
+* sh /home/pi/Raspberry-Wifi-Router/installer.sh
 
 
 
