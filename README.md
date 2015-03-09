@@ -51,10 +51,10 @@ After the net-install, login to your Raspberry Pi using root and raspbian as pas
 * chmod -R 755 /home/pi
 * sed -i 's/pi:x:1000:1000::\/home\/pi:\/bin\/sh/pi:x:1000:1000::\/home\/pi:\/bin\/bash/g' /etc/passwd
 * sed -i 's/# export LS_OPTIONS='--color=auto'/export LS_OPTIONS='--color=auto'/g' /home/pi/.bashrc
-* sed -i 's/# eval "`dircolors`"/eval "`dircolors`"/g' /home/pi/.bashrc
-* sed -i 's/# alias ls=\'ls $LS_OPTIONS\'/alias ls=\'ls $LS_OPTIONS\'/g' /home/pi/.bashrc
-* sed -i 's/# alias ll='ls $LS_OPTIONS -l'/alias ll='ls $LS_OPTIONS -l'/g' /home/pi/.bashrc
-* sed -i 's/# alias l='ls $LS_OPTIONS -lA'/alias l='ls $LS_OPTIONS -lA'/g' /home/pi/.bashrc
+* sed -i s/# eval "`dircolors`"/eval "`dircolors`"/g' /home/pi/.bashrc
+* sed -i "s/# alias ls=\'ls $LS_OPTIONS\'/alias ls=\'ls $LS_OPTIONS\'/g" /home/pi/.bashrc
+* sed -i "s/# alias ll='ls $LS_OPTIONS -l'/alias ll='ls $LS_OPTIONS -l'/g" /home/pi/.bashrc
+* sed -i "s/# alias l='ls $LS_OPTIONS -lA'/alias l='ls $LS_OPTIONS -lA'/g" /home/pi/.bashrc
 
 sudo apt-get -y install git-core
 apt-get update && apt-get dist-upgrade
