@@ -1,6 +1,8 @@
 rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
-dpkg-reconfigure tzdata
-dpkg-reconfigure locales
+echo "Europe/Dublin" > /etc/timezone    
+dpkg-reconfigure -f noninteractive tzdata
+
+dpkg-reconfigure -f locales
 apt-get install console-setup keyboard-configuration
 dpkg-reconfigure keyboard-configuration
 apt-get -y install rpi-update
