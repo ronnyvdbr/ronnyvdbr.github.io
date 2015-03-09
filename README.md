@@ -12,7 +12,7 @@ Download: [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/Raspb
 
 For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
 
-#### Getting started:
+##### Getting started:
 Before getting started, make sure you have the right equipment at hand:
 * Raspberry Pi - Model B - other models might work but are untested.
 * Ssd card formatted fat32
