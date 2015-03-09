@@ -137,6 +137,8 @@ Login to your Raspberry Pi using pi as username.
 
 * sudo chgrp www-data /etc/timezone
 * sudo chmod g+w /etc/timezone
+
+* sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini
  
 
 
