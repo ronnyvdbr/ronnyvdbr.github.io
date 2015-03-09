@@ -7,10 +7,10 @@ a dynamic web interface designed in HTML/PHP.
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
-###### For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
+For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
 Download: [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.gz)
 
-###### For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
+For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
 
 ####Licensing:
 This software is released as free software under the General Public License, everyone is free to do with it what he wants.
