@@ -74,8 +74,6 @@ sudo update-rc.d hostapd defaults
 sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
 sudo chgrp www-data /etc/dhcp/dhclient.conf
 sudo chmod g+w /etc/dhcp/dhclient.conf
-sudo chgrp www-data /etc/ntp.conf
-sudo chmod g+w /etc/ntp.conf
 sudo chgrp www-data /etc/timezone
 sudo chmod g+w /etc/timezone
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini
