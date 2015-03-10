@@ -50,7 +50,6 @@ sudo ln -s libnl-3.so.200.5.2 libnl.so
 cd ~/hostapd-2.3/hostapd
 sudo apt-get -y install make
 sudo make
-
 sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 sudo apt-get -y install iw
@@ -66,10 +65,8 @@ sudo chmod g+w /etc/dnsmasq.conf
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
 sudo chgrp www-data /etc/hostapd/hostapd.conf
 sudo chmod g+w /etc/hostapd/hostapd.conf
-sudo /etc/init.d/hostapd start
 sudo update-rc.d hostapd defaults
 sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
-sudo /etc/init.d/lighttpd force-reload
 sudo chgrp www-data /etc/dhcp/dhclient.conf
 sudo chmod g+w /etc/dhcp/dhclient.conf
 sudo chgrp www-data /etc/ntp.conf
@@ -100,5 +97,10 @@ echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq' | sudo tee --
 echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /sbin/iptables' | sudo tee --append /etc/sudoers.d/wr_commands
-apt-get update && apt-get dist-upgrade
-firmware-ralink
+sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http://archive.raspbian.org/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
+apt-get update 
+apt-get -y install firmware-ralink
+sudo sed -i 's/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/g' /etc/apt/sources.list
+apt-get update
+reboot
+
