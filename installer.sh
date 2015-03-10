@@ -1,17 +1,13 @@
 rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
 echo "Europe/Dublin" > /etc/timezone    
 dpkg-reconfigure -f noninteractive tzdata
-
-dpkg-reconfigure -f locales
-apt-get install console-setup keyboard-configuration
-dpkg-reconfigure keyboard-configuration
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+/usr/sbin/locale-gen
 apt-get -y install rpi-update
 rpi-update
-apt-get -y install wireless-tools
-apt-get install firmware-ralink
-apt-get install sudo
+apt-get -y install sudo
 useradd pi
-useradd -G sudo pi
+usermod -a -G sudo pi
 mkdir /home/pi
 cp /root/.profile /home/pi/.profile
 cp /root/.bashrc /home/pi/.bashrc
@@ -19,14 +15,13 @@ chown -R pi /home/pi
 chgrp -R pi /home/pi
 chmod -R 755 /home/pi
 sed -i 's/pi:x:1000:1000::\/home\/pi:\/bin\/sh/pi:x:1000:1000::\/home\/pi:\/bin\/bash/g' /etc/passwd
-sed -i 's/# export LS_OPTIONS='--color=auto'/export LS_OPTIONS='--color=auto'/g' /home/pi/.bashrc
-sed -i s/# eval "dircolors"/eval "dircolors"/g' /home/pi/.bashrc
-sed -i "s/# alias ls=\'ls $LS_OPTIONS\'/alias ls=\'ls $LS_OPTIONS\'/g" /home/pi/.bashrc
-sed -i "s/# alias ll='ls $LS_OPTIONS -l'/alias ll='ls $LS_OPTIONS -l'/g" /home/pi/.bashrc
-sed -i "s/# alias l='ls $LS_OPTIONS -lA'/alias l='ls $LS_OPTIONS -lA'/g" /home/pi/.bashrc
+sed -i 's/# export LS_OPTIONS=/export LS_OPTIONS=/g' /home/pi/.bashrc
+sed -i 's/# eval/eval/g' /home/pi/.bashrc
+sed -i "s/# alias ls=/alias ls=/g" /home/pi/.bashrc
+sed -i "s/# alias ll=/alias ll=/g" /home/pi/.bashrc
+sed -i "s/# alias l=/alias l=/g" /home/pi/.bashrc
 sudo apt-get -y install lighttpd php5-common php5-cgi php5
 sudo lighty-enable-mod fastcgi-php
-sudo /etc/init.d/lighttpd force-reload
 sudo rm -R /var/www
 sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
 sudo chown pi:www-data /var/www
@@ -36,7 +31,7 @@ sudo chmod 775 /var/www
 sudo usermod -a -G www-data pi
 sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
 sudo /etc/init.d/lighttpd force-reload
-sudo apt-get -y install hostapd
+apt-get -y install wireless-tools hostapd
 sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/init.d/hostapd
 sudo apt-get -y install libnl-3-dev
 sudo apt-get -y install libnl-genl-3-dev
@@ -45,7 +40,7 @@ wget http://w1.fi/releases/hostapd-2.3.tar.gz
 tar -zxvf hostapd-2.3.tar.gz
 cd ~/hostapd-2.3/hostapd
 cp defconfig .config
-sed -i 's/#CONFIG_LIBNL20=y/CONFIG_LIBNL20=y/g' .config
+sed -i 's/#CONFIG_LIBNL32=y/CONFIG_LIBNL32=y/g' .config
 sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
 sed -i 's/#LIBS += -L$<path to libnl library files>/LIBS += -L\/lib\/arm-linux-gnueabihf/g' .config
 sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' .config
@@ -55,6 +50,7 @@ sudo ln -s libnl-3.so.200.5.2 libnl.so
 cd ~/hostapd-2.3/hostapd
 sudo apt-get -y install make
 sudo make
+
 sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
 sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 sudo apt-get -y install iw
@@ -105,3 +101,4 @@ echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq' | sudo tee -
 echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /sbin/iptables' | sudo tee --append /etc/sudoers.d/wr_commands
 apt-get update && apt-get dist-upgrade
+firmware-ralink
