@@ -61,6 +61,9 @@ sudo apt-get -y install dnsmasq
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 sudo chgrp www-data /etc/network/interfaces
 sudo chmod g+w /etc/network/interfaces
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf
+sudo chgrp www-data /etc/ntp.conf
+sudo chmod g+w /etc/ntp.conf
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
 sudo chgrp www-data /etc/dnsmasq.conf
 sudo chmod g+w /etc/dnsmasq.conf
@@ -79,6 +82,7 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/rou
 sudo umount /dev/mmcblk0p1
 sudo sed -i 's/\/dev\/mmcblk0p1 \/boot vfat defaults 0 2/\/dev\/mmcblk0p1 \/boot vfat rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro 0 2/g' /etc/fstab
 sudo mount /dev/mmcblk0p1
+sudo update-rc.d -f ntp remove
 sudo touch /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload' | sudo tee --append /etc/sudoers.d/wr_commands
