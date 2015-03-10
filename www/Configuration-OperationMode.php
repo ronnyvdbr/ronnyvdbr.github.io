@@ -192,17 +192,17 @@ function ReturnReadyOperation() {
 				update_interfaces_file("Access Point");
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
-				
-				shell_exec("sudo ifconfig eth0 down");
-				shell_exec("sudo ifconfig eth0 hw ether 00:11:22:33:44:56");
-				shell_exec("sudo ifconfig eth0 up");
-				
 				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0");
 				shell_exec("sudo sysctl disable dnsmasq");
 				shell_exec("sudo /etc/init.d/dnsmasq stop");
+				shell_exec("sudo ip addr flush dev eth0");
+				shell_exec("sudo ip addr flush dev wlan0");
+				shell_exec("sudo ifconfig eth0 down");
+				shell_exec("sudo ifconfig eth0 hw ether 20:11:22:33:44:56");
+				shell_exec("sudo ifconfig eth0 up");
+
+				shell_exec("sudo ifup br0");			
 				
-				shell_exec("sudo /etc/init.d/networking restart");
-				shell_exec("sudo /etc/init.d/hostapd restart");
 				echo "<script>$('#functionstat').text('Access Point');</script>";
 				echo "<script>$('#selectopsmode').val('Router');</script>";
 			}

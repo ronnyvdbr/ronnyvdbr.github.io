@@ -299,9 +299,11 @@ function ReturnFailure(error) {
 		flush();
 		if 	(array_key_exists ("timesync_checkbox" , $_POST)) {
 			shell_exec("sudo /etc/init.d/ntp force-reload");
+			shell_exec("sudo update-rc.d ntp defaults");
 		}
 		else {
 			shell_exec("sudo /etc/init.d/ntp stop");
+			shell_exec("sudo update-rc.d -f ntp remove");
 		}
 		echo "<script>ReturnReadyTimesync();</script>";
 	  }

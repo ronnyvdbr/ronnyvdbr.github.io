@@ -109,7 +109,7 @@
 			  array_push($arrdata,"smsc95xx.macaddr=" . $configurationsettings['lanmac']);
 			}
 			else {
-			  array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:55");
+			  array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:55");
 			}
 			
 			$arrdata = str_replace("\n","",$arrdata);
@@ -137,11 +137,13 @@
 			if (strcmp($configurationsettings['lantype'],"dhcp") == 0) {
 				array_push($networksettings,"auto br0\n");
 				array_push($networksettings,"iface br0 inet dhcp\n");
+				array_push($networksettings,"pre-up service hostapd stop\n");
 				array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
+				array_push($networksettings,"pre-up service hostapd start\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
 				else {
-					array_push($networksettings,"hwaddress ether 00:11:22:33:44:55" . "\n");
+					array_push($networksettings,"hwaddress ether 20:11:22:33:44:55" . "\n");
 					$strdata = file_get_contents ("/boot/cmdline.txt");
 					$arrdata = explode (" ",$strdata);
 					foreach($arrdata as $key => $value) {
@@ -149,7 +151,7 @@
 						unset($arrdata[$key]);
 					  }
 					}
-					array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:56");
+					array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:56");
 					$arrdata = str_replace("\n","",$arrdata);
 					file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
 				}
@@ -166,7 +168,7 @@
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
 				else {
-					array_push($networksettings,"hwaddress ether 00:11:22:33:44:55" . "\n");
+					array_push($networksettings,"hwaddress ether 20:11:22:33:44:55" . "\n");
 					$strdata = file_get_contents ("/boot/cmdline.txt");
 					$arrdata = explode (" ",$strdata);
 					foreach($arrdata as $key => $value) {
@@ -174,7 +176,7 @@
 						unset($arrdata[$key]);
 					  }
 					}
-					array_push($arrdata,"smsc95xx.macaddr=00:11:22:33:44:56");
+					array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:56");
 					$arrdata = str_replace("\n","",$arrdata);
 					file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
 				}
