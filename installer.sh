@@ -1,4 +1,5 @@
 rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
+echo 'root:raspberry'|chpasswd
 echo "Europe/Dublin" > /etc/timezone    
 dpkg-reconfigure -f noninteractive tzdata
 sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
@@ -7,6 +8,7 @@ apt-get -y install rpi-update
 rpi-update
 apt-get -y install sudo
 useradd pi
+echo 'pi:raspberry'|chpasswd
 usermod -a -G sudo pi
 mkdir /home/pi
 cp /root/.profile /home/pi/.profile
