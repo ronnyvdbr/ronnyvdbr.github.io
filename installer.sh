@@ -81,6 +81,8 @@ sudo umount /dev/mmcblk0p1
 sudo sed -i 's/\/dev\/mmcblk0p1 \/boot vfat defaults 0 2/\/dev\/mmcblk0p1 \/boot vfat rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro 0 2/g' /etc/fstab
 sudo mount /dev/mmcblk0p1
 sudo update-rc.d -f ntp remove
+rm /etc/udev/rules.d/*
+echo '# ' | sudo tee --append /etc/udev/rules.d/75-persistent-net-generator.rules
 sudo touch /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload' | sudo tee --append /etc/sudoers.d/wr_commands
