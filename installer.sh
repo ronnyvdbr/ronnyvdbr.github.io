@@ -99,6 +99,7 @@ echo 'www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-
 echo 'www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /usr/bin/macchanger' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1' | sudo tee --append /etc/sudoers.d/wr_commands
+echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=0' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
