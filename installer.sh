@@ -107,7 +107,7 @@ echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /
 echo 'www-data ALL = (root) NOPASSWD: /sbin/iptables' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/update-rc.d' | sudo tee --append /etc/sudoers.d/wr_commands
 echo 'www-data ALL = (root) NOPASSWD: /bin/sed' | sudo tee --append /etc/sudoers.d/wr_commands
-sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http://archive.raspbian.org/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
+sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
 apt-get update 
 apt-get -y install firmware-ralink
 sudo sed -i 's/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/g' /etc/apt/sources.list
