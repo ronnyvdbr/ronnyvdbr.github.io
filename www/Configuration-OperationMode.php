@@ -155,53 +155,114 @@ function ReturnReadyOperation() {
 	  else {  
 		if (strcmp($opsmode, $configurationsettings['operationmode']) !== 0) {
 			if(strcmp($opsmode,'Router') == 0) {
+				logmessage("Reconfiguring operation mode to Router");
+				
+				logmessage("Rewriting /etc/network/interfaces file with settings for router mode");
 				update_interfaces_file("Router");
+				
+				logmessage("Updating /var/www/routersettings.ini for Router operation mode");
 				$configurationsettings['operationmode'] = "Router";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
-				shell_exec("sudo /sbin/ifdown eth0");
-				shell_exec("sudo /sbin/ifdown wlan0");
-				shell_exec("sudo /sbin/brctl delif br0 eth0");
-				shell_exec("sudo /sbin/brctl delif br0 wlan0");
-				shell_exec("sudo /sbin/ifdown br0");
-				shell_exec("sudo /sbin/ifconfig br0 down");
-				shell_exec("sudo /sbin/brctl delbr br0");
+				logmessage("Stopping Access Point Daemon");
+				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-				shell_exec("sudo service ifplugd stop");
-				shell_exec("sudo ifconfig eth0 down");
-				if(empty($configurationsettings['lanmac'])) {
-					shell_exec("sudo ifconfig eth0 hw ether 00:11:22:33:44:55");}
-				else
-					shell_exec("sudo ifconfig eth0 hw ether " . $configurationsettings['lanmac']);
-				shell_exec("sudo ifconfig eth0 up");
-				shell_exec("sudo ifup eth0");
-				shell_exec("sudo service ifplugd start");
+				logmessage("Unconfiguring interface eth0");
+				shell_exec("sudo ifdown eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-				shell_exec("sudo ifup wlan0");
-				shell_exec("sudo /etc/init.d/hostapd start");
+				//logmessage("Unconfiguring interface wlan0");
+				//shell_exec("sudo ifdown wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
-				shell_exec("sudo sysctl -w net.ipv4.ip_forward=1");
-				shell_exec("sudo sysctl enable dnsmasq");
-				shell_exec("sudo /etc/init.d/dnsmasq start");
-				shell_exec("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE");
+				logmessage("Deleting interface eth0 from bridge br0");
+				shell_exec("sudo brctl delif br0 eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Deleting interface wlan0 from bridge br0");
+				shell_exec("sudo brctl delif br0 wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Unconfiguring interface br0");
+				shell_exec("sudo ifdown br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Bringing bridge interface br0 down");
+				shell_exec("sudo ifconfig br0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Deleting bridge interface br0");
+				shell_exec("sudo brctl delbr br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+				logmessage("Bringing interface eth0 down");
+				shell_exec("sudo ifconfig eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(empty($configurationsettings['lanmac'])) {
+					logmessage("Configuring default mac address 20:11:22:33:44:55 on interface eth0");
+					shell_exec("sudo ifconfig eth0 hw ether 20:11:22:33:44:55 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+					logmessage("Configuring mac address " . $configurationsettings['lanmac'] . " from configuration file on interface eth0");
+					shell_exec("sudo ifconfig eth0 hw ether " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				logmessage("Bringing interface eth0 up");
+				shell_exec("sudo ifconfig eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Configuring interface eth0");
+				shell_exec("sudo ifup eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+				logmessage("Starting Access Point Management hostapd");
+				shell_exec("sudo service hostapd start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Setting ip address 192.168.1.1/32 on interface wlan0");
+				shell_exec("sudo ip addr add 192.168.1.1/24 dev wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Enabling ip forwarding");
+				shell_exec("sudo sysctl -w net.ipv4.ip_forward=1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Configuring dnsmasq to start at boot");
+				shell_exec("sudo update-rc.d dnsmasq defaults 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Starting dnsmasq");
+				shell_exec("sudo service dnsmasq start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Enabling NAT");
+				shell_exec("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				echo "<script>$('#functionstat').text('Router');</script>";
 				echo "<script>$('#selectopsmode').val('Access Point');</script>";
 			}
 			if(strcmp($opsmode,'Access Point') == 0) {
+				logmessage("Reconfiguring operation mode to Access Point");
+				
+				logmessage("Rewriting /etc/network/interfaces file with settings for router mode");
 				update_interfaces_file("Access Point");
+				
+				logmessage("Updating /var/www/routersettings.ini for Router operation mode");
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
-				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0");
-				shell_exec("sudo sysctl disable dnsmasq");
-				shell_exec("sudo /etc/init.d/dnsmasq stop");
-				shell_exec("sudo ip addr flush dev eth0");
-				shell_exec("sudo ip addr flush dev wlan0");
-				shell_exec("sudo ifconfig eth0 down");
-				shell_exec("sudo ifconfig eth0 hw ether 20:11:22:33:44:56");
-				shell_exec("sudo ifconfig eth0 up");
+				
+				logmessage("Disabling IP forwarding");
+				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Disabling dnsmasq to start at boot");
+				shell_exec("sudo update-rc.d -f dnsmasq remove 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Stopping dnsmasq service");
+				shell_exec("sudo service dnsmasq stop  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Stopping Access Point Management hostapd");
+				shell_exec("sudo /etc/init.d/hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Removing IP address from eth0");
+				shell_exec("sudo ip addr flush dev eth0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-				shell_exec("sudo ifup br0");			
+				logmessage("Removing IP address from wlan0");
+				shell_exec("sudo ip addr flush dev wlan0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Bringing interface eth0 down");
+				shell_exec("sudo ifconfig eth0 down  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+				logmessage("Setting default mac address 20:11:22:33:44:56 on eth0 for access point mode");
+				shell_exec("sudo ifconfig eth0 hw ether 20:11:22:33:44:56  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Bringing interface eth0 up");
+				shell_exec("sudo ifconfig eth0 up  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+				logmessage("Configuring interface br0");
+				shell_exec("sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
 				
 				echo "<script>$('#functionstat').text('Access Point');</script>";
 				echo "<script>$('#selectopsmode').val('Router');</script>";

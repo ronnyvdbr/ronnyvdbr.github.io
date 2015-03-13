@@ -1,5 +1,8 @@
 <?php
-
+	function logmessage($message) {
+		shell_exec("sudo echo '" . $message . "' | sudo tee --append /var/log/raspberrywap.log");
+	}
+	
 
 	function test_input($data) {
 	  $data = trim($data);
@@ -138,7 +141,7 @@
 				array_push($networksettings,"auto br0\n");
 				array_push($networksettings,"iface br0 inet dhcp\n");
 				array_push($networksettings,"pre-up service hostapd stop\n");
-				array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
+				//array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
 				array_push($networksettings,"pre-up service hostapd start\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
@@ -164,7 +167,7 @@
 			if (strcmp($configurationsettings['lantype'],"static") == 0) {
 				array_push($networksettings,"auto br0\n");
 				array_push($networksettings,"iface br0 inet static\n");
-				array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
+				//array_push($networksettings,"pre-up iw dev wlan0 set 4addr on\n");
 				if(!empty($configurationsettings['lanmac'])) 
 					array_push($networksettings,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
 				else {
