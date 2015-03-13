@@ -58,6 +58,7 @@ sudo apt-get -y install iw
 sudo apt-get -y install bridge-utils
 sudo apt-get -y install macchanger
 sudo apt-get -y install dnsmasq
+sudo apt-get -y install iptables
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 sudo chgrp www-data /etc/network/interfaces
 sudo chmod g+w /etc/network/interfaces
