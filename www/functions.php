@@ -3,6 +3,17 @@
 		shell_exec("sudo echo '" . $message . "' | sudo tee --append /var/log/raspberrywap.log");
 	}
 	
+	function mask2cidr($mask){
+	  $long = ip2long($mask);
+	  $base = ip2long('255.255.255.255');
+	  return 32-log(($long ^ $base)+1,2);
+	
+	  /* xor-ing will give you the inverse mask,
+		  log base 2 of that +1 will return the number
+		  of bits that are off in the mask and subtracting
+		  from 32 gets you the cidr notation */
+			
+	}
 
 	function test_input($data) {
 	  $data = trim($data);
@@ -10,6 +21,24 @@
 	  $data = htmlspecialchars($data);
 	  return $data;
 	}
+	
+
+	function hostapd_addbridge($action) {
+		$hostapdconfig = parse_ini_file("/etc/hostapd/hostapd.conf");
+		switch($action) {
+			case "enable":
+				if(!walk($hostapdconfig, 'bridge'))
+					$hostapdconfig['bridge'] = "br0";
+					write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
+			break;
+			case "disable":
+				if(walk($hostapdconfig, 'bridge'))
+					unset($hostapdconfig['bridge']);
+					write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
+			break;
+		}
+	}
+
   
 	function write_php_ini($array, $file)
 	{
@@ -26,7 +55,24 @@
 		safefilerewrite($file, implode("\r\n", $res));
 	}
 
-
+	function write_hostapd_conf($array, $file)
+	{
+		$res = array();
+		foreach($array as $key => $val)
+		{
+			if(is_array($val))
+			{
+				$res[] = "[$key]";
+				foreach($val as $skey => $sval) $res[] = "$skey=$sval";
+			}
+			else $res[] = "$key=$val";
+		}
+		safefilerewrite($file, implode("\n", $res));
+	}
+	
+	
+	
+	
 	function safefilerewrite($fileName, $dataToSave)
 	{    if ($fp = fopen($fileName, 'w'))
 		{

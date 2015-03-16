@@ -1,0 +1,24 @@
+www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
+www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
+www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
+www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
+www-data ALL = (root) NOPASSWD: /sbin/ifconfig
+www-data ALL = (root) NOPASSWD: /sbin/brctl
+www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+www-data ALL = (root) NOPASSWD: /usr/sbin/service
+www-data ALL = (root) NOPASSWD: /sbin/ifdown
+www-data ALL = (root) NOPASSWD: /sbin/ifup
+www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+www-data ALL = (root) NOPASSWD: /usr/bin/macchanger
+www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1
+www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=0
+www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq
+www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq
+www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
+www-data ALL = (root) NOPASSWD: /sbin/iptables
+www-data ALL = (root) NOPASSWD: /usr/sbin/update-rc.d
+www-data ALL = (root) NOPASSWD: /bin/sed
+www-data ALL = (root) NOPASSWD: /usr/bin/tee
+www-data ALL = (root) NOPASSWD: /sbin/ip
+www-data ALL = (root) NOPASSWD: /bin/echo

@@ -202,12 +202,15 @@ function ReturnReadyOperation() {
 				shell_exec("sudo ifconfig eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Configuring interface eth0");
 				shell_exec("sudo ifup eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-
+				
+				logmessage("Removing bridge parameter from hostapd config.");
+				hostapd_addbridge("disable");
+				
 				logmessage("Starting Access Point Management hostapd");
 				shell_exec("sudo service hostapd start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
-				logmessage("Setting ip address 192.168.1.1/32 on interface wlan0");
-				shell_exec("sudo ip addr add 192.168.1.1/24 dev wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Setting ip address " . $configurationsettings['wifiip'] . "/" . mask2cidr($configurationsettings['wifimask']) . " on interface wlan0");
+				shell_exec("sudo ip addr add " . $configurationsettings['wifiip'] . "/" . mask2cidr($configurationsettings['wifimask']) . " dev wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Enabling ip forwarding");
 				shell_exec("sudo sysctl -w net.ipv4.ip_forward=1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -217,20 +220,28 @@ function ReturnReadyOperation() {
 				
 				logmessage("Starting dnsmasq");
 				shell_exec("sudo service dnsmasq start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				
+
 				logmessage("Enabling NAT");
 				shell_exec("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				echo "<script>$('#functionstat').text('Router');</script>";
 				echo "<script>$('#selectopsmode').val('Access Point');</script>";
 			}
+			
+			
+			
+			
+			
+			
+			
+			
 			if(strcmp($opsmode,'Access Point') == 0) {
 				logmessage("Reconfiguring operation mode to Access Point");
 				
-				logmessage("Rewriting /etc/network/interfaces file with settings for router mode");
+				logmessage("Rewriting /etc/network/interfaces file with settings for Access Point mode");
 				update_interfaces_file("Access Point");
 				
-				logmessage("Updating /var/www/routersettings.ini for Router operation mode");
+				logmessage("Updating /var/www/routersettings.ini for Access Point operation mode");
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
@@ -244,7 +255,7 @@ function ReturnReadyOperation() {
 				shell_exec("sudo service dnsmasq stop  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Stopping Access Point Management hostapd");
-				shell_exec("sudo /etc/init.d/hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Removing IP address from eth0");
 				shell_exec("sudo ip addr flush dev eth0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -261,6 +272,12 @@ function ReturnReadyOperation() {
 				logmessage("Bringing interface eth0 up");
 				shell_exec("sudo ifconfig eth0 up  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
+				logmessage("Adding bridge parameter to hostapd config.");
+				hostapd_addbridge("enable");
+
+				logmessage("Starting Access Point Management hostapd");
+				shell_exec("sudo service hostapd start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
 				logmessage("Configuring interface br0");
 				shell_exec("sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
 				

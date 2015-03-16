@@ -10,6 +10,6 @@ iface eth0 inet manual
 auto br0
 iface br0 inet dhcp
 pre-up iw dev wlan0 set 4addr on
-hwaddress ether 00:11:22:33:44:55
+hwaddress ether 20:11:22:33:44:55
 bridge_ports wlan0 eth0
 

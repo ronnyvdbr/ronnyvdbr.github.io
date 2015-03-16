@@ -104,6 +104,7 @@ function ReturnFailurePppoe(error) {
 <!-- ********************************************************************************************************************** -->
   <?php 
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttondynamic'])) {
+	  logmessage("Processing Dynamic IP form data.");
 	  $macchange = false;
 	  $dhcpuid = $primarydns = $secondarydns = $mtus = $mac = "";
 	  $dhcpuiderr = $primarydnserr = $secondarydnserr = $mtuerr = $macerr = "";
@@ -141,6 +142,7 @@ function ReturnFailurePppoe(error) {
 		$configurationsettings['lantype'] = "dhcp";
 		$configurationsettings['dhcpuid'] = $dhcpuid;
 		if(isset($_POST['overridedns'])) {
+		  logmessage("Setting DNS override, reading /etc/dhcp/dhclient.conf and changing settings.");
 		  $configurationsettings['dhcpdnsoverride'] = "enabled";
 		  $dhclientconf = file("/etc/dhcp/dhclient.conf");
 		  foreach($dhclientconf as $key => $value) {
@@ -159,9 +161,11 @@ function ReturnFailurePppoe(error) {
 				array_push($dhclientconf,"supersede domain-name-servers " . $primarydns . "," . $secondarydns . ";\n");
 			  }
 		  }
-		  file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
+		  //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
+		  //file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
 		}
 		else {
+		  logmessage("DNS override not set, setting config file accordingly, reading /etc/dhcp/dhclient.conf");
 		  $configurationsettings['dhcpdnsoverride'] = "disabled";
 		  $dhclientconf = file("/etc/dhcp/dhclient.conf");
 		  foreach($dhclientconf as $key => $value) {
@@ -169,17 +173,20 @@ function ReturnFailurePppoe(error) {
 			  unset($dhclientconf[$key]);
 			}
 		  }
-		  file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
+		  //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
+		  //file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
 		}
 		$configurationsettings['dns1'] = $primarydns;
 		$configurationsettings['dns2'] = $secondarydns;
 		$configurationsettings['lanmtu'] = $mtus;
-		$dhclientconf = file("/etc/dhcp/dhclient.conf");
+	    //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
+		//$dhclientconf = file("/etc/dhcp/dhclient.conf");
 		foreach($dhclientconf as $key => $value) {
 		  if (strpos($value, 'send host-name =') !== FALSE) {
 			$dhclientconf[$key] = "send host-name = \"" . $dhcpuid . "\";\n";
 		  }
 		}
+	    logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
 		file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
 		$macchange = false;
 		if(strcmp($mac,$configurationsettings['lanmac']) !== 0) {$macchange = true;}
@@ -187,7 +194,9 @@ function ReturnFailurePppoe(error) {
 			$configurationsettings['lanmac'] = '';
 		else 
 			$configurationsettings['lanmac'] = $mac;
+	    logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
 	}
@@ -195,6 +204,8 @@ function ReturnFailurePppoe(error) {
 <!-- ********************************************************************************************************************** -->
   <?php
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttonstatic'])) {
+  	  logmessage("Processing Static IP form data.");
+
 	  $ipaddress = $subnetmask = $defaultgateway = $primarydns = $secondarydns = $mtus = $macaddress = "";
 	  $ipaddresserr = $subnetmaskerr = $defaultgatewayerr = $primarydnserr = $secondarydnserr = $mtuerr = $macaddresserr = "";
 	  
@@ -269,8 +280,11 @@ function ReturnFailurePppoe(error) {
 			$configurationsettings['lanmac'] = '';
 		else 
 			$configurationsettings['lanmac'] = $mac;
-		
+
+	    logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+
+		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
 	}
@@ -343,6 +357,8 @@ function ReturnFailurePppoe(error) {
 	}
   ?>
 <!-- ********************************************************************************************************************** -->
+<!-- Forms -->
+<!-- ********************************************************************************************************************** -->
   <div id="ContentTitle">
   <span>Network Settings</span></div>
   
@@ -367,7 +383,7 @@ function ReturnFailurePppoe(error) {
   </div><!-- end div contentarticle -->
   
   <br />
-  
+<!-- ********************************************************************************************************************** -->  
   <div id="conf-dhcp">
     <div id="ContentTitle"><span>Dynamic IP (DHCP)</span></div>
     <div id="ContentArticle">
@@ -551,33 +567,39 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttondynamic'])) {
 	  // only apply shell actions when no form errors are present
 	  if(empty($dhcpuiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
+		logmessage("Starting to apply dhcp form changes.");
 		echo "<script>ReturnProgressDynamic();</script>";
-		// in case of mac change
 		flush();
+		// in case of mac change
 		if($macchange) { // and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
 			  } // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				shell_exec("sudo service ifplugd stop");
+				logmessage("Unconfiguring interface eth0 (ifdown)");
 				shell_exec("sudo ifdown eth0");
+				logmessage("Changing Mac address on interface eth0");
 				shell_exec("sudo ifconfig eth0 hw ether " . $mac);
+				logmessage("Configuring interface eth0 (ifup)");
 				shell_exec("sudo ifup eth0");
-				shell_exec("sudo service ifplugd start");
 			  }
 		}
 		// in case of no mac change
 		else { //and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
 			} // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
 				shell_exec("sudo ifdown eth0 && sudo ifup eth0");
 			}
 		}
 		echo "<script>ReturnReadyDynamic();</script>";
 	  }
 	  else { // if form errors are present, show them in the status cell on the form
+		logmessage("Wrong form data received: " . $dhcpuiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr);
 		echo "<script>ReturnFailureDynamic('" . $dhcpuiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr . "');</script>";
 	  }
 	}
@@ -587,27 +609,32 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttonstatic'])) {
 	  // only apply shell actions when no form errors are present
 	  if(empty($ipaddresserr) && empty($subnetmaskerr) && empty($defaultgatewayerr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macaddresserr)) {
+		logmessage("Starting to apply Static IP form changes.");
 		echo "<script>ReturnProgressStatic();</script>";
 		// in case of mac change
 		flush();
 		if($macchange) { // and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
 			  } // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				shell_exec("sudo service ifplugd stop");
+				logmessage("Unconfiguring interface eth0 (ifdown)");
 				shell_exec("sudo ifdown eth0");
+				logmessage("Changing Mac address on interface eth0");
 				shell_exec("sudo ifconfig eth0 hw ether " . $mac);
+				logmessage("Configuring interface eth0 (ifup)");
 				shell_exec("sudo ifup eth0");
-				shell_exec("sudo service ifplugd start");
 			  }
 		}
 		// in case of no mac change
 		else { //and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
 			} // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
 				shell_exec("sudo ifdown eth0 && sudo ifup eth0");
 			}
 		}
@@ -616,6 +643,7 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 	  else { // if form errors are present, show them in the status cell on the form
 		if(empty($ipaddress) || empty($subnetmask))
 		  echo "<script>ReturnFailureStatic('IP Address and Subnet Mask are required values!'";
+		logmessage("Reconfiguring interface eth0 (ifdown-ifup)" . $ipaddresserr . "'+'" . $subnetmaskerr . "'+'" . $defaultgatewayerr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macaddresserr);
 		echo "<script>ReturnFailureStatic('" . $ipaddresserr . "'+'" . $subnetmaskerr . "'+'" . $defaultgatewayerr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macaddresserr . "');</script>";
 	  }
 	}
