@@ -59,6 +59,8 @@ sudo apt-get -y install bridge-utils
 sudo apt-get -y install macchanger
 sudo apt-get -y install dnsmasq
 sudo apt-get -y install iptables
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands
+sudo chmod 644 /etc/sudoers.d/wr_commands
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 sudo chgrp www-data /etc/network/interfaces
 sudo chmod g+w /etc/network/interfaces
@@ -85,29 +87,6 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt
 sudo update-rc.d -f ntp remove
 rm /etc/udev/rules.d/*
 echo '# ' | sudo tee --append /etc/udev/rules.d/75-persistent-net-generator.rules
-sudo touch /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/hostapd restart' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/ifconfig *' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/brctl *' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /bin/rm /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/service *' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/ifdown *' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/ifup *' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /bin/chown root /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /bin/chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /usr/bin/macchanger' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=1' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl -w net.ipv4.ip_forward=0' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /sbin/iptables' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /usr/sbin/update-rc.d' | sudo tee --append /etc/sudoers.d/wr_commands
-echo 'www-data ALL = (root) NOPASSWD: /bin/sed' | sudo tee --append /etc/sudoers.d/wr_commands
 sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
 apt-get update 
 apt-get -y install firmware-ralink
