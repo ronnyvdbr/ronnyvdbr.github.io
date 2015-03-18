@@ -9,6 +9,8 @@ I'm putting my desing onto Github to share my work with the open source communit
 
 For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
 Download: [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.gz)
+The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
+Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.
 
 For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
 
