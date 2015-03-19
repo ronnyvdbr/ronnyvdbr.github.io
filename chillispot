@@ -1,0 +1,15 @@
+wget http://ap.coova.org/chilli/coova-chilli-1.3.0.tar.gz
+tar -zxvf ~/coova-chilli-1.3.0.tar.gz
+cd ~/coova-chilli-1.3.0
+echo "/usr/local/lib" | tee --append /etc/ld.conf
+ldconfig
+useradd chilli
+cp /usr/local/etc/chilli/defaults /usr/local/etc/chilli/config
+sed -i 's/# HS_WANIF=eth0/HS_WANIF=eth0/g' /usr/local/etc/chilli/config
+sed -i 's/HS_LANIF=eth1/HS_LANIF=wlan0/g' /usr/local/etc/chilli/config
+/usr/local/etc/init.d/chilli stop
+
+mkdir /usr/local/var
+ln -s /var/run /usr/local/var/run
+
+As /usr/local/var/run path did not exist, I created the /usr/local/var directory and then added a symlink dir called 'run' there, that links to /var/run
