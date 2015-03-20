@@ -36,6 +36,17 @@ cd haserl-0.9.35
 ./configure
 sudo make && sudo make install
 sed -i 's/START_CHILLI=0/START_CHILLI=1/g' /etc/default/chilli
+cp /etc/chilli/defaults /etc/chilli/config
+sed -i 's/# HS_WANIF=eth0/HS_WANIF=eth0/g' /etc/chilli/config
+sed -i 's/HS_LANIF=eth1/HS_LANIF=wlan0/g' /etc/chilli/config
+sed -i 's/HS_DNS1=208.67.222.222/HS_DNS1=8.8.8.8/g' /etc/chilli/config
+sed -i 's/HS_DNS2=208.67.220.220/HS_DNS2=8.8.4.4/g' /etc/chilli/config
+echo "iptables –I POSTROUTING –t nat –o $HS_WANIF –j MASQUERADE" | tee --append /etc/chilli/up.sh
+sed -i 's/haserl=$(which haserl 2>\/dev\/null)/haserl=\/usr\/local\/bin\/haserl/g' /etc/chilli/wwwsh
+
+
+
+
 
 
 
