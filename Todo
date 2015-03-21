@@ -1,0 +1,3 @@
+when rebooting after switch to router mode, there is no ip address on wlan0
+when switching from access point to router mode, the dhclient keeps running
+the shutdown of coova chilli doesn't work
