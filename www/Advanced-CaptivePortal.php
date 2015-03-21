@@ -13,12 +13,31 @@
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
 <script>
-$(document).ready(function(){
-   $('#Home').removeClass('active');
-   $('#Advanced').addClass('active');
-	$('#AdvancedUl').show();
-});
+function ReturnProgress_form_enableportal() {
+    document.getElementById('ReturnStatus_form_enableportal').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function ReturnReady_form_enableportal() {
+    document.getElementById('ReturnStatus_form_enableportal').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+}
+function ReturnProgress_form_addusers() {
+    document.getElementById('ReturnStatus_form_addusers').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function ReturnReady_form_addusers() {
+    document.getElementById('ReturnStatus_form_addusers').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+}
+function ReturnStatus_form_addusers(error) {
+    document.getElementById('ReturnStatus_form_addusers').innerHTML = '<img src="images/Fail.jpg" width="20" height="20"  alt=""/>' + error;
+}
+function ReturnProgress_form_deleteusers() {
+    document.getElementById('ReturnStatus_form_deleteusers').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function ReturnReady_form_deleteusers() {
+    document.getElementById('ReturnStatus_form_deleteusers').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+}
 </script>
+<?php include 'functions.php';?>
+<?php include 'mysqlfunctions.php';?>
+<?php logmessage("Loading Captive Portal page.");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -70,14 +89,182 @@ $(document).ready(function(){
     </nav>
   </div><!-- end .sidebar1 -->
   <!-- InstanceBeginEditable name="MenuExpander" -->
-  
+   <script>
+	$('#Home').removeClass('active');
+	$('#Advanced').addClass('active');
+	$('#AdvancedUl').show();
+  </script>
   <!-- InstanceEndEditable -->
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-  
-  
-  
+
+  <?php   	
+	$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+  ?>
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_enable'])) {
+	  $doactions = False;
+	  logmessage("Processing form_enableportal data.");
+	  if(isset($_POST['enablecaptiveportal']) && strcmp($configurationsettings['captiveportal'],"disabled") == 0) {
+		logmessage("Setting captive portal to enabled state.");
+		$configurationsettings['captiveportal'] = "enabled";
+		$doactions = True;
+	  }
+	  else if(!isset($_POST['enablecaptiveportal']) && strcmp($configurationsettings['captiveportal'],"enabled") == 0) {
+		logmessage("Setting captive portal to disabled state.");
+		$configurationsettings['captiveportal'] = "disabled";
+		$doactions = True;
+	  }
+	  else {
+		logmessage("Nothing to do.");
+	  }
+	  if($doactions) {
+		logmessage("Writing captive portal state to configuration file.");
+		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+	  }
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_addusers'])) {
+	  logmessage("Processing addusers_form data.");
+
+	  $username = $password = "";
+	  $usernameerr = $passworderr = "";
+	  
+	  logmessage("Validating username input.");
+	  if (!empty($_POST["username"])) {
+		$username = test_input($_POST["username"]);
+		if (!preg_match("/^[a-zA-Z0-9]*$/",$username)) {
+		  $usernameerr = "username field contains incorrect data, only a-zA-Z0-9 allowed!<br />"; 
+		}
+	  }
+	  
+	  logmessage("Validating password input.");
+	  if (!empty($_POST["password"])) {
+		$password = test_input($_POST["password"]);
+		if (!preg_match("/^[a-zA-Z0-9]*$/",$password)) {
+		  $passworderr = "username field contains incorrect data, only a-zA-Z0-9 allowed!<br />"; 
+		}
+	  }
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
+    <div id="ContentTitle"><span>Captive Portal</span></div>
+      
+    <div id="ContentArticle" <?php if(strcmp($configurationsettings['operationmode'],'Router') == 0) {echo 'style="display: none"';}?>>
+      <table width="100%" border="0">
+        <tr>
+          <td align="center">
+              <p>The Raspberry Wap is currently operating in Access Point modus.<br />
+              The Captive Portal functionality is only available when the Raspberry Wap is operating in Router modus.<br />
+              To switch the Raspberry Wap to Router mode, select Configuration - Operation mode, and switch to Router mode.
+              </p>
+          </td>
+        </tr>
+    </table>
+    </div><!--end div contentarticle-->
+<!-- ********************************************************************************************************************** -->
+    <div id="ContentArticle" <?php if(strcmp($configurationsettings['operationmode'],'Access Point') == 0) {echo 'style="display: none;';}?>>
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="form_enableportal">
+        <fieldset><legend>Captive Portal</legend>
+          <table width="100%" border="0">
+            <tr>
+              <td width="40%" align="right">Enable Captive Portal:</td>
+              <td width="60%"><input name="enablecaptiveportal" type="checkbox" id="enablecaptiveportal" form="form_enableportal" <?php if(strcmp($configurationsettings['captiveportal'],'enabled') == 0) {echo 'checked';}?>></td>
+            </tr>
+            <tr>
+              <td align="right"><input name="button_enable" type="submit" id="button_enable" form="form_enableportal" value="Apply"></td>
+              <td><span id="ReturnStatus_form_enableportal"></span></td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+    </div><!--end div contentarticle-->
+<!-- ********************************************************************************************************************** -->
+    <div id="ContentTitle" <?php if((strcmp($configurationsettings['operationmode'],'Access Point') == 0) || (strcmp($configurationsettings['captiveportal'],'disabled') == 0)) {echo 'style="display: none;';}?>>
+      <span>Captive Portal User Management</span>
+    </div>
+
+    <div id="ContentArticle" <?php if((strcmp($configurationsettings['operationmode'],'Access Point') == 0) || (strcmp($configurationsettings['captiveportal'],'disabled') == 0))  {echo 'style="display: none;';}?>>
+
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="form_addusers">
+        <fieldset><legend>Add Users</legend>
+          <table width="100%" border="0">
+            <tr>
+              <td width="40%" align="right"><label for="username">Username:</label></td>
+              <td width="60%">
+                <input name="username" type="text" id="username" form="form_addusers" placeholder="myuser" pattern="^[a-zA-Z0-9]*$">
+              
+              </td>
+            </tr>
+            <tr>
+              <td align="right"><label for="password">Password:</label></td>
+              <td><input name="password" type="text" id="password" form="form_addusers" placeholder="mypassword" pattern="^[a-zA-Z0-9]*$"></td>
+            </tr>
+            <tr>
+              <td align="right"><input name="button_addusers" type="submit" id="button_addusers" form="form_addusers" value="Add User"></td>
+              <td valign="middle"><span id="ReturnStatus_form_addusers"></span></td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+  </div><!--end div ContentArticle-->
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_addusers'])) {
+  	  echo "<script>ReturnProgress_form_addusers();</script>";
+	  if(empty($usernameerr) && empty($passworderr)) {
+		logmessage("Username & Password input don't contain any errors.");
+		if(!empty($username) && !empty($password)) {
+			logmessage("Writing Username & Password to database.");
+			insert("INSERT INTO radcheck (username, attribute, op, value) VALUES ('$username', 'Cleartext-Password', ':=', '$password')","radius");
+			echo "<script>ReturnReady_form_addusers();</script>";
+
+		}
+		else {
+			logmessage("Username & Password not written to database because one of both is empty.");
+			echo '<script>ReturnStatus_form_addusers("Username or Password cannot be empty");</script>';
+		}
+	  }
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
+    <div id="ContentTitle" <?php if((strcmp($configurationsettings['operationmode'],'Access Point') == 0) || (strcmp($configurationsettings['captiveportal'],'disabled') == 0)) {echo 'style="display: none;';}?>>
+      <span>Captive Portal User Database</span>
+    </div>
+
+    <div id="ContentArticle" <?php if((strcmp($configurationsettings['operationmode'],'Access Point') == 0) || (strcmp($configurationsettings['captiveportal'],'disabled') == 0))  {echo 'style="display: none;';}?>>
+
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="form_deleteusers">
+        <fieldset><legend>Captive Portal Users</legend>
+          <table width="100%" border="0">
+            <tr>
+              <td width="40%" align="right"><label for="captiveportalusers">Captive Portal Users:</label></td>
+              <td width="60%">
+                <select name="captiveportalusers" size="5" id="captiveportalusers" form="form_deleteusers">
+                  <?php 
+					$recordset = select("select username,value from radcheck","radius");                   
+                  	
+					if (mysqli_num_rows($recordset) > 0) {
+					  // output data of each row
+					  while($row = mysqli_fetch_assoc($recordset)) {
+						echo "<option>Username: " . $row["username"] . ", Password: " . $row["value"] . "</option>";
+					  }
+					} 
+				  ?>
+                </select></td>
+            </tr>
+            <tr>
+              <td align="right"><input name="button_deleteusers" type="submit" id="button_deleteusers" form="form_deleteusers" value="Delete User"></td>
+              <td><span id="ReturnStatus_form_deleteusers"></span></td>
+            </tr>
+          </table>
+        </fieldset>
+      </form>
+    </div><!--end div ContentArticle-->
   <!-- InstanceEndEditable -->
   </article><!-- end .content -->
 
@@ -101,9 +288,50 @@ $(document).ready(function(){
   </footer>
 </div><!-- end .container -->
 
-<!-- InstanceBeginEditable name="code" -->code
-
-
+<!-- InstanceBeginEditable name="code" -->
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_enable'])) {
+	  echo "<script>ReturnProgress_form_enableportal();</script>";
+	  if($doactions) { 
+		switch($configurationsettings['captiveportal'])
+		  {
+		  case "enabled":
+			flush();
+			logmessage("Stopping hostapd service.");
+			shell_exec("sudo service hostapd stop");
+			logmessage("Stopping dnsmasq service.");
+			shell_exec("sudo service dnsmasq stop");
+			logmessage("Unscheduling dnsmasq service to start at boot.");
+			shell_exec("sudo update-rc.d –f dnsmasq remove");
+			logmessage("Starting Captive Portal service.");
+			shell_exec("sudo service chilli start");
+			logmessage("Scheduling Captive Portal service to start at boot.");
+			shell_exec("sudo update-rc.d chilli defaults");
+			logmessage("Starting hostapd service.");
+			shell_exec("sudo service hostapd start");
+		  break;
+		  case "disabled":
+			flush();
+			logmessage("Stopping hostapd service.");
+			shell_exec("sudo service hostapd stop");
+			logmessage("Stopping Captive Portal service.");
+			shell_exec("sudo service chilli stop");
+			logmessage("Unscheduling Captive Portal service to start at boot.");
+			shell_exec("sudo update-rc.d –f chilli remove");
+			logmessage("Starting dnsmasq service.");
+			shell_exec("sudo service dnsmasq start");
+			logmessage("Scheduling dnsmasq service to start at boot.");
+			shell_exec("sudo update-rc.d chilli defaults");
+			logmessage("Starting hostapd service.");
+			shell_exec("sudo service hostapd start");
+		  break;
+		  }
+	  }
+	echo "<script>ReturnReady_form_enableportal();</script>";
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
 
 
 
