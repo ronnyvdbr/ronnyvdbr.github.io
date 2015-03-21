@@ -4,6 +4,7 @@ sudo apt-get -y install debhelper libcurl4-gnutls-dev
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password raspberry'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password raspberry'
 sudo apt-get -y install mysql-server
+sudo apt-get -y install php5-mysql
 sudo apt-get -y install freeradius freeradius-mysql
 echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry radius
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/schema.sql
