@@ -1,0 +1,7 @@
+Welcome to the bugs file.
+The Raspberry WAP is under heavy development, some of the problems which might 
+slip into the software will not be noticed immediately.
+If problems are encountered they will be queued up for fixing until the next release.
+
+Raspberry WAP v1.0
+When the software is switched to Router mode, on the next reboot the wlan0 interfaces is not assigned the IP address.
