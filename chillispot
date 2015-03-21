@@ -43,6 +43,9 @@ sed -i 's/HS_DNS1=208.67.222.222/HS_DNS1=8.8.8.8/g' /etc/chilli/config
 sed -i 's/HS_DNS2=208.67.220.220/HS_DNS2=8.8.4.4/g' /etc/chilli/config
 echo "iptables –I POSTROUTING –t nat –o $HS_WANIF –j MASQUERADE" | tee --append /etc/chilli/up.sh
 sed -i 's/haserl=$(which haserl 2>\/dev\/null)/haserl=\/usr\/local\/bin\/haserl/g' /etc/chilli/wwwsh
+sudo sed -i 's/# Default-Start:  2 3 5/# Default-Start:  2 3 4 5/g' /etc/init.d/chilli
+sudo sed -i 's/# Default-Stop:/# Default-Stop:  0 1 6/g' /etc/init.d/chilli
+
 
 
 
