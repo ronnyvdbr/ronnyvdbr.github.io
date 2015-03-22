@@ -23,15 +23,31 @@ function insert($sql,$mysqldbname) {
 	  if (!$mysqlconn) {
 		die("mysqlconnection failed: " . mysqli_connect_error());
 	  }
-	  
 	  if (mysqli_query($mysqlconn, $sql)) {
 		return false;
 	  } else {
 		return true;
 	  }
-
 	  mysqli_close($conn);
 }
+
+
+function delete($sql,$mysqldbname) {
+	  $mysqlservername = "localhost";
+	  $mysqlusername = "root";
+	  $mysqlpassword = "raspberry";
+	  $mysqlconn = mysqli_connect($mysqlservername, $mysqlusername, $mysqlpassword, $mysqldbname);
+	  if (!$mysqlconn) {
+		die("mysqlconnection failed: " . mysqli_connect_error());
+	  }
+	  if (mysqli_query($mysqlconn, $sql)) {
+		return false;
+	  } else {
+		return true;
+	  }
+	  mysqli_close($conn);
+}
+
 ?> 
 
 

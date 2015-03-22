@@ -76,7 +76,12 @@ $(document).ready(function(){
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
   
-  
+      <table width="100%" border="0">
+      <tr>
+        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
+      </tr>
+    </table>
+
   
   <!-- InstanceEndEditable -->
   </article><!-- end .content -->
@@ -101,7 +106,7 @@ $(document).ready(function(){
   </footer>
 </div><!-- end .container -->
 
-<!-- InstanceBeginEditable name="code" -->code
+<!-- InstanceBeginEditable name="code" -->
 
 
 

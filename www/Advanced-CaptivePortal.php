@@ -34,6 +34,9 @@ function ReturnProgress_form_deleteusers() {
 function ReturnReady_form_deleteusers() {
     document.getElementById('ReturnStatus_form_deleteusers').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
 }
+function ReturnStatus_form_deleteusers(error) {
+    document.getElementById('ReturnStatus_form_deleteusers').innerHTML = '<img src="images/Fail.jpg" width="20" height="20"  alt=""/>' + error;
+}
 </script>
 <?php include 'functions.php';?>
 <?php include 'mysqlfunctions.php';?>
@@ -152,6 +155,19 @@ function ReturnReady_form_deleteusers() {
 	}
   ?>
 <!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_deleteusers'])) {
+	  logmessage("Processing deleteusers_form data.");
+	  
+	  $deleteuser = "";
+	  
+	  if (!empty($_POST["captiveportalusers"])) {
+		$deleteuser = test_input($_POST["captiveportalusers"]);
+	  }
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
+
     <div id="ContentTitle"><span>Captive Portal</span></div>
       
     <div id="ContentArticle" <?php if(strcmp($configurationsettings['operationmode'],'Router') == 0) {echo 'style="display: none"';}?>>
@@ -232,6 +248,22 @@ function ReturnReady_form_deleteusers() {
 	}
   ?>
 <!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_deleteusers'])) {
+		echo "<script>ReturnProgress_form_deleteusers();</script>";
+		if(!empty($deleteuser)) {
+			logmessage("Deleting user from database.");
+			logmessage($deleteuser);
+			delete('DELETE FROM radcheck WHERE username="' . $deleteuser . '"','radius');
+			echo "<script>ReturnReady_form_deleteusers();</script>";
+		}
+		else {
+			logmessage("No user selected, nothing to do.");
+			echo ('<script>ReturnStatus_form_deleteusers("No user selected, so nothing deleted.");</script>'); 
+		}
+	}
+  ?>
+<!-- ********************************************************************************************************************** -->
     <div id="ContentTitle" <?php if((strcmp($configurationsettings['operationmode'],'Access Point') == 0) || (strcmp($configurationsettings['captiveportal'],'disabled') == 0)) {echo 'style="display: none;';}?>>
       <span>Captive Portal User Database</span>
     </div>
@@ -251,7 +283,7 @@ function ReturnReady_form_deleteusers() {
 					if (mysqli_num_rows($recordset) > 0) {
 					  // output data of each row
 					  while($row = mysqli_fetch_assoc($recordset)) {
-						echo "<option>Username: " . $row["username"] . ", Password: " . $row["value"] . "</option>";
+						echo '<option label="Username: ' . $row["username"] . ', Password: ' . $row["value"] . '">' . $row["username"] . '</option>';
 					  }
 					} 
 				  ?>
@@ -300,6 +332,8 @@ function ReturnReady_form_deleteusers() {
 			flush();
 			logmessage("Stopping hostapd service.");
 			shell_exec("sudo service hostapd stop");
+			logmessage("Unconfiguring interface wlan0.");
+			shell_exec("sudo ifdown wlan0");
 			logmessage("Stopping dnsmasq service.");
 			shell_exec("sudo service dnsmasq stop");
 			logmessage("Unscheduling dnsmasq service to start at boot.");
@@ -316,7 +350,7 @@ function ReturnReady_form_deleteusers() {
 			logmessage("Stopping hostapd service.");
 			shell_exec("sudo service hostapd stop");
 			logmessage("Stopping Captive Portal service.");
-			shell_exec("sudo service chilli stop");
+			shell_exec("sudo killall chilli");
 			logmessage("Unscheduling Captive Portal service to start at boot.");
 			shell_exec("sudo update-rc.d –f chilli remove");
 			logmessage("Starting dnsmasq service.");
@@ -325,6 +359,8 @@ function ReturnReady_form_deleteusers() {
 			shell_exec("sudo update-rc.d chilli defaults");
 			logmessage("Starting hostapd service.");
 			shell_exec("sudo service hostapd start");
+			logmessage("Configuring interface wlan0.");
+			shell_exec("sudo ifup wlan0");
 		  break;
 		  }
 	  }
@@ -332,8 +368,16 @@ function ReturnReady_form_deleteusers() {
 	}
   ?>
 <!-- ********************************************************************************************************************** -->
-
-
+  <?php 
+  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['button_deleteusers'])) {
+      if(!empty($deleteuser)) {
+          echo "<script>ReturnReady_form_deleteusers();</script>";
+      }
+      else {
+          echo ('<script>ReturnStatus_form_deleteusers("No user selected, so nothing deleted.");</script>'); 
+      }
+  }
+?>
 
 <!-- InstanceEndEditable -->
 </body>

@@ -164,6 +164,10 @@ function ReturnReadyOperation() {
 				$configurationsettings['operationmode'] = "Router";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
+				logmessage("Updating rc.local to add IP address on wlan interface on boot.");
+				shell_exec("sudo sed -i 's/exit 0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
+				shell_exec('sudo echo "exit 0" | sudo tee --append /etc/rc.local');
+				
 				logmessage("Stopping Access Point Daemon");
 				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
@@ -245,14 +249,29 @@ function ReturnReadyOperation() {
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
+				logmessage("Updating rc.local to default configuration.");
+				shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0//g' /etc/rc.local");
+				
 				logmessage("Disabling IP forwarding");
 				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
-				logmessage("Disabling dnsmasq to start at boot");
-				shell_exec("sudo update-rc.d -f dnsmasq remove 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(strcmp($configurationsettings['captiveportal'],"disabled") == 0) {
+					logmessage("Disabling dnsmasq to start at boot");
+					shell_exec("sudo update-rc.d -f dnsmasq remove 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+					logmessage("Stopping dnsmasq service");
+					shell_exec("sudo service dnsmasq stop  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Stopping Captive Portal service.");
+				  shell_exec("sudo killall chilli");
+				  logmessage("Unscheduling Captive Portal service to start at boot.");
+				  shell_exec("sudo update-rc.d –f chilli remove");
+				  logmessage("Setting Captiveportal as disabled in configuration.");
+				  $configurationsettings['captiveportal'] = "disabled";
+				  logmessage("Saving configuration to /etc/network/interfaces file.");
+				  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+				}
 				
-				logmessage("Stopping dnsmasq service");
-				shell_exec("sudo service dnsmasq stop  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Stopping Access Point Management hostapd");
 				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -275,8 +294,8 @@ function ReturnReadyOperation() {
 				logmessage("Adding bridge parameter to hostapd config.");
 				hostapd_addbridge("enable");
 
-				logmessage("Starting Access Point Management hostapd");
-				shell_exec("sudo service hostapd start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				//logmessage("Starting Access Point Management hostapd");
+				//shell_exec("sudo service hostapd start 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Configuring interface br0");
 				shell_exec("sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
