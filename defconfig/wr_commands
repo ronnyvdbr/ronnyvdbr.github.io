@@ -22,3 +22,4 @@ www-data ALL = (root) NOPASSWD: /bin/sed
 www-data ALL = (root) NOPASSWD: /usr/bin/tee
 www-data ALL = (root) NOPASSWD: /sbin/ip
 www-data ALL = (root) NOPASSWD: /bin/echo
+www-data ALL = (root) NOPASSWD: /usr/bin/killall chilli

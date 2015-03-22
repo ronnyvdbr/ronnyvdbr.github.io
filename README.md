@@ -32,6 +32,7 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 * apt-get -y install git-core
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
 * sh /home/pi/Raspberry-Wifi-Router/installer.sh
+* sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
 
 
 
