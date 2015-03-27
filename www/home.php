@@ -52,11 +52,20 @@
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
          </li>
+        <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
+            <ul id="MaintenanceUl">
+               <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
+               <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
+               <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
+            </ul>
+         </li>
+
          <li class='has-sub' id="Logs"><a href='#'><span>Logs</span></a>
             <ul id="LogsUl">
                <li><a href='Logs-Dmesg.php'><span>Dmesg</span></a></li>
-               <li><a href='Logs-Hostapd.php'><span>Hostapd</span></a></li>
-               <li class='last'><a href='Logs-DhcpClientList.php'><span>DHCP Client List</span></a></li>
+               <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
+               <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>
             </ul>
          </li>
       </ul>
