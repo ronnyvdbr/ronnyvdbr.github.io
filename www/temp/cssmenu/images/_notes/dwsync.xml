@@ -6,10 +6,4 @@
 <file name="icon_minus.png" server="192.168.20.115//var/www/" local="130204861440000000" remote="130678081800000000" Dst="1" />
 <file name="icon_plus.png" server="192.168.20.178//var/www/" local="130204861440000000" remote="130685894400000000" Dst="1" />
 <file name="icon_minus.png" server="192.168.20.178//var/www/" local="130204861440000000" remote="130685894400000000" Dst="1" />
-<file name="icon_minus.png" server="192.168.20.247//var/www/" local="130704794880000000" remote="130704794880000000" Dst="1" />
-<file name="icon_plus.png" server="192.168.20.247//var/www/" local="130704794880000000" remote="130704794880000000" Dst="1" />
-<file name="icon_plus.png" server="192.168.20.248//var/www/" local="130704794880000000" remote="130706436460000000" Dst="1" />
-<file name="icon_minus.png" server="192.168.20.248//var/www/" local="130704794880000000" remote="130706436460000000" Dst="1" />
-<file name="icon_plus.png" server="192.168.20.135//var/www/" local="130704794880000000" remote="130708005690000000" Dst="1" />
-<file name="icon_minus.png" server="192.168.20.135//var/www/" local="130704794880000000" remote="130708005690000000" Dst="1" />
 </dwsync>
