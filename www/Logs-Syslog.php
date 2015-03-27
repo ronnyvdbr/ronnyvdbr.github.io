@@ -15,9 +15,12 @@
 <script>
 $(document).ready(function(){
    $('#Home').removeClass('active');
-   $('#Advanced').addClass('active');
-	$('#AdvancedUl').show();
+   $('#Logs').addClass('active');
+	$('#LogsUl').show();
 });
+function Reload() {
+	window.location = '/Logs-Syslog.php';
+}
 </script>
 <!-- InstanceEndEditable --> 
 </head>
@@ -84,12 +87,15 @@ $(document).ready(function(){
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-      <table width="100%" border="0">
-      <tr>
-        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
-      </tr>
-    </table>
-
+  <div id="ContentTitle">SYSLOG</div>
+  
+  <div id="ContentArticle">
+  <?php
+	$output = shell_exec('sudo tail -n 50 /var/log/syslog | tac');
+	echo "<p>" . nl2br($output) . "</p>";
+	echo "<script>setTimeout(Reload, 3000);</script>";
+  ?>
+  </div>
   
   
   <!-- InstanceEndEditable -->

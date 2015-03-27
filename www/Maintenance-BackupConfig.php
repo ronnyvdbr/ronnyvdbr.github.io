@@ -12,13 +12,6 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
-<script>
-$(document).ready(function(){
-   $('#Home').removeClass('active');
-   $('#Advanced').addClass('active');
-	$('#AdvancedUl').show();
-});
-</script>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -79,20 +72,19 @@ $(document).ready(function(){
     </nav>
   </div><!-- end .sidebar1 -->
   <!-- InstanceBeginEditable name="MenuExpander" -->
-  
+  <script>
+	$('#Home').removeClass('active');
+	$('#Maintenance').addClass('active');
+	$('#MaintenanceUl').show();
+  </script>
   <!-- InstanceEndEditable -->
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-      <table width="100%" border="0">
-      <tr>
-        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
-      </tr>
-    </table>
-
-  
-  
-  <!-- InstanceEndEditable -->
+      
+      
+      
+    <!-- InstanceEndEditable -->
   </article><!-- end .content -->
 
 
@@ -116,6 +108,7 @@ $(document).ready(function(){
 </div><!-- end .container -->
 
 <!-- InstanceBeginEditable name="code" -->
+
 
 
 

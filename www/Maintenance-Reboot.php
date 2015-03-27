@@ -13,11 +13,14 @@
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
 <script>
-$(document).ready(function(){
-   $('#Home').removeClass('active');
-   $('#Logs').addClass('active');
-	$('#LogsUl').show();
-});
+function ReturnProgress() {
+    
+	document.getElementById('status').innerHTML = 'Please stand by, rebooting ...';
+	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function GoToHome() {
+	window.location = '/';
+}
 </script>
 <!-- InstanceEndEditable --> 
 </head>
@@ -58,11 +61,20 @@ $(document).ready(function(){
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
          </li>
+        <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
+            <ul id="MaintenanceUl">
+               <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
+               <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
+               <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
+            </ul>
+         </li>
+
          <li class='has-sub' id="Logs"><a href='#'><span>Logs</span></a>
             <ul id="LogsUl">
                <li><a href='Logs-Dmesg.php'><span>Dmesg</span></a></li>
-               <li><a href='Logs-Hostapd.php'><span>Hostapd</span></a></li>
-               <li class='last'><a href='Logs-DhcpClientList.php'><span>DHCP Client List</span></a></li>
+               <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
+               <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>
             </ul>
          </li>
       </ul>
@@ -70,15 +82,36 @@ $(document).ready(function(){
     </nav>
   </div><!-- end .sidebar1 -->
   <!-- InstanceBeginEditable name="MenuExpander" -->
-  
+  <script>
+	$('#Home').removeClass('active');
+	$('#Maintenance').addClass('active');
+	$('#MaintenanceUl').show();
+  </script>
   <!-- InstanceEndEditable -->
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-  
-  
-  
-  <!-- InstanceEndEditable -->
+  <div id="ContentTitle">
+  <span>Reboot Raspberry Pi</span></div>
+      
+  <div id="ContentArticle">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="reboot">
+      <fieldset>
+        <table width="100%" border="0">
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center"><span id="status"><input name="reboot" type="submit" id="reboot" form="reboot" value="Reboot"></span></td>
+          </tr>
+          <tr>
+            <td align="center"><span id="progress"></span></td>
+          </tr>
+        </table>
+      </fieldset>
+    </form>
+  </div>
+    <!-- InstanceEndEditable -->
   </article><!-- end .content -->
 
 
@@ -101,12 +134,14 @@ $(document).ready(function(){
   </footer>
 </div><!-- end .container -->
 
-<!-- InstanceBeginEditable name="code" -->code
-
-
-
-
-
+<!-- InstanceBeginEditable name="code" -->
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['reboot'])) {
+		echo "<script>ReturnProgress();</script>";
+		echo "<script>setTimeout(GoToHome, 60000);</script>";
+	}
+  ?>
 <!-- InstanceEndEditable -->
 </body>
 <!-- InstanceEnd --></html>
