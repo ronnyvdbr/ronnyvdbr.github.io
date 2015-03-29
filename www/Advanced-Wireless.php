@@ -233,8 +233,8 @@ $(document).ready(function(){
           <td colspan="2" align="center">Add Power Constraint element to Beacon and Probe Response frames.  This config option adds Power Constraint element when applicable and Country element is added. Power Constraint element is required by Transmit Power Control. This can be used only when ieee80211d is enabled.  Valid values are 0 until 255.</td>
         </tr>
         <tr>
-          <td width="34%" align="right"><label for="number">Local power constraint:</label></td>
-          <td width="66%"><input name="number" type="number" id="number" max="255" min="0" step="1"></td>
+          <td width="40%" align="right"><label for="number">Local power constraint:</label></td>
+          <td width="60%"><input name="number" type="number" id="number" max="255" min="0" step="1"></td>
         </tr>
       </table>
     </fieldset>
@@ -257,10 +257,10 @@ $(document).ready(function(){
       <table width="100%" border="0">
         <tr>
           <td colspan="2" align="center">(a = IEEE 802.11a, b = IEEE 802.11b, g = IEEE 802.11g, ad = IEEE 802.11ad (60 GHz); a/g options are used with IEEE 802.11n, too, to specify band) Default: IEEE 802.11b.  When configured will override common settings.</td>
-          </tr>
+        </tr>
         <tr>
-          <td align="right"><label for="select5">Operation mode:</label></td>
-          <td>
+          <td width="40%" align="right"><label for="select5">Operation mode:</label></td>
+          <td width="60%">
             <select name="select5" id="select5">
               <option value="unconfigured">unconfigured</option>
               <option value="a">IEEE 802.11a</option>
@@ -273,98 +273,350 @@ $(document).ready(function(){
       </table>
     </fieldset>
   
+
+    <fieldset><legend>Channel number (IEEE 802.11)</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">(default: 0, i.e., not set)  Please note that some drivers do not use this value from hostapd and the channel will need to be configured separately with iwconfig.  If CONFIG_ACS build option is enabled, the channel can be selected automatically at run time by setting channel=acs_survey or channel=0, both of which will enable the ACS survey based algorithm.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="select6">Channel number:</label></td>
+          <td width="60%">
+            <select name="select6" id="select6">
+              <option value="unconfigured">unconfigured</option>
+              <option value="acs_survey">acs_survey</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
         
-  <tr>
-    <td colspan="2" align="center"> Channel number (IEEE 802.11) (default: 0, i.e., not set)  Please note that some drivers do not use this value from hostapd and the channel will need to be configured separately with iwconfig.  If CONFIG_ACS build option is enabled, the channel can be selected automatically at run time by setting channel=acs_survey or channel=0, both of which will enable the ACS survey based algorithm.</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="select6">Channel number:</label></td>
-    <td><select name="select6" id="select6">
-      <option value="unconfigured">unconfigured</option>
-      <option value="acs_survey">acs_survey</option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="12">12</option>
-      <option value="13">13</option>
-      <option value="14">14</option>
-    </select></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">ACS tuning - Automatic Channel Selection<br>See: http://wireless.kernel.org/en/users/Documentation/acs<br>You can customize the ACS survey algorithm with following variables:<br>acs_num_scans requirement is 1..100 - number of scans to be performed that are used to trigger survey data gathering of an underlying device driver.  Scans are passive and typically take a little over 100ms (depending on the driver) on each available channel for given hw_mode. Increasing this value means sacrificing startup time and gathering more data wrt channel interference that may help choosing a better channel. This can also help fine tune the ACS scan time in case a driver has different scan dwell times.</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="number2">acs_num_scans:</label></td>
-    <td><input type="number" name="number2" id="number2"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">Channel list restriction. This option allows hostapd to select one of the provided channels when a channel should be automatically selected.  Default: not set (allow any enabled channel to be selected) chanlist=100 104 108 112 116</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="textfield">Chanlist:</label></td>
-    <td><input type="text" name="textfield" id="textfield"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">Beacon interval in kus (1.024 ms) (default: 100; range 15..65535)</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="range">Beacon interval:</label></td>
-    <td><input name="range" type="range" id="range" max="65535" min="15"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">DTIM (delivery traffic information message) period (range 1..255): number of beacons between DTIMs (1 = every beacon includes DTIM element) (default: 2)</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="range2">DTIM period:</label></td>
-    <td><input name="range2" type="range" id="range2" max="255" min="1" step="1"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">Maximum number of stations allowed in station table. New stations will be rejected after the station table is full. IEEE 802.11 has a limit of 2007 different association IDs, so this number should not be larger than that.  (default: 2007)</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="number3">Maximum number stations:</label></td>
-    <td><input type="number" name="number3" id="number3"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">RTS/CTS threshold; 2347 = disabled (default); range 0..2347  If this field is not included in hostapd.conf, hostapd will not control RTS threshold and 'iwconfig wlan# rts &lt;val&gt;' can be used to set it.</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="range3">RTS/CTS threshold:</label></td>
-    <td><input name="range3" type="range" id="range3" max="2347" min="0" step="1"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">Fragmentation threshold; 2346 = disabled (default); range 256..2346  If this field is not included in hostapd.conf, hostapd will not control fragmentation threshold and 'iwconfig wlan# frag &lt;val&gt;' can be used to set it.</td>
-    </tr>
-  <tr>
-    <td align="right"><label for="range4">Fragmentation threshold:</label></td>
-    <td><input name="range4" type="range" id="range4" max="2346" min="256" step="1"></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td></td>
-    </tr>
-</table>
+
+    <fieldset><legend>ACS tuning - Automatic Channel Selection</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">See: http://wireless.kernel.org/en/users/Documentation/acs<br>You can customize the ACS survey algorithm with following variables:<br>acs_num_scans requirement is 1..100 - number of scans to be performed that are used to trigger survey data gathering of an underlying device driver.  Scans are passive and typically take a little over 100ms (depending on the driver) on each available channel for given hw_mode. Increasing this value means sacrificing startup time and gathering more data wrt channel interference that may help choosing a better channel. This can also help fine tune the ACS scan time in case a driver has different scan dwell times.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="number2">acs_num_scans:</label></td>
+          <td width="60%"><input type="number" name="number2" id="number2"></td>
+        </tr>
+      </table>
+    </fieldset>
+  
+  
+    <fieldset><legend>Channel list restriction</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">This option allows hostapd to select one of the provided channels when a channel should be automatically selected.  Default: not set (allow any enabled channel to be selected) chanlist=100 104 108 112 116</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield">Channel list:</label></td>
+          <td width="60%"><input type="text" name="textfield" id="textfield"></td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>Beacon interval</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Beacon interval in kus (1.024 ms) (default: 100; range 15..65535)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="range">Beacon interval:</label></td>
+          <td width="60%"><input name="range" type="range" id="range" max="65535" min="15"></td>
+        </tr>
+      </table>
+    </fieldset>
+
+       
+    <fieldset><legend>DTIM (delivery traffic information message)</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">period (range 1..255): number of beacons between DTIMs (1 = every beacon includes DTIM element) (default: 2)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="range2">DTIM period:</label></td>
+          <td width="60%"><input name="range2" type="range" id="range2" max="255" min="1" step="1"></td>
+        </tr>
+      </table>
+    </fieldset>
+        
+        
+    <fieldset><legend>Maximum stations</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Maximum number of stations allowed in station table. New stations will be rejected after the station table is full. IEEE 802.11 has a limit of 2007 different association IDs, so this number should not be larger than that.  (default: 2007)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="number3">Maximum number stations:</label></td>
+          <td width="60%"><input type="number" name="number3" id="number3"></td>
+        </tr>
+      </table>
+    </fieldset>
+        
+
+    <fieldset><legend>RTS/CTS threshold</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">2347 = disabled (default); range 0..2347  If this field is not included in hostapd.conf, hostapd will not control RTS threshold and 'iwconfig wlan# rts &lt;val&gt;' can be used to set it.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="range3">RTS/CTS threshold:</label></td>
+          <td width="60%"><input name="range3" type="range" id="range3" max="2347" min="0" step="1" value="2347"></td>
+        </tr>
+      </table>
+    </fieldset>
+        
+
+    <fieldset><legend>&nbsp;Fragmentation threshold
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">2346 = disabled (default); range 256..2346;  If this field is not included in hostapd.conf, hostapd will not control fragmentation threshold and 'iwconfig wlan# frag &lt;val&gt;' can be used to set it.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="range4">Fragmentation treshold:</label></td>
+          <td width="60%"><input name="range4" type="range" id="range4" max="2346" min="256" step="1" value="2346"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+
+    <fieldset><legend>&nbsp;Rate configuration
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Default is to enable all rates supported by the hardware. This configuration item allows this list be filtered so that only the listed rates will be left in the list. If the list is empty, all rates are used. This list can have entries that are not in the list of rates the hardware supports (such entries are ignored). The entries in this list are in 100 kbps, i.e., 11 Mbps = 110. If this item is present, at least one rate have to be matching with the rates hardware supports.  default: use the most common supported rate setting for the selected hw_mode (i.e., this line can be removed from configuration file in most cases) supported_rates=10 20 55 110 60 90 120 180 240 360 480 540</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield3">Rate configuration:</label></td>
+          <td width="60%"><input type="text" name="textfield3" id="textfield3"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Basic rate set configuration
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">List of rates (in 100 kbps) that are included in the basic rate set.  If this item is not included, usually reasonable default set is used.  basic_rates=10 20; basic_rates=10 20 55 110; basic_rates=60 120 240;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield4">Basic rate set:</label></td>
+          <td width="60%"><input type="text" name="textfield4" id="textfield4"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Short Preamble
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">This parameter can be used to enable optional use of short preamble for frames sent at 2 Mbps, 5.5 Mbps, and 11 Mbps to improve network performance.  This applies only to IEEE 802.11b-compatible networks and this should only be enabled if the local hardware supports use of short preamble. If any of the associated STAs do not support short preamble, use of short preamble will be disabled (and enabled when such STAs disassociate) dynamically.  0 = do not allow use of short preamble (default) 1 = allow use of short preamble</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox5">Short preamble: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox5" id="checkbox5"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Station MAC address -based authentication
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Please note that this kind of access control requires a driver that uses hostapd to take care of management frame processing and as such, this can be used with driver=hostap or driver=nl80211, but not with driver=atheros.  0 = accept unless in deny list  1 = deny unless in accept list  2 = use external RADIUS server (accept/deny lists are searched first)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="select7">Mac authentication:</label></td>
+          <td width="60%"><select name="select7" id="select7">
+            <option value="0">accept unless in deny list</option>
+            <option value="1">deny unless in accept list</option>
+            <option value="2">use external RADIUS server</option>
+          </select></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+
+    <fieldset><legend>&nbsp;Accept/deny lists
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Is  read from separate files (containing list of MAC addresses, one per line). Use absolute path name to make sure that the files can be read on SIGHUP configuration reloads.  accept_mac_file=/etc/hostapd.accept  deny_mac_file=/etc/hostapd.deny</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield5">Accept/Deny file path:</label></td>
+          <td width="60%"><input name="textfield5" type="text" id="textfield5" placeholder="/etc/hostapd.accept"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+
+    <fieldset><legend>&nbsp;IEEE 802.11 authentication algorithms
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">IEEE 802.11 specifies two authentication algorithms. hostapd can be configured to allow both of these or only one. Open system authentication should be used with IEEE 802.1X.  Bit fields of allowed authentication algorithms: bit 0 = Open System Authentication bit 1 = Shared Key Authentication (requires WEP)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="select8">Authentication algorithms:</label></td>
+          <td width="60%"><select name="select8" id="select8">
+            <option value="1">Open System</option>
+            <option value="2">Shared Key</option>
+            <option value="3" selected="selected">Both</option>
+          </select></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+
+    <fieldset><legend>&nbsp;Send empty SSID
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Send empty SSID in beacons and ignore probe request frames that do not specify full SSID, i.e., require stations to know SSID.  default: disabled (0);  1 = send empty (length=0) SSID in beacon and ignore probe request for broadcast SSID;  2 = clear SSID (ASCII 0), but keep the original length (this may be required with some clients that do not support empty SSID) and ignore probe requests for broadcast SSID</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="ignore_broadcast_ssid">Send empty SSID:</label></td>
+          <td width="60%"><select name="ignore_broadcast_ssid" id="ignore_broadcast_ssid">
+            <option value="0" selected="selected">Disabled</option>
+            <option value="1">Send Empty</option>
+            <option value="2">Clear SSID</option>
+          </select></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;</legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">&nbsp;</td>
+          <td width="60%">&nbsp;</td>
+        </tr>
+      </table>
+    </fieldset>
+
 
     
     
