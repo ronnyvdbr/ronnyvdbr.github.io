@@ -514,16 +514,295 @@ $(document).ready(function(){
 
 
 
-    <fieldset><legend>&nbsp;</legend>
+    <fieldset><legend>&nbsp;vendor specfic elements
+      </legend>
       <table width="100%" border="0">
         <tr>
-          <td colspan="2" align="center">&nbsp;</td>
+          <td colspan="2" align="center">Additional vendor specfic elements for Beacon and Probe Response frames.  This parameter can be used to add additional vendor specific element(s) into the end of the Beacon and Probe Response frames. The format for these element(s) is a hexdump of the raw information elements (id+len+payload for one or more elements)</td>
         </tr>
         <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
+          <td width="40%" align="right"><label for="textfield6">Vendor elements:</label></td>
+          <td width="60%"><input type="text" name="textfield6" id="textfield6"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;TX queue parameters (EDCF / bursting)
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">tx_queue_&lt;queue name&gt;_&lt;param&gt; ; queues: data0, data1, data2, data3, after_beacon, beacon ; (data0 is the highest priority queue)</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">parameters: aifs: AIFS (default 2) ; cwmin: cwMin (1, 3, 7, 15, 31, 63, 127, 255, 511, 1023) ; cwmax: cwMax (1, 3, 7, 15, 31, 63, 127, 255, 511, 1023); cwMax &gt;= cwMin ; burst: maximum length (in milliseconds with precision of up to 0.1 ms) for bursting</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">Default WMM parameters (IEEE 802.11 draft; 11-03-0504-03-000e): These parameters are used by the access point when transmitting frames to the clients.</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">Low priority / AC_BK = background ; tx_queue_data3_aifs=7 ; tx_queue_data3_cwmin=15 ; tx_queue_data3_cwmax=1023 ; tx_queue_data3_burst=0 ; Note: for IEEE 802.11b mode: cWmin=31 cWmax=1023 burst=0</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">Normal priority / AC_BE = best effort ; tx_queue_data2_aifs=3 ; tx_queue_data2_cwmin=15 ; tx_queue_data2_cwmax=63 ; tx_queue_data2_burst=0 ; Note: for IEEE 802.11b mode: cWmin=31 cWmax=127 burst=0</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">High priority / AC_VI = video ; tx_queue_data1_aifs=1 ; tx_queue_data1_cwmin=7 ; tx_queue_data1_cwmax=15 ; tx_queue_data1_burst=3.0 ; Note: for IEEE 802.11b mode: cWmin=15 cWmax=31 burst=6.0</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">Highest priority / AC_VO = voice ; tx_queue_data0_aifs=1 ; tx_queue_data0_cwmin=3 ; tx_queue_data0_cwmax=7 ; tx_queue_data0_burst=1.5 ; Note: for IEEE 802.11b mode: cWmin=7 cWmax=15 burst=3.3</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textarea">TX Queue parameters:</label></td>
+          <td width="60%"><textarea name="textarea" cols="30" rows="5" id="textarea"></textarea></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Default WMM parameters
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="3" align="center">Default WMM parameters (IEEE 802.11 draft; 11-03-0504-03-000e): for 802.11a or 802.11g networks.  These parameters are sent to WMM clients when they associate.  The parameters will be used by WMM clients for frames transmitted to the access point.</td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">note - txop_limit is in units of 32microseconds ; note - acm is admission control mandatory flag. 0 = admission control not required, 1 = mandatory ; note - here cwMin and cmMax are in exponent form. the actual cw value used will be (2^n)-1 where n is the value given here.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">WMM Enabled:</td>
+          <td colspan="2"><input type="checkbox" name="checkbox6" id="checkbox6"></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">WMM-PS Unscheduled Automatic Power Save Delivery [U-APSD] ; Enable this flag if U-APSD supported outside hostapd (eg., Firmware/driver)</td>
+          </tr>
+        <tr>
+          <td align="right"><label for="checkbox7">U-APSD Enabled: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox7" id="checkbox7"></td>
+        </tr>
+        <tr>
+          <td align="right"><p>
+            <label>
+            </label>
+            Low priority / AC_BK = background<br>
+          </p></td>
+          <td width="9%" align="center"><input type="radio" name="wmm parameters" value="radio" id="wmmparameters_0"></td>
+          <td width="51%">wmm_ac_bk_cwmin=4<br>
+            wmm_ac_bk_cwmax=10<br>
+            wmm_ac_bk_aifs=7<br>
+            wmm_ac_bk_txop_limit=0<br>
+            wmm_ac_bk_acm=0<br></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Note: for IEEE 802.11b mode: cWmin=5 cWmax=10</td>
+          </tr>
+        <tr>
+          <td align="right"><label>Normal priority / AC_BE = best effort:</label></td>
+          <td align="center"><input type="radio" name="wmm parameters" value="radio" id="wmmparameters_1"></td>
+          <td>wmm_ac_be_aifs=3<br>
+            wmm_ac_be_cwmin=4<br>
+            wmm_ac_be_cwmax=10<br>
+            wmm_ac_be_txop_limit=0<br>
+            wmm_ac_be_acm=0<br></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Note: for IEEE 802.11b mode: cWmin=5 cWmax=7</td>
+          </tr>
+        <tr>
+          <td align="right">High priority / AC_VI = video:</td>
+          <td align="center"><input type="radio" name="wmm parameters" value="radio" id="wmmparameters_2"></td>
+          <td>wmm_ac_vi_aifs=2<br>
+            wmm_ac_vi_cwmin=3<br>
+            wmm_ac_vi_cwmax=4<br>
+            wmm_ac_vi_txop_limit=94<br>
+            wmm_ac_vi_acm=0<br></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Note: for IEEE 802.11b mode: cWmin=4 cWmax=5 txop_limit=188</td>
+          </tr>
+        <tr>
+          <td align="right">Highest priority / AC_VO = voice:</td>
+          <td align="center"><input type="radio" name="wmm parameters" value="radio" id="wmmparameters_3"></td>
+          <td>wmm_ac_vo_aifs=2<br>
+            wmm_ac_vo_cwmin=2<br>
+            wmm_ac_vo_cwmax=3<br>
+            wmm_ac_vo_txop_limit=47<br>
+            wmm_ac_vo_acm=0<br></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Note: for IEEE 802.11b mode: cWmin=3 cWmax=4 burst=102</td>
+          </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Static WEP key configuration
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">The key number to use when transmitting.  It must be between 0 and 3, and the corresponding key must be set.</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="select9">Default key:</label></td>
+          <td><select name="select9" id="select9">
+            <option value="0">not set</option>
+            <option value="1">Key 1</option>
+            <option value="2">Key 2</option>
+            <option value="3">Key 3</option>
+            <option value="4">Key 4</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">The key length should be 5, 13, or 16 characters, or 10, 26, or 32 digits, depending on whether 40-bit (64-bit), 104-bit (128-bit), or 128-bit (152-bit) WEP is used.  Only the default key must be supplied; the others are optional.</td>
+          </tr>
+        <tr>
+          <td align="right"><label for="textfield7">Key 1:</label></td>
+          <td><input name="textfield7" type="text" id="textfield7" placeholder="123456789a"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="textfield8">Key 2:</label></td>
+          <td><input name="textfield8" type="text" id="textfield8" placeholder="&quot;vwxyz&quot;"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="textfield9">Key 3:</label></td>
+          <td><input name="textfield9" type="text" id="textfield9" placeholder="0102030405060708090a0b0c0d"></td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield10">Key 4:</label></td>
+          <td width="60%"><input name="textfield10" type="text" id="textfield10" placeholder="&quot;.2.4.6.8.0.23&quot;"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Station inactivity limit
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">If a station does not send anything in ap_max_inactivity seconds, an empty data frame is sent to it in order to verify whether it is still in range. If this frame is not ACKed, the station will be disassociated and then deauthenticated. This feature is used to clear station table of old entries when the STAs move out of the range.</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">The station can associate again with the AP if it is still in range.  This inactivity poll is just used as a nicer way of verifying inactivity; i.e., client will not report broken connection because disassociation frame is not sent immediately without first polling the STA with a data frame. default: 300 (i.e., 5 minutes)</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="number4">Max inactivity:</label></td>
+          <td><input name="number4" type="number" id="number4" value="300"></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">The inactivity polling can be disabled to disconnect stations based on inactivity timeout so that idle stations are more likely to be disconnected even if they are still in range of the AP. This can be done by setting skip_inactivity_poll to 1 (default 0).</td>
+          </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox8">Skip inactivity poll: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox8" id="checkbox8"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Disassociate stations
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Disassociate stations based on excessive transmission failures or other indications of connection loss. This depends on the driver capabilities and may not be available with all drivers.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox9">Disassociate low acknowledge: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox9" id="checkbox9"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Maximum allowed Listen Interval
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">(how many Beacon periods STAs are allowed to remain asleep). Default: 65535 (no limit apart from field size)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="number5">Maximum interval:</label></td>
+          <td width="60%"><input name="number5" type="number" id="number5" value="65535"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;WDS (4-address frame) mode
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">WDS (4-address frame) mode with per-station virtual interfaces (only supported with driver=nl80211) This mode allows associated stations to use 4-address frames to allow layer 2 bridging to be used.</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox10">Enable wds mode: </label></td>
+          <td><input type="checkbox" name="checkbox10" id="checkbox10"></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="right">If bridge parameter is set, the WDS STA interface will be added to the same bridge by default. This can be overridden with the wds_bridge parameter to use a separate bridge.</td>
+          </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield11">Wds-Bridge:</label></td>
+          <td width="60%"><input name="textfield11" type="text" id="textfield11" placeholder="wds-br0"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset>
+      <legend></legend>
+    No Beaconing
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Start the AP with beaconing disabled by default.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox11">Start without beaconing: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox11" id="checkbox11"></td>
         </tr>
       </table>
+    </fieldset>
+
+
+    <fieldset>
+      <legend></legend>
+    Client Isolation
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Client isolation can be used to prevent low-level bridging of frames between associated stations in the BSS. By default, this bridging is allowed.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox12">AP Isolation: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox12" id="checkbox12"></td>
+        </tr>
+      </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;BSS Load update period (in BUs)
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">This field is used to enable and configure adding a BSS Load element into Beacon and Probe Response frames.</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="number6">BSS Load update period:</label></td>
+          <td width="60%"><input name="number6" type="number" id="number6" placeholder="50"></td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;Fixed BSS Load value for testing purposes
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center"> This field can be used to configure hostapd to add a fixed BSS Load element into Beacon and Probe Response frames for testing purposes. The format is &lt;station count&gt;:&lt;channel utilization&gt;:&lt;available admission capacity&gt;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="textfield12">BSS Load Test:</label></td>
+          <td width="60%"><input name="textfield12" type="text" id="textfield12" placeholder="12:80:20000"></td>
+        </tr>
+  </table>
     </fieldset>
 
 
@@ -603,21 +882,6 @@ $(document).ready(function(){
         </tr>
       </table>
     </fieldset>
-
-
-    <fieldset><legend>&nbsp;</legend>
-      <table width="100%" border="0">
-        <tr>
-          <td colspan="2" align="center">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
-        </tr>
-      </table>
-    </fieldset>
-
-
     
     
     </div>
