@@ -6,6 +6,7 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again p
 sudo apt-get -y install mysql-server
 sudo apt-get -y install php5-mysql
 sudo apt-get -y install freeradius freeradius-mysql
+update-rc.d mysql defaults
 echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry radius
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/schema.sql
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/admin.sql
