@@ -12,6 +12,16 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
+<script>
+function ReturnProgress() {
+    
+	document.getElementById('status').innerHTML = 'Please stand by, rebooting ...';
+	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function GoToHome() {
+	window.location = '/';
+}
+</script>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -81,7 +91,26 @@
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
+  <div id="ContentTitle">
+  <span>Reset Factory Default</span></div>
       
+  <div id="ContentArticle">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="reboot">
+      <fieldset>
+        <table width="100%" border="0">
+          <tr>
+            <td height="60" align="center">Warning, after resetting to default configuration all connections will be disconnected and the access point will be rebooted.</td>
+          </tr>
+          <tr>
+            <td align="center"><span id="status"><input name="reboot" type="submit" id="reboot" form="reboot" value="Reset to factory default configuration"></span></td>
+          </tr>
+          <tr>
+            <td align="center"><span id="progress"></span></td>
+          </tr>
+        </table>
+      </fieldset>
+    </form>
+  </div>
       
       
     <!-- InstanceEndEditable -->
@@ -108,7 +137,45 @@
 </div><!-- end .container -->
 
 <!-- InstanceBeginEditable name="code" -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['reboot'])) {
+		logmessage("Factory reset initiated.");
+		echo "<script>ReturnProgress();</script>";
+		echo "<script>setTimeout(GoToHome, 60000);</script>";
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt");
 
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf to /etc/dnsmasq.conf");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf");
+
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf to /etc/hostapd/hostapd.conf");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/interfaces to /etc/network/interfaces");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf to /etc/ntp.conf");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini to /var/www/routersettings.ini");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf to /etc/freeradius/radiusd.conf");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf /etc/freeradius/radiusd.conf");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default to /etc/freeradius/sites-available-default");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default  /etc/freeradius/sites-available-default");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands to /etc/sudoers.d/wr_commands");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands");
+    	logmessage("Dropping Radius database.");
+		shell_exec("sudo echo 'drop database radius;' | mysql --host=localhost --user=root --password=raspberry radius");
+    	logmessage("Recreating Radius database.");
+		shell_exec("sudo echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry radius");
+    	logmessage("Importing radius database schema.");
+		shell_exec("sudo mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/schema.sql");
+    	logmessage("Importing radius database admin schema.");
+		shell_exec("sudo mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/admin.sql");
+    	logmessage("Populating radius database with 1 user account.");
+		shell_exec("sudo echo \"insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');\" | mysql --host=localhost --user=root --password=raspberry radius");
+    	logmessage("Reboot initiated.");
+		shell_exec("sudo reboot");
+	}
+  ?>
 
 
 

@@ -140,6 +140,7 @@ function GoToHome() {
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['reboot'])) {
 		echo "<script>ReturnProgress();</script>";
 		echo "<script>setTimeout(GoToHome, 60000);</script>";
+		shell_exec("sudo reboot");
 	}
   ?>
 <!-- InstanceEndEditable -->

@@ -24,4 +24,7 @@ www-data ALL = (root) NOPASSWD: /sbin/ip
 www-data ALL = (root) NOPASSWD: /bin/echo
 www-data ALL = (root) NOPASSWD: /usr/bin/tail
 www-data ALL = (root) NOPASSWD: /usr/bin/killall chilli
+www-data ALL = (root) NOPASSWD: /sbin/reboot
+www-data ALL = (root) NOPASSWD: /bin/cp
+www-data ALL = (root) NOPASSWD: /usr/bin/mysql
 
