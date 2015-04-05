@@ -806,68 +806,172 @@ $(document).ready(function(){
     </fieldset>
 
 
-    <fieldset><legend>&nbsp;</legend>
+    <fieldset><legend>&nbsp;ieee80211n
+      </legend>
       <table width="100%" border="0">
         <tr>
-          <td colspan="2" align="center">&nbsp;</td>
+          <td colspan="2" align="center">Whether IEEE 802.11n (HT) is enabled</td>
         </tr>
         <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
+          <td width="40%" align="right">Enable 802.11n </td>
+          <td width="60%"><input type="checkbox" name="checkbox13" id="checkbox13"></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">Note: You will also need to enable WMM for full HT functionality.</td>
+          </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset><legend>&nbsp;HT capabilities
+      </legend>
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="3" align="center">ht_capab: HT capabilities (list of flags)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">LDPC coding capability:</td>
+          <td colspan="2"><input type="checkbox" name="checkbox14" id="checkbox14"></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Supported channel width set: [HT40-] = both 20 MHz and 40 MHz with secondary channel below the primary channel; [HT40+] = both 20 MHz and 40 MHz with secondary channel above the primary channel ; (20 MHz only if neither is set)</td>
+          </tr>
+        <tr>
+          <td colspan="3" align="center">Note: There are limits on which channels can be used with HT40- and HT40+.  Following table shows the channels that may be available for HT40- and HT40+ use per IEEE 802.11n Annex J:</td>
+          </tr>
+        <tr>
+          <td align="center">freq</td>
+          <td width="22%" align="center">HT40-</td>
+          <td width="48%" align="center">HT40+</td>
+        </tr>
+        <tr>
+          <td align="center">2.4 GHz</td>
+          <td align="center">5-13</td>
+          <td align="center">1-7 (1-9 in Europe/Japan)</td>
+        </tr>
+        <tr>
+          <td align="center">5 GHz</td>
+          <td align="center">40,48,56,64</td>
+          <td align="center">36,44,52,60</td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">(depending on the location, not all of these channels may be available for use)  Please note that 40 MHz channels may switch their primary and secondary channels if needed or creation of 40 MHz channel maybe rejected based on overlapping BSSes. These changes are done automatically when hostapd is setting up the 40 MHz channel.</td>
+          </tr>
+        <tr>
+          <td align="right"><label for="checkbox15">[HT40-]: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox15" id="checkbox15"></td>
+        </tr>
+        <tr>
+          <td align="right">[HT40+]:</td>
+          <td colspan="2"><input type="checkbox" name="checkbox16" id="checkbox16"></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">Spatial Multiplexing (SM) Power Save: [SMPS-STATIC] or [SMPS-DYNAMIC] (SMPS disabled if neither is set)</td>
+          </tr>
+        <tr>
+          <td align="right">(SM) Power Save:</td>
+          <td colspan="2"><select name="select10" id="select10">
+            <option>Not set</option>
+            <option value="[SMPS-STATIC]">[SMPS-STATIC]</option>
+            <option value="[SMPS-DYNAMIC]">[SMPS-DYNAMIC]</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox17">HT-greenfield: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox17" id="checkbox17"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox18">Short GI for 20 MHz: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox18" id="checkbox18"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox19">Short GI for 40 MHz: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox19" id="checkbox19"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox20">Tx STBC: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox20" id="checkbox20"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="select11">Rx STBC:</label></td>
+          <td><select name="select11" id="select11">
+            <option>None</option>
+            <option value="[RX-STBC1]">[RX-STBC1]</option>
+            <option value="[RX-STBC12]">[RX-STBC12]</option>
+            <option value="[RX-STBC123]">[RX-STBC123]</option>
+          </select></td>
+          <td>(one, two, or three spatial streams); Rx STBC disabled if none of these set</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox21">HT-delayed Block Ack: </label></td>
+          <td colspan="2"><input type="checkbox" name="checkbox21" id="checkbox21"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox22">Maximum A-MSDU length: </label></td>
+          <td><input type="checkbox" name="checkbox22" id="checkbox22"></td>
+          <td>for 7935 octets (3839 octets if not<br>
+            set)</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox23">DSSS/CCK Mode in 40 MHz: </label></td>
+          <td><input type="checkbox" name="checkbox23" id="checkbox23"></td>
+          <td>allowed (not allowed if not set)</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox24">40 MHz intolerant: </label></td>
+          <td><input type="checkbox" name="checkbox24" id="checkbox24"></td>
+          <td>(not advertised if not set)</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox25">L-SIG TXOP protection support: </label></td>
+          <td><input type="checkbox" name="checkbox25" id="checkbox25"></td>
+          <td>(disabled if not set)</td>
+        </tr>
+  </table>
+    </fieldset>
+
+
+    <fieldset>
+      <legend></legend>
+    Require HT
+      <table width="100%" border="0">
+        <tr>
+          <td colspan="2" align="center">Require stations to support HT PHY (reject association if they do not)</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><label for="checkbox26">Require HT: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox26" id="checkbox26"></td>
         </tr>
       </table>
     </fieldset>
 
 
-    <fieldset><legend>&nbsp;</legend>
+    <fieldset>
+      <legend></legend>
+    OBSS Interval
       <table width="100%" border="0">
         <tr>
-          <td colspan="2" align="center">&nbsp;</td>
+          <td colspan="2" align="center">If set non-zero, require stations to perform scans of overlapping channels to test for stations which would be affected by 40 MHz traffic.  This parameter sets the interval in seconds between these scans. This is useful only for testing that stations properly set the OBSS interval, since the other parameters in the OBSS scan parameters IE are set to 0.</td>
         </tr>
         <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
+          <td width="40%" align="right"><label for="checkbox27">OBSS Interval: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox27" id="checkbox27"></td>
         </tr>
       </table>
     </fieldset>
 
 
-    <fieldset><legend>&nbsp;</legend>
+    <fieldset><legend>&nbsp;ieee80211ac
+      </legend>
       <table width="100%" border="0">
         <tr>
-          <td colspan="2" align="center">&nbsp;</td>
+          <td colspan="2" align="center">Whether IEEE 802.11ac (VHT) is enabled</td>
         </tr>
         <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
+          <td width="40%" align="right"><label for="checkbox28">Enabled: </label></td>
+          <td width="60%"><input type="checkbox" name="checkbox28" id="checkbox28"></td>
         </tr>
-      </table>
-    </fieldset>
-
-
-    <fieldset><legend>&nbsp;</legend>
-      <table width="100%" border="0">
-        <tr>
-          <td colspan="2" align="center">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
-        </tr>
-      </table>
-    </fieldset>
-
-
-    <fieldset><legend>&nbsp;</legend>
-      <table width="100%" border="0">
-        <tr>
-          <td colspan="2" align="center">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
-        </tr>
-      </table>
+  </table>
     </fieldset>
 
 
