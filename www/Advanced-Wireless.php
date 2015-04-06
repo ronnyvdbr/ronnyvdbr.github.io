@@ -975,14 +975,144 @@ $(document).ready(function(){
     </fieldset>
 
 
-    <fieldset><legend>&nbsp;</legend>
+    <fieldset><legend>&nbsp;VHT Capabilities </legend>
       <table width="100%" border="0">
         <tr>
-          <td colspan="2" align="center">&nbsp;</td>
+          <td colspan="3" align="center">VHT capabilities (list of flags)</td>
         </tr>
         <tr>
-          <td width="40%" align="right">&nbsp;</td>
-          <td width="60%">&nbsp;</td>
+          <td align="right"><label for="select12">Maximum MPDU length:</label></td>
+          <td colspan="2" align="left"><select name="select12" id="select12">
+            <option>3895 octets</option>
+            <option value="[MAX-MPDU-7991]">7991 octets</option>
+            <option value="[MAX-MPDU-11454]">11454 octets</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="select13">Supported Channel widths:</label></td>
+          <td colspan="2" align="left"><select name="select13" id="select13">
+            <option>160 MHz &amp; 80+80 channel widths not supported</option>
+            <option value="[VHT160]">160 MHz channel width supported</option>
+            <option value="[VHT160-80PLUS80]">160 MHz &amp; 80+80 channel widths supported</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td align="right">Rx LDPC coding capability:</td>
+          <td><input type="checkbox" name="checkbox29" id="checkbox29"></td>
+          <td>Indicates support for receiving LDPC coded pkts</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox30">Short GI for 80 MHz: </label></td>
+          <td width="6%"><input type="checkbox" name="checkbox30" id="checkbox30"></td>
+          <td width="54%"> Indicates short GI support for reception of packets transmitted with TXVECTOR</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox31">Short GI for 160 MHz:</label></td>
+          <td><input type="checkbox" name="checkbox31" id="checkbox31"></td>
+          <td>Indicates short GI support for reception of packets transmitted with TXVECTOR</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox32">Tx STBC:</label></td>
+          <td><input type="checkbox" name="checkbox32" id="checkbox32"></td>
+          <td>Indicates support for the transmission of at least 2x1 STBC</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="select14">Rx STBC:</label></td>
+          <td colspan="2"><select name="select14" id="select14">
+            <option>Not Supported</option>
+            <option value="[RX-STBC-1]">support of one spatial stream</option>
+            <option value="[RX-STBC-12]">support of one and two spatial streams</option>
+            <option value="[RX-STBC-123]">support of one, two and three spatial streams</option>
+            <option value="[RX-STBC-1234]">support of one, two, three and four spatial streams</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox33">SU Beamformer Capable: </label></td>
+          <td><input type="checkbox" name="checkbox33" id="checkbox33"></td>
+          <td>Indicates support for operation as a single user beamformer</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox34">SU Beamformee Capable:</label></td>
+          <td><input type="checkbox" name="checkbox34" id="checkbox34"></td>
+          <td>Indicates support for operation as a single user beamformee</td>
+        </tr>
+        <tr>
+          <td align="center"><label for="textfield13">Compressed Steering Number of Beamformer Antennas Supported: [BF-ANTENNA-2] ; Beamformee's capability indicating the maximum number of beamformer antennas the beamformee can support when sending compressed beamforming feedback.  If SU beamformer capable, set to maximum value minus 1 else reserved (default).</label></td>
+          <td colspan="2"><input type="text" name="textfield13" id="textfield13"></td>
+        </tr>
+        <tr>
+          <td align="center"><label for="textfield14">Number of Sounding Dimensions: [SOUNDING-DIMENSION-2] ; Beamformer's capability indicating the maximum value of the NUM_STS parameter in the TXVECTOR of a VHT NDP. If SU beamformer capable, set to maximum value minus 1, else reserved (default).</label></td>
+          <td colspan="2"><input type="text" name="textfield14" id="textfield14"></td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox35">MU Beamformer Capable:</label></td>
+          <td><input type="checkbox" name="checkbox35" id="checkbox35"></td>
+          <td>Indicates support for operation as an MU beamformer</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox36">MU Beamformee Capable:</label></td>
+          <td><input type="checkbox" name="checkbox36" id="checkbox36"></td>
+          <td>Indicates support for operation as an MU beamformee</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox37">VHT TXOP PS:</label></td>
+          <td><input type="checkbox" name="checkbox37" id="checkbox37"></td>
+          <td>Indicates whether or not the AP supports VHT TXOP Power Save Mode or whether or not the STA is in VHT TXOP Power Save mode.</td>
+        </tr>
+        <tr>
+          <td align="right"><label for="checkbox38">+HTC-VHT Capable: </label></td>
+          <td><input type="checkbox" name="checkbox38" id="checkbox38"></td>
+          <td>Indicates whether or not the STA supports receiving a VHT variant HT Control field.</td>
+        </tr>
+        <tr>
+          <td align="center"><label for="number7">Indicates the maximum length of A-MPDU pre-EOF padding that the STA can recv.  This field is an integer in the range of 0 to 7.  The length defined by this field is equal to 2 pow(13 + Maximum A-MPDU Length Exponent) -1 octets</label></td>
+          <td colspan="2"><input name="number7" type="number" id="number7" max="7" min="0"></td>
+        </tr>
+        <tr>
+          <td colspan="3" align="left"># VHT Link Adaptation Capable: [VHT-LINK-ADAPT2] [VHT-LINK-ADAPT3]<br>
+            # Indicates whether or not the STA supports link adaptation using VHT variant<br>
+            # HT Control field<br>
+            # If +HTC-VHTcapable is 1<br>
+            #  0 = (no feedback) if the STA does not provide VHT MFB (default)<br>
+            #  1 = reserved<br>
+            #  2 = (Unsolicited) if the STA provides only unsolicited VHT MFB<br>
+            #  3 = (Both) if the STA can provide VHT MFB in response to VHT MRQ and if the<br>
+            #      STA provides unsolicited VHT MFB<br>
+            # Reserved if +HTC-VHTcapable is 0<br></td>
+          </tr>
+        <tr>
+          <td align="right"><label for="select15">VHT Link Adaptation Capable:</label></td>
+          <td colspan="2"><select name="select15" id="select15">
+            <option>0 = (no feedback)</option>
+            <option>1 = reserved</option>
+            <option value="[VHT-LINK-ADAPT2]">2 = (Unsolicited)</option>
+            <option value="[VHT-LINK-ADAPT3]">3 = (Both)</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right"><p>test</p>
+            <p>&nbsp;</p></td>
+          <td colspan="2">&nbsp;</td>
         </tr>
       </table>
     </fieldset>
@@ -1008,7 +1138,7 @@ $(document).ready(function(){
 
   
   
-  <!-- InstanceEndEditable -->
+  	<!-- InstanceEndEditable -->
   </footer>
 </div><!-- end .container -->
 
