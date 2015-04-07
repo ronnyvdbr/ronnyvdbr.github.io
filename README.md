@@ -8,7 +8,9 @@ This project came to life out of personal interest in hardware embedded design a
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
 For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
-Download: [Raspberry Pi Wifi Router v1.1](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip)
+* [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.zip)
+Version 1.1 of the image now available which includes a captive portal, for all the changes, check the CHANGELOG on github.
+* [Raspberry Pi Wifi Router v1.1](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip)
 The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
 Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.
 
