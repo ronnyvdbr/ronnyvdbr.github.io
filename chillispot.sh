@@ -1,8 +1,8 @@
 sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
 apt-get update
 sudo apt-get -y install debhelper libcurl4-gnutls-dev
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password raspberry'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password raspberry'
+echo 'mysql-server mysql-server/root_password password raspberry' | debconf-set-selections
+echo 'mysql-server mysql-server/root_password_again password raspberry' | debconf-set-selections
 sudo apt-get -y install mysql-server
 sudo apt-get -y install php5-mysql
 sudo apt-get -y install freeradius freeradius-mysql
