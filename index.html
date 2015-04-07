@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Raspberry Pi - Wifi Router Project : The Raspbian Hard-Float Wireless Router">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Raspberry Pi - Wifi Router Project</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ronnyvdbr">View on GitHub</a>
+
+          <h1 id="project_title">Raspberry Pi - Wifi Router Project</h1>
+          <h2 id="project_tagline">The Raspbian Hard-Float Wireless Router</h2>
+
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="raspberry-wifi-router" class="anchor" href="#raspberry-wifi-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry-Wifi-Router:</h1>
+
+<h3>
+<a id="welcome-to-the-raspberry-wifi-router-project" class="anchor" href="#welcome-to-the-raspberry-wifi-router-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to the Raspberry-Wifi-Router project.</h3>
+
+<p>This project aims to build a descent Wifi Router out of a Raspberry Pi which is easily configurable via
+a dynamic web interface designed in HTML/PHP.
+This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
+I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.</p>
+
+<p>For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:</p>
+
+<ul>
+<li>
+<a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.zip">Raspberry Pi Wifi Router v1.0</a>
+Version 1.1 of the image now available which includes a captive portal, for all the changes, check the CHANGELOG on github.</li>
+<li>
+<a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip">Raspberry Pi Wifi Router v1.1</a>
+The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
+Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.</li>
+</ul>
+
+<p>For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:</p>
+
+<h5>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started:</h5>
+
+<p>Before getting started, make sure you have the right equipment at hand:</p>
+
+<ul>
+<li>Raspberry Pi - Model B - other models might work but are untested.</li>
+<li>SD card from minimal 2 Gb.</li>
+<li>A wifi adapter which has a compatible cfg80211 driver.
+Go to <a href="https://wireless.wiki.kernel.org/en/users/drivers">https://wireless.wiki.kernel.org/en/users/drivers</a>
+Search for a usb wifi driver which is cfg80211 compatible, and is capable of doing AP and PHY mode B/G/N.
+Based on that driver, look for a physical device which will work with that driver.
+This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapter: <a href="http://www.alfa.com.tw/products_show.php?pc=34&amp;ps=22">http://www.alfa.com.tw/products_show.php?pc=34&amp;ps=22</a>
+</li>
+</ul>
+
+<h5>
+<a id="preparing-your-raspberry-pi" class="anchor" href="#preparing-your-raspberry-pi" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing your Raspberry Pi:</h5>
+
+<ul>
+<li>For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card.</li>
+<li>I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called miniban.</li>
+<li>You can grab an image of their minimal Raspbian OS image from their website <a href="https://minibianpi.wordpress.com/">https://minibianpi.wordpress.com/</a> and write that to SD card with win32diskimager to get started.</li>
+</ul>
+
+<p>After booting, we need to resize the partition to 2 Gb to fit the Wireless Router:</p>
+
+<ul>
+<li>fdisk /dev/mmcblk0</li>
+<li>Then delete partitions with d and create a new with n. You can view the existing table with p.</li>
+<li>p to see the current start of the main partition</li>
+<li>d, 2 to delete the main partition</li>
+<li>n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and  enter +2G to expand the partition to 2 Gb, Check the p output!</li>
+<li>w write the new partition table
+Now you need to reboot:</li>
+<li>shutdown -r now
+After the reboot you need to resize the filesystem on the partition. The resize2fs command will resize your filesystem to the new size from the changed partition table.</li>
+<li>resize2fs /dev/mmcblk0p2</li>
+</ul>
+
+<h5>
+<a id="after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" class="anchor" href="#after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" aria-hidden="true"><span class="octicon octicon-link"></span></a>After bootup with your miniban image, login to your Raspberry Pi using root and raspberry as password, then continue the rest of the prep:</h5>
+
+<ul>
+<li>apt-get update</li>
+<li>apt-get -y install git-core</li>
+<li>git clone <a href="https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git">https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git</a> /home/pi/Raspberry-Wifi-Router</li>
+<li>sh /home/pi/Raspberry-Wifi-Router/installer.sh</li>
+<li>sh /home/pi/Raspberry-Wifi-Router/chillispot.sh</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-18361926-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
