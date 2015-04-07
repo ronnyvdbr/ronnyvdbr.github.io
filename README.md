@@ -17,7 +17,7 @@ For the ones amongst us that are not scared of entering the matrix, here's how y
 ##### Getting started:
 Before getting started, make sure you have the right equipment at hand:
 * Raspberry Pi - Model B - other models might work but are untested.
-* Ssd card formatted fat32
+* SD card from minimal 2 Gb.
 * A wifi adapter which has a compatible cfg80211 driver.
 Go to https://wireless.wiki.kernel.org/en/users/drivers
 Search for a usb wifi driver which is cfg80211 compatible, and is capable of doing AP and PHY mode B/G/N.
