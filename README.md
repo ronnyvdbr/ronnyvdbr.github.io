@@ -8,7 +8,7 @@ This project came to life out of personal interest in hardware embedded design a
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
 For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
-Download: [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.gz)
+Download: [Raspberry Pi Wifi Router v1.1](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip)
 The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
 Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.
 
@@ -25,10 +25,11 @@ Based on that driver, look for a physical device which will work with that drive
 This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapter: http://www.alfa.com.tw/products_show.php?pc=34&ps=22
 
 ##### Preparing your Raspberry Pi:
-* For this project I chose to start off with a netinstall of Raspbian, because it gives u a minimal vanilla install of Raspbian Wheezy without any extra clutter.
-* Credits go out to [Debian Pi](https://github.com/debian-pi/raspbian-ua-netinst), you can grab a copy of their latest net-installer [https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6](https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6).  Format your SSD fat32, and extract the zip onto the ssd.  Put into Raspberry Pi, and boot it up, it's just as simple as that.
+* For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card.
+* I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called miniban.
+* You can grab an image of their minimal Raspbian OS image from their website https://minibianpi.wordpress.com/ and then get started with the Wireless Router Preparation.
 
-##### After the net-install, login to your Raspberry Pi using root and raspbian as password, then continue the rest of the prep:
+##### After bootup with your miniban image, login to your Raspberry Pi using root and raspberry as password, then continue the rest of the prep:
 * apt-get -y install git-core
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
 * sh /home/pi/Raspberry-Wifi-Router/installer.sh
