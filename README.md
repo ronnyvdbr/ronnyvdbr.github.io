@@ -36,7 +36,7 @@ After booting, we need to resize the partition to 2 Gb to fit the Wireless Route
 * Then delete partitions with d and create a new with n. You can view the existing table with p.
 * p to see the current start of the main partition
 * d, 2 to delete the main partition
-* n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and * enter +2G to expand the partition to 2 Gb, Check the p output!
+* n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and  enter +2G to expand the partition to 2 Gb, Check the p output!
 * w write the new partition table
 Now you need to reboot:
 * shutdown -r now
