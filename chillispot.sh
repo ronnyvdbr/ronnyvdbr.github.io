@@ -47,6 +47,7 @@ echo "iptables –I POSTROUTING –t nat –o $HS_WANIF –j MASQUERADE" | tee -
 sed -i 's/haserl=$(which haserl 2>\/dev\/null)/haserl=\/usr\/local\/bin\/haserl/g' /etc/chilli/wwwsh
 sudo sed -i 's/# Default-Start:  2 3 5/# Default-Start:  2 3 4 5/g' /etc/init.d/chilli
 sudo sed -i 's/# Default-Stop:/# Default-Stop:  0 1 6/g' /etc/init.d/chilli
+reboot
 
 
 
