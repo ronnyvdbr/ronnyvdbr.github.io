@@ -7,7 +7,7 @@ sudo apt-get -y install mysql-server
 sudo apt-get -y install php5-mysql
 sudo apt-get -y install freeradius freeradius-mysql
 update-rc.d mysql defaults
-echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry radius
+echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/schema.sql
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/admin.sql
 echo "insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');" | mysql --host=localhost --user=root --password=raspberry radius
