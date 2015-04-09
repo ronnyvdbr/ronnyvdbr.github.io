@@ -1,13 +1,13 @@
 sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
 apt-get update
 sudo apt-get -y install debhelper libcurl4-gnutls-dev
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password raspberry'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password raspberry'
+echo 'mysql-server mysql-server/root_password password raspberry' | debconf-set-selections
+echo 'mysql-server mysql-server/root_password_again password raspberry' | debconf-set-selections
 sudo apt-get -y install mysql-server
 sudo apt-get -y install php5-mysql
 sudo apt-get -y install freeradius freeradius-mysql
 update-rc.d mysql defaults
-echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry radius
+echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/schema.sql
 mysql --host=localhost --user=root --password=raspberry radius < /etc/freeradius/sql/mysql/admin.sql
 echo "insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');" | mysql --host=localhost --user=root --password=raspberry radius
@@ -47,6 +47,7 @@ echo "iptables –I POSTROUTING –t nat –o $HS_WANIF –j MASQUERADE" | tee -
 sed -i 's/haserl=$(which haserl 2>\/dev\/null)/haserl=\/usr\/local\/bin\/haserl/g' /etc/chilli/wwwsh
 sudo sed -i 's/# Default-Start:  2 3 5/# Default-Start:  2 3 4 5/g' /etc/init.d/chilli
 sudo sed -i 's/# Default-Stop:/# Default-Stop:  0 1 6/g' /etc/init.d/chilli
+reboot
 
 
 

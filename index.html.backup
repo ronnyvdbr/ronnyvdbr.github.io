@@ -9,7 +9,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Raspberry Pi - Wifi Router Project</title>
-    <script>
+
+<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -33,6 +34,7 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
+
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
@@ -49,6 +51,7 @@
       <section id="main_content" class="inner">
         <h1>
 <a id="raspberry-wifi-router" class="anchor" href="#raspberry-wifi-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry-Wifi-Router:</h1>
+
 <a href="https://twitter.com/share" class="twitter-share-button" data-via="ronnyvdbr">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
 
@@ -65,6 +68,7 @@
 
 
 <img src="Screenshot.PNG"alt=""/>
+
 <h3>
 <a id="welcome-to-the-raspberry-wifi-router-project" class="anchor" href="#welcome-to-the-raspberry-wifi-router-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to the Raspberry-Wifi-Router project.</h3>
 
@@ -76,28 +80,35 @@ I'm putting my desing onto Github to share my work with the open source communit
 <p>For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:</p>
 
 <ul>
-
-<li>
-<a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.2.zip"
-   onclick="ga('send','event','download','RaspberryWAPv1.2.zip')" target="_blank">Raspberry Pi Wifi Router v1.2</a>
-</li>
-
-
-<li>
-<a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip"
-   onclick="ga('send','event','download','RaspberryWAPv1.1.zip')" target="_blank">Raspberry Pi Wifi Router v1.1</a>
-   </li>
-
-
-
 <li>
 <a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.zip"
    onclick="ga('send','event','download','RaspberryWAPv1.0.zip')" target="_blank">Raspberry Pi Wifi Router v1.0</a>
    </li>
-   
-   </ul>
    <p>Version 1.1 of the image now available which includes a captive portal.</p>
    
+   <li>
+<a href="http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip"
+   onclick="ga('send','event','download','RaspberryWAPv1.1.zip')" target="_blank">Raspberry Pi Wifi Router v1.1</a>
+   </li>
+</ul>
+  <p>The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.<br>
+Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.</p>
+<strong>Features:</strong><br>
+    Bridge and Router with NAT functionality<br>
+    Static/Dynamic addressing<br>
+    DHCP, DNS Proxy, NTP, <br>
+    hostapd wifi module<br>
+    802.11 B/G/N depending on your wifi adapter<br>
+    Wi-Fi Protected Access® (WPA/WPA2—PSK) and WEP<br>
+    Captive Portal (coovachilli)<br>
+  <p>Still to be implemented:<br>
+     Port forwarding (iptables).<br>
+     Network Filter (firewall).<br>
+     Web Filter (privoxy).<br>
+     Proxy (squid, squidguard).<br>
+     Advanced wireless configuration (hostapd).</p>
+  <p>&nbsp;</p>
+
 
 <p>For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:</p>
 
@@ -108,7 +119,7 @@ I'm putting my desing onto Github to share my work with the open source communit
 
 <ul>
 <li>Raspberry Pi - Model B - other models might work but are untested.</li>
-<li>SD card from minimal 2 Gb.</li>
+<li>Ssd card formatted fat32</li>
 <li>A wifi adapter which has a compatible cfg80211 driver.
 Go to <a href="https://wireless.wiki.kernel.org/en/users/drivers">https://wireless.wiki.kernel.org/en/users/drivers</a>
 Search for a usb wifi driver which is cfg80211 compatible, and is capable of doing AP and PHY mode B/G/N.
@@ -121,31 +132,14 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <a id="preparing-your-raspberry-pi" class="anchor" href="#preparing-your-raspberry-pi" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing your Raspberry Pi:</h5>
 
 <ul>
-<li>For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card.</li>
-<li>I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called miniban.</li>
-<li>You can grab an image of their minimal Raspbian OS image from their website <a href="https://minibianpi.wordpress.com/">https://minibianpi.wordpress.com/</a> and write that to SD card with win32diskimager to get started.</li>
-</ul>
-
-<p>After booting, we need to resize the partition to 2 Gb to fit the Wireless Router:</p>
-
-<ul>
-<li>fdisk /dev/mmcblk0</li>
-<li>Then delete partitions with d and create a new with n. You can view the existing table with p.</li>
-<li>p to see the current start of the main partition</li>
-<li>d, 2 to delete the main partition</li>
-<li>n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and  enter +2G to expand the partition to 2 Gb, Check the p output!</li>
-<li>w write the new partition table
-Now you need to reboot:</li>
-<li>shutdown -r now
-After the reboot you need to resize the filesystem on the partition. The resize2fs command will resize your filesystem to the new size from the changed partition table.</li>
-<li>resize2fs /dev/mmcblk0p2</li>
+<li>For this project I chose to start off with a netinstall of Raspbian, because it gives u a minimal vanilla install of Raspbian Wheezy without any extra clutter.</li>
+<li>Credits go out to <a href="https://github.com/debian-pi/raspbian-ua-netinst">Debian Pi</a>, you can grab a copy of their latest net-installer <a href="https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6">https://github.com/debian-pi/raspbian-ua-netinst/releases/tag/v1.0.6</a>.  Format your SSD fat32, and extract the zip onto the ssd.  Put into Raspberry Pi, and boot it up, it's just as simple as that.</li>
 </ul>
 
 <h5>
-<a id="after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" class="anchor" href="#after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" aria-hidden="true"><span class="octicon octicon-link"></span></a>After bootup with your miniban image, login to your Raspberry Pi using root and raspberry as password, then continue the rest of the prep:</h5>
+<a id="after-the-net-install-login-to-your-raspberry-pi-using-root-and-raspbian-as-password-then-continue-the-rest-of-the-prep" class="anchor" href="#after-the-net-install-login-to-your-raspberry-pi-using-root-and-raspbian-as-password-then-continue-the-rest-of-the-prep" aria-hidden="true"><span class="octicon octicon-link"></span></a>After the net-install, login to your Raspberry Pi using root and raspbian as password, then continue the rest of the prep:</h5>
 
 <ul>
-<li>apt-get update</li>
 <li>apt-get -y install git-core</li>
 <li>git clone <a href="https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git">https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git</a> /home/pi/Raspberry-Wifi-Router</li>
 <li>sh /home/pi/Raspberry-Wifi-Router/installer.sh</li>
@@ -157,21 +151,9 @@ After the reboot you need to resize the filesystem on the partition. The resize2
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-18361926-2");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-
   </body>
 </html>
+N
