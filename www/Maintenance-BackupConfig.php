@@ -12,6 +12,8 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
+<?php include 'functions.php';?>
+<?php logmessage("Loading page Maintenance-BackupConfig.php");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -62,6 +64,7 @@
 
          <li class='has-sub' id="Logs"><a href='#'><span>Logs</span></a>
             <ul id="LogsUl">
+               <li><a href='Logs-Routerlog.php'><span>Routerlog</span></a></li>
                <li><a href='Logs-Dmesg.php'><span>Dmesg</span></a></li>
                <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
                <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>
@@ -81,7 +84,12 @@
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-      
+         <table width="100%" border="0">
+      <tr>
+        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
+      </tr>
+    </table>
+   
       
       
     <!-- InstanceEndEditable -->

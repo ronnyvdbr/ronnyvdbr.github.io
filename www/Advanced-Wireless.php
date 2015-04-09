@@ -19,6 +19,8 @@ $(document).ready(function(){
 	$('#AdvancedUl').show();
 });
 </script>
+<?php include 'functions.php';?>
+<?php logmessage("Loading page Advanced-Wireless.php");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -69,6 +71,7 @@ $(document).ready(function(){
 
          <li class='has-sub' id="Logs"><a href='#'><span>Logs</span></a>
             <ul id="LogsUl">
+               <li><a href='Logs-Routerlog.php'><span>Routerlog</span></a></li>
                <li><a href='Logs-Dmesg.php'><span>Dmesg</span></a></li>
                <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
                <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>

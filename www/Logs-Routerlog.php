@@ -18,12 +18,9 @@ $(document).ready(function(){
    $('#Logs').addClass('active');
 	$('#LogsUl').show();
 });
-function Reload() {
-	window.location = '/Logs-Syslog.php';
-}
 </script>
 <?php include 'functions.php';?>
-<?php logmessage("Loading page Logs-Messages.php");?>
+<?php logmessage("Loading page Logs-Routerlog.php");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -90,16 +87,14 @@ function Reload() {
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-  <div id="ContentTitle">MESSAGES</div>
+  <div id="ContentTitle">ROUTERLOG</div>
   
   <div id="ContentArticle">
   <?php
-	$output = shell_exec('sudo tail -n 50 /var/log/messages | tac');
+	$output = shell_exec('sudo tail -n 50 /var/log/raspberrywap.log | tac');
 	echo "<p>" . nl2br($output) . "</p>";
-	echo "<script>setTimeout(Reload, 3000);</script>";
   ?>
   </div>
-
   
   
   <!-- InstanceEndEditable -->
@@ -125,7 +120,7 @@ function Reload() {
   </footer>
 </div><!-- end .container -->
 
-<!-- InstanceBeginEditable name="code" -->code
+<!-- InstanceBeginEditable name="code" -->
 
 
 

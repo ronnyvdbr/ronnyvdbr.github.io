@@ -13,6 +13,7 @@
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
 <?php include 'functions.php';?>
+<?php logmessage("Loading page home.php");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -63,6 +64,7 @@
 
          <li class='has-sub' id="Logs"><a href='#'><span>Logs</span></a>
             <ul id="LogsUl">
+               <li><a href='Logs-Routerlog.php'><span>Routerlog</span></a></li>
                <li><a href='Logs-Dmesg.php'><span>Dmesg</span></a></li>
                <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
                <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>
@@ -89,6 +91,10 @@
   
   <div id="ContentArticle">
     <table width="100%" border="0">
+    <tr>
+      <td colspan="2" align="center">The Raspberry Wireless Router Project can be found on github:<br />
+        <a href="https://github.com/ronnyvdbr/ronnyvdbr.github.io" target="_blank">https://github.com/ronnyvdbr/ronnyvdbr.github.io</a></td>
+      </tr>
     <tr>
       <td width="50%" align="right">Current Timezone:</td>
       <td width="50%"><?php echo date_default_timezone_get();?></td>
@@ -261,7 +267,7 @@
       </tr>
 	
 	<?php
-	if (($routersettingsini['operationmode'] == "Router") && (shell_exec("cat /sys/class/net/wlan0/operstate") == "up\n"))
+	if (($routersettingsini['operationmode'] == "Router") && (shell_exec("cat /sys/class/net/wlan0/operstate") == "up\n") && ($routersettingsini['captiveportal'] == "disabled"))
 	{
 		echo "<tr>";
 		  echo '<td align="right">IP Address:</td>';
@@ -270,6 +276,18 @@
 		echo "<tr>";
 		  echo '<td align="right">Subnet Mask:</td>';
 		  echo "<td>" . shell_exec("ifconfig wlan0 | awk '/Mask:/{ print $4;} ' | sed 's/Mask://'") . "</td>";
+		echo "</tr>";
+	  echo "</table>";
+	}
+	else if (($routersettingsini['operationmode'] == "Router") && ($routersettingsini['captiveportal'] == "enabled"))
+	{
+		echo "<tr>";
+		  echo '<td align="right">IP Address:</td>';
+		  echo "<td>" . shell_exec("ifconfig tun0 | awk '/inet / { print $2 }' | sed 's/addr://'") . "</td>";
+		echo "</tr>";
+		echo "<tr>";
+		  echo '<td align="right">Subnet Mask:</td>';
+		  echo "<td>" . shell_exec("ifconfig tun0 | awk '/Mask:/{ print $4;} ' | sed 's/Mask://'") . "</td>";
 		echo "</tr>";
 	  echo "</table>";
 	}
