@@ -1,9 +1,0 @@
-### Preparing an ssd card with a small size Rasbian Installation
-
-Let's not re-invent the wheel and create a minimal installation ourself, there already exist a nice project for that:
-http://sourceforge.net/projects/minibian/
-let's download this image, put it to ssd with w32diskimager.
-
-This image launches a Rasbian netinstall, so put the SD in your Raspberry, boot it up, wait until finished.
-After this, run the installer script from the repository.
-
