@@ -3,3 +3,5 @@ when switching from access point to router mode, the dhclient keeps running
 the shutdown of coova chilli doesn't work
 
 When rebooting after switching to router mode, the iptables masquerade is not retained.
+The init script of Chili dependance on Network daemon needs to be remover
+
