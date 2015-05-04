@@ -5,3 +5,7 @@ the shutdown of coova chilli doesn't work
 When rebooting after switching to router mode, the iptables masquerade is not retained.
 The init script of Chili dependance on Network daemon needs to be remover
 
+1. Updated avanced captive portal php
+2. In up.sh of Chili put another iptables masquerade
+3. In the init script of Chili Removed Network dependency
+
