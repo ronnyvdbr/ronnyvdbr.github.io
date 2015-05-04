@@ -9,16 +9,23 @@ The current release version of the Raspberry WAP is v1.0:
 * created configuration page to modify basic network parameters
 * Created configuration page to modify basic wireless parameters
 
-Targeted for release v1.1:
-* Captive portal (coovachilli)
+Release v1.1:
+* Implemented Captive portal (coovachilli)
+
+Release v1.2: 
+* Partial Advanced Wireless form implementation
+* Included link to github page on home page
+* Implemented the ability to reboot the AP
+* Implemented factory default config
+* Implemented logging buttons
 
 Targeted for future releases:
-* Port forwarding (iptables).<br>
-* Captive Portal (coovachilli)<br>
-* Network Filter (firewall).<br>
-* Web Filter (privoxy).<br>
-* Proxy (squid, squidguard).<br>
-* Advanced wireless configuration (hostapd).</p>
+* Advanced wireless configuration (hostapd)
+* Port forwarding (iptables)
+* Network Filter (firewall)
+* Web Filter (privoxy)
+* Proxy (squid, squidguard)
+
 
 
 
