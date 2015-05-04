@@ -1,3 +1,5 @@
-when rebooting after switch to router mode, there is no ip address on wlan0
+when rebooting after switch to router mode, there is no ip address on wlan0.  OK added to rc.local
 when switching from access point to router mode, the dhclient keeps running
 the shutdown of coova chilli doesn't work
+
+When rebooting after switching to router mode, the iptables masquerade is not retained.
