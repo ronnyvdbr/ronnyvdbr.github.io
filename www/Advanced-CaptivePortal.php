@@ -354,8 +354,8 @@ function ReturnStatus_form_deleteusers(error) {
 			shell_exec("sudo update-rc.d chilli defaults 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Starting hostapd service.");
 			shell_exec("sudo service hostapd start 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-			logmessage("Updating rc.local to default configuration.");
-			shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0//g' /etc/rc.local");
+			logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
+			shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
 		  break;
 		  case "disabled":
 			flush();
@@ -374,8 +374,7 @@ function ReturnStatus_form_deleteusers(error) {
 			logmessage("Configuring interface wlan0.");
 			shell_exec("sudo ifup wlan0 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Updating rc.local to add IP address on wlan interface on boot.");
-			shell_exec("sudo sed -i 's/exit 0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
-			shell_exec('sudo echo "exit 0" | sudo tee --append /etc/rc.local');
+			shell_exec("sudo sed -i 's/# ip addr add 192.168.1.1\/24 dev wlan0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
 		  break;
 		  }
 	  }
