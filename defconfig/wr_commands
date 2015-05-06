@@ -17,6 +17,7 @@ www-data ALL = (root) NOPASSWD: /sbin/sysctl enable dnsmasq
 www-data ALL = (root) NOPASSWD: /sbin/sysctl disable dnsmasq
 www-data ALL = (root) NOPASSWD: /etc/init.d/dnsmasq
 www-data ALL = (root) NOPASSWD: /sbin/iptables
+www-data ALL = (root) NOPASSWD: /sbin/iptables-save
 www-data ALL = (root) NOPASSWD: /usr/sbin/update-rc.d
 www-data ALL = (root) NOPASSWD: /bin/sed
 www-data ALL = (root) NOPASSWD: /usr/bin/tee

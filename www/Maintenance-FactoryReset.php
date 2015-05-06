@@ -148,6 +148,11 @@ function GoToHome() {
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/rc.local to /etc/rc.local");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf to /etc/dnsmasq.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf to /etc/hostapd/hostapd.conf");

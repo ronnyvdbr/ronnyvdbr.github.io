@@ -176,8 +176,7 @@ function ReturnReadyOperation() {
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
 				logmessage("Updating rc.local to add IP address on wlan interface on boot.");
-				shell_exec("sudo sed -i 's/exit 0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
-				shell_exec('sudo echo "exit 0" | sudo tee --append /etc/rc.local');
+				shell_exec("sudo sed -i 's/# ip addr add 192.168.1.1\/24 dev wlan0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
 				
 				logmessage("Stopping Access Point Daemon");
 				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -230,6 +229,9 @@ function ReturnReadyOperation() {
 				logmessage("Enabling ip forwarding");
 				shell_exec("sudo sysctl -w net.ipv4.ip_forward=1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
+				logmessage("Enabling ip forwarding restore on boot in rc.local");
+				shell_exec("sudo sed -i 's/# sysctl -w net.ipv4.ip_forward=1/sysctl -w net.ipv4.ip_forward=1/g' /etc/rc.local");
+				
 				logmessage("Configuring dnsmasq to start at boot");
 				shell_exec("sudo update-rc.d dnsmasq defaults 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
@@ -238,6 +240,12 @@ function ReturnReadyOperation() {
 
 				logmessage("Enabling NAT");
 				shell_exec("sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Writing iptables to /var/tmp/iptables");
+				shell_exec("sudo iptables-save > /var/tmp/iptables");
+				
+				logmessage("Enabling iptables restore on boot in rc.local");
+				shell_exec("sudo sed -i 's/# iptables-restore < \/var\/tmp\/iptables/iptables-restore < \/var\/tmp\/iptables/g' /etc/rc.local");
 				
 				echo "<script>$('#functionstat').text('Router');</script>";
 				echo "<script>$('#selectopsmode').val('Access Point');</script>";
@@ -260,11 +268,15 @@ function ReturnReadyOperation() {
 				$configurationsettings['operationmode'] = "Access Point";
 				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				
-				logmessage("Updating rc.local to default configuration.");
-				shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0//g' /etc/rc.local");
+				logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
+				shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
 				
 				logmessage("Disabling IP forwarding");
 				shell_exec("sudo sysctl -w net.ipv4.ip_forward=0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Disabling ip forwarding restore on boot in rc.local");
+				shell_exec("sudo sed -i 's/sysctl -w net.ipv4.ip_forward=1/# sysctl -w net.ipv4.ip_forward=1/g' /etc/rc.local");
+				
 				
 				if(strcmp($configurationsettings['captiveportal'],"disabled") == 0) {
 					logmessage("Disabling dnsmasq to start at boot");
@@ -310,6 +322,12 @@ function ReturnReadyOperation() {
 				
 				logmessage("Configuring interface br0");
 				shell_exec("sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
+				
+				logmessage("Flushing iptables nat table entries, if any ...");
+				shell_exec("sudo iptables -t nat -F 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				logmessage("Disabling iptables restore on boot in rc.local");
+				shell_exec("sudo sed -i 's/iptables-restore < \/var\/tmp\/iptables/# iptables-restore < \/var\/tmp\/iptables/g' /etc/rc.local");
 				
 				echo "<script>$('#functionstat').text('Access Point');</script>";
 				echo "<script>$('#selectopsmode').val('Router');</script>";
