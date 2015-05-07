@@ -363,8 +363,6 @@ function ReturnStatus_form_deleteusers(error) {
 			shell_exec("sudo service hostapd stop 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Killing Captive Portal service.");
 			shell_exec("sudo killall chilli 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-			logmessage("Unscheduling Captive Portal service to start at boot.");
-			shell_exec("sudo update-rc.d -f chilli remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Starting dnsmasq service.");
 			shell_exec("sudo service dnsmasq start 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Scheduling dnsmasq service to start at boot.");
@@ -375,6 +373,9 @@ function ReturnStatus_form_deleteusers(error) {
 			shell_exec("sudo ifup wlan0 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			logmessage("Updating rc.local to add IP address on wlan interface on boot.");
 			shell_exec("sudo sed -i 's/# ip addr add 192.168.1.1\/24 dev wlan0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
+			logmessage("Unscheduling Captive Portal service to start at boot.");
+			shell_exec("sudo update-rc.d chilli remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+
 		  break;
 		  }
 	  }
