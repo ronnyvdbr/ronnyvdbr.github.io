@@ -4,4 +4,18 @@ slip into the software will not be noticed immediately.
 If problems are encountered they will be queued up for fixing until the next release.
 
 Raspberry WAP v1.0
-When the software is switched to Router mode, on the next reboot the wlan0 interfaces is not assigned the IP address.
+when switching from access point to router mode, the dhclient keeps running
+When the software is switched to Router mode, on the next reboot the wlan0 interfaces is not assigned the IP address. -> ok fixed
+
+Raspberry WAP v1.2
+the shutdown of coova chilli doesn't work -> ok fixed
+after reboot coova chilli doesn't work -> ok fixed
+after reboot ip forwarding is not enable automatically -> ok fixed
+after reboot ip masquerading is not enabled automatically -> ok fixed
+to make chilli work perfectly the following changes were needed:
+1. Updated avanced captive portal php
+2. In up.sh of Chili put another iptables masquerade
+3. In the init script of Chili Removed Network dependency
+The init script of Chili dependance on Network daemon needs to be removed
+
+Raspberry WAP v1.2
