@@ -1,3 +1,5 @@
+<!-- check if our login_user is set, otherwise redirect to the logon screen -->
+<?php include('logincheck.php');?>
 <!doctype html>
 <html lang="en"><!-- InstanceBegin template="/Templates/RWR-Template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
@@ -21,7 +23,6 @@
 <body>
 
 <div class="container"> 
-  
   
   <header>
     <div id="titlebar">
@@ -69,6 +70,8 @@
                <li><a href='Logs-Syslog.php'><span>Syslog</span></a></li>
                <li class='last'><a href='Logs-Messages.php'><span>Messages</span></a></li>
             </ul>
+         </li>
+         <li id="Logs"><a href='logout.php'><span>Log out</span></a>
          </li>
       </ul>
       </div>

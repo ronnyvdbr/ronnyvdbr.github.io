@@ -1,3 +1,4 @@
+<?php session_start(); // Starting Session ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
@@ -12,8 +13,6 @@
 
 
 <?php
-ob_start();
-session_start(); // Starting Session
 $error=''; // Variable To Store Error Message
 if (isset($_POST['submit'])) {
 	if (empty($_POST['username']) || empty($_POST['password'])) {
@@ -63,16 +62,9 @@ echo "<script type='text/javascript'> document.location = 'home.php'; </script>"
 				<input name="password" type="password" required id="password" placeholder="Password" />
 			</div>
 			<div>
-				<table width="100%" border="0">
-                  <tr>
-                    <td align="center">
-                      <input name="submit" type="submit" id="submit" value="Log in" />
-                      <br />
-                      <span><?php echo $error; ?></span>
-                    </td>
-                  </tr>
-                </table>
-		  </div>
+              <input name="submit" type="submit" id="submit" value="Log in" /><br><br>
+              <span style="color:red"><?php echo $error; ?></span>
+            </div>
 		</form><!-- form -->
 		<div class="button">
 		</div><!-- button -->

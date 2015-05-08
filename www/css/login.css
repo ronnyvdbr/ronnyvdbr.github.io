@@ -10,16 +10,18 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
 	padding: 0;
 	border: 0;
 	outline: 0;
 	font-size: 100%;
 	vertical-align: baseline;
 	background: transparent;
+	margin-bottom: 0;
+	margin-right: 0;
+	margin-top: 0;
 }
 body {
-	background: #DCDDDF url(http://cssdeck.com/uploads/media/items/7/7AF2Qzt.png);
+	background-color: #42413C;
 	color: #000;
 	font: 14px Arial;
 	margin: 0 auto;
@@ -157,7 +159,7 @@ form:after {
 	-ms-transition: all 0.5s ease;
 	-o-transition: all 0.5s ease;
 	transition: all 0.5s ease;
-	background: #eae7e7 url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) no-repeat;
+	background: #eae7e7 url(../images/Login_Page_Icons.png) no-repeat;
 	border: 1px solid #c8c8c8;
 	color: #777;
 	font: 13px Helvetica, Arial, sans-serif;
@@ -185,6 +187,19 @@ form:after {
 	background: -o-linear-gradient(top,  rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
 	background: -ms-linear-gradient(top,  rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
 	background: linear-gradient(top,  rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
+
+
+
+
+
+
+
+
+
+
+
+
+
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fee79a', endColorstr='#fec151',GradientType=0 );
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
@@ -202,10 +217,13 @@ form:after {
 	float: left;
 	font: bold 15px Helvetica, Arial, sans-serif;
 	height: 35px;
-	margin: 20px 0 35px 15px;
 	position: relative;
 	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 	width: 120px;
+	margin-bottom: 35px;
+	margin-left: 15px;
+	margin-right: 0;
+	margin-top: 20px;
 }
 #content form input[type="submit"]:hover {
 	background: rgb(254,193,81);
@@ -245,7 +263,7 @@ form:after {
 	padding: 15px 0;
 }
 .button a {
-	background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;
+	background: url(../images/Login_Page_Icons.png) 0 -112px no-repeat;
 	color: #7E7E7E;
 	font-size: 17px;
 	padding: 2px 0 2px 40px;
@@ -259,4 +277,7 @@ form:after {
 .button a:hover {
 	background-position: 0 -135px;
 	color: #00aeef;
+}
+.container #content form div span {
+	margin-top: 50px;
 }
