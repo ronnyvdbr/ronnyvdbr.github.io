@@ -19,14 +19,15 @@ Release v1.2:
 * Implemented factory default config
 * Implemented logging buttons
 
+Release v1.3:
+* implemented login page, a username and password is now required to log in to the raspberry wap. 
+* bugfixes for captive portal, the captive portal now works across reboots.
+* also other functions are retained across reboots
+
+
 Targeted for future releases:
 * Advanced wireless configuration (hostapd)
 * Port forwarding (iptables)
 * Network Filter (firewall)
 * Web Filter (privoxy)
 * Proxy (squid, squidguard)
-
-
-
-
-
