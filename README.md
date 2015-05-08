@@ -8,11 +8,26 @@ This project came to life out of personal interest in hardware embedded design a
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
 For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
-* [Raspberry Pi Wifi Router v1.0](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.0.zip)
-Version 1.1 of the image now available which includes a captive portal, for all the changes, check the CHANGELOG on github.
-* [Raspberry Pi Wifi Router v1.1](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.1.zip)
+* [Raspberry Pi Wifi Router v1.3](http://ronnyvdb.synology.me:8080/RaspberryWAPv1.3.zip)
+
 The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
-Once booted up, you can log in with 'pi' as username, and 'raspberry' as password, use sudo for root access.
+To access the web interface, enter 'admin' as username and 'raspberry' as password.
+To login via SSH, login with username 'pi' and password 'raspberry', and use sudo for root access.
+
+Features:
+Bridge and Router with NAT functionality
+Static/Dynamic addressing
+DHCP, DNS Proxy, NTP, 
+hostapd wifi module
+802.11 B/G/N depending on your wifi adapter
+Wi-Fi Protected Access® (WPA/WPA2—PSK) and WEP
+Captive Portal (coovachilli)
+Still to be implemented:
+Port forwarding (iptables).
+Network Filter (firewall).
+Web Filter (privoxy).
+Proxy (squid, squidguard).
+Advanced wireless configuration (hostapd).
 
 For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
 
@@ -49,6 +64,7 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
 * sh /home/pi/Raspberry-Wifi-Router/installer.sh
 * sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
+* sh /home/pi/Raspberry-Wifi-Router/login_database.sh
 
 
 
