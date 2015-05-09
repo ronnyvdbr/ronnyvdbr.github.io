@@ -67,6 +67,7 @@ function ReturnReadyOperation() {
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -288,13 +289,11 @@ function ReturnReadyOperation() {
 					shell_exec("sudo service dnsmasq stop  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				}
 				else {
-				  logmessage("Stopping Captive Portal service.");
-				  shell_exec("sudo killall chilli");
-				  logmessage("Unscheduling Captive Portal service to start at boot.");
-				  shell_exec("sudo update-rc.d –f chilli remove");
+				  logmessage("Stopping Captive Portal service and unscheduling chilli service at boot time");
+				  shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
 				  logmessage("Setting Captiveportal as disabled in configuration.");
 				  $configurationsettings['captiveportal'] = "disabled";
-				  logmessage("Saving configuration to /etc/network/interfaces file.");
+				  logmessage("Saving configuration to /var/www/routersettings.ini");
 				  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 				}
 				

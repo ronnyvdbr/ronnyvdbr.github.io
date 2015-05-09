@@ -82,6 +82,7 @@ function ReturnFailurePppoe(error) {
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>

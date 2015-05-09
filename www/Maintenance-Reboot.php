@@ -21,7 +21,7 @@ function ReturnProgress() {
 	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
 }
 function GoToHome() {
-	window.location = '/';
+	window.location = '/login.php';
 }
 </script>
 <?php include 'functions.php';?>
@@ -69,6 +69,7 @@ function GoToHome() {
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -146,6 +147,10 @@ function GoToHome() {
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['reboot'])) {
 		echo "<script>ReturnProgress();</script>";
 		echo "<script>setTimeout(GoToHome, 60000);</script>";
+		
+		session_start();
+		session_destroy();
+		
 		shell_exec("sudo reboot");
 	}
   ?>

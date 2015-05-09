@@ -14,18 +14,20 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
-<script>
-$(document).ready(function(){
-   $('#Home').removeClass('active');
-   $('#Logs').addClass('active');
-	$('#LogsUl').show();
-});
-function Reload() {
-	window.location = '/Logs-Syslog.php';
-}
-</script>
 <?php include 'functions.php';?>
-<?php logmessage("Loading page Logs-Messages.php");?>
+<?php logmessage("Loading page Maintenance-ChangePassword.php");?>
+<script>
+function ReturnProgressOperation() {
+    document.getElementById('ReturnOperationStatus').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function ReturnReadyOperation() {
+    document.getElementById('ReturnOperationStatus').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+}
+function ReturnFailure(error) {
+    document.getElementById("ReturnOperationStatus").innerHTML = '<img src="images/Fail.jpg" width="20" height="20"  alt=""/><br />There was a problem saving your details: <br />' + error + '<br />';
+}
+
+</script>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -89,24 +91,82 @@ function Reload() {
     </nav>
   </div><!-- end .sidebar1 -->
   <!-- InstanceBeginEditable name="MenuExpander" -->
-  
+  <script>
+	$('#Home').removeClass('active');
+	$('#Maintenance').addClass('active');
+	$('#MaintenanceUl').show();
+  </script>
   <!-- InstanceEndEditable -->
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-  <div id="ContentTitle">MESSAGES</div>
-  
-  <div id="ContentArticle">
-  <?php
-	$output = shell_exec('sudo tail -n 50 /var/log/messages | tac');
-	echo "<p>" . nl2br($output) . "</p>";
-	echo "<script>setTimeout(Reload, 3000);</script>";
-  ?>
-  </div>
 
+<!-- ********************************************************************************************************************** -->
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	  logmessage("Processing Password form data.");
+	  
+	  $savepasswordflag = "";
+	  $password = $repeatpassword = "";
+	  $passworderr = $repeatpassworderr = "";
+	  
+	  if (!empty($_POST["password"])) {
+		$password = test_input($_POST["password"]);
+		if (!preg_match("/^[a-zA-Z0-9_-]*$/",$password)) {
+		  $passworderr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		}
+	  }
+
+	  if (!empty($_POST["repeatpassword"])) {
+		$repeatpassword = test_input($_POST["repeatpassword"]);
+		if (!preg_match("/^[a-zA-Z0-9_-]*$/",$repeatpassword)) {
+		  $repeatpassworderr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		}
+	  }
+	
+	  if (empty($passworderr) && empty($repeatpassworderr)) {
+		  if($password == $repeatpassword) {
+			  $savepasswordflag = "ok";
+		  }
+		  else {
+			echo "<script>ReturnFailure('Passwords do not match!');</script>";
+		  }
+	  }
+	  else {
+		  echo "<script>ReturnFailure('" . $passworderr . "'+'" . $repeatpassworderr . "');</script>";
+	  }
+	}
+  ?>
+
+<!-- ********************************************************************************************************************** -->
+    <div id="ContentTitle">
+      <span>Change Password</span>
+    </div>
   
-  
-  <!-- InstanceEndEditable -->
+    <div id="ContentArticle">
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="formtimesync">
+        <fieldset>
+          <legend>Change password</legend>
+          <table width="100%" border="0">
+            <tr>
+              <td width="40%" align="right"><label for="password">Password:</label></td>
+              <td width="60%"><input name="password" type="password" autofocus="autofocus" required="required" id="password" pattern="^[a-zA-Z0-9_-]*$"></td>
+            </tr>
+            <tr>
+              <td align="right"><label for="password2">Repeat Password:</label> </td>
+              <td><input name="repeatpassword" type="password" required="required" id="repeatpassword" pattern="^[a-zA-Z0-9_-]*$"></td>
+            </tr>
+            <tr>
+              <td width="40%" align="right"><input name="applybutton" type="submit" id="applybutton" value="Apply"></td>
+              <td width="60%"><span id="ReturnOperationStatus"></span></td>
+            </tr>
+
+          </table>
+        </fieldset>
+      </form>
+    </div>
+      
+    <!-- InstanceEndEditable -->
   </article><!-- end .content -->
 
 
@@ -129,7 +189,26 @@ function Reload() {
   </footer>
 </div><!-- end .container -->
 
-<!-- InstanceBeginEditable name="code" -->code
+<!-- InstanceBeginEditable name="code" -->
+  <?php
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	  if($savepasswordflag == "ok") {
+		  echo "<script>ReturnProgressOperation();</script>";
+		  flush();
+		  // Establishing Connection with Server by passing server_name, user_id and password as a parameter
+		  $connection = mysql_connect("localhost", "root", "raspberry");
+		  // Selecting Database
+		  $db = mysql_select_db("login", $connection);
+		  // SQL Query To update password
+		  mysql_query("update users set password = '$password' where username = 'admin'", $connection);
+		  mysql_close($connection); // Closing Connection
+		  session_start();
+          session_destroy();
+		  echo "<script type='text/javascript'> document.location = 'login.php'; </script>"; // Redirecting To Login Page
+	  }	  
+	}
+  ?>
+
 
 
 

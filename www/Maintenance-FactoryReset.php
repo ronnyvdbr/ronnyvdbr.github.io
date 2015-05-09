@@ -21,7 +21,7 @@ function ReturnProgress() {
 	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
 }
 function GoToHome() {
-	window.location = '/';
+	window.location = '/login.php';
 }
 </script>
 <?php include 'functions.php';?>
@@ -69,6 +69,7 @@ function GoToHome() {
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
+               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -146,52 +147,84 @@ function GoToHome() {
   <?php 
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['reboot'])) {
 		logmessage("Factory reset initiated.");
+
 		echo "<script>ReturnProgress();</script>";
 		echo "<script>setTimeout(GoToHome, 60000);</script>";
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/rc.local to /etc/rc.local");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-
-
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf to /etc/dnsmasq.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+ 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf to /etc/hostapd/hostapd.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+ 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/interfaces to /etc/network/interfaces");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf to /etc/ntp.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini to /var/www/routersettings.ini");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf to /etc/freeradius/radiusd.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf /etc/freeradius/radiusd.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default to /etc/freeradius/sites-available-default");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default  /etc/freeradius/sites-available-default 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands to /etc/sudoers.d/wr_commands");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-    	logmessage("Dropping Radius database.");
+
+
+    	logmessage("Resetting admin password to default password 'raspberry'");
+		shell_exec("sudo echo \"update users set password = 'raspberry' where username = 'admin';\" | sudo mysql --host=localhost --user=root --password=raspberry --database login 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
+    	
+		logmessage("Dropping Radius database.");
 		shell_exec("sudo echo 'drop database radius;' | sudo mysql --host=localhost --user=root --password=raspberry 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+ 
     	logmessage("Dropping Radius user.");
 		shell_exec("sudo echo \"DROP USER 'radius'@'localhost';\" | sudo mysql --host=localhost --user=root --password=raspberry 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Recreating Radius database.");
 		shell_exec("sudo echo 'create database radius;' | sudo mysql --host=localhost --user=root --password=raspberry 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+ 
     	logmessage("Importing radius database schema.");
 		shell_exec("sudo mysql --host=localhost --user=root --password=raspberry --database=radius < /etc/freeradius/sql/mysql/schema.sql 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+ 
     	logmessage("Importing radius database admin schema.");
 		shell_exec("sudo mysql --host=localhost --user=root --password=raspberry --database=radius < /etc/freeradius/sql/mysql/admin.sql 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
     	logmessage("Populating radius database with 1 user account.");
 		shell_exec("sudo echo \"insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');\" | mysql --host=localhost --user=root --password=raspberry radius 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-    	logmessage("Reboot initiated.");
+
+
+
+		logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
+		shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
+		logmessage("Disabling iptables restore on boot in rc.local");
+		shell_exec("sudo sed -i 's/iptables-restore < \/var\/tmp\/iptables/# iptables-restore < \/var\/tmp\/iptables/g' /etc/rc.local");
+		logmessage("Disabling ip forwarding restore on boot in rc.local");
+		shell_exec("sudo sed -i 's/sysctl -w net.ipv4.ip_forward=1/# sysctl -w net.ipv4.ip_forward=1/g' /etc/rc.local");
+
+
+
+		logmessage("Stopping Captive Portal service and unscheduling chilli service at boot time");
+		shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
+
+		session_start();
+		session_destroy();
+
+		logmessage("Reboot initiated.");
 		shell_exec("sudo reboot");
 	}
   ?>
-
-
-
-
 
 <!-- InstanceEndEditable -->
 </body>
