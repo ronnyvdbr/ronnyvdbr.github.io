@@ -18,5 +18,5 @@ to make chilli work perfectly the following changes were needed:
 3. In the init script of Chili Removed Network dependency
 The init script of Chili dependance on Network daemon needs to be removed
 
-Raspberry WAP v1.2
+Raspberry WAP v1.3
 when starting the Raspberry without the network cable connected, U can't login to the web interface.
