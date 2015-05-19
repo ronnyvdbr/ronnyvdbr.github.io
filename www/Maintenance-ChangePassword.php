@@ -61,6 +61,7 @@ function ReturnFailure(error) {
             <ul id="AdvancedUl">
                <li><a href='Advanced-PortForwarding.php'><span>Port Forwarding</span></a></li>
                <li><a href='Advanced-CaptivePortal.php'><span>Captive Portal</span></a></li>
+               <li><a href='Advanced-VpnServer.php'><span>VPN Server</span></a></li>
                <li><a href='Advanced-NetworkFilter.php'><span>Network Filter</span></a></li>
                <li><a href='Advanced-WebFilter.php'><span>Web Filter</span></a></li>
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
