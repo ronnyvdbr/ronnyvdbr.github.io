@@ -243,11 +243,23 @@ function ReturnStatusCa(message) {
 		echo "<script>ReturnProgressCa();</script>";
 		echo "<script>ReturnStatusCa('Starting Certificate Authority Initialisation');</script>";
 		flush();
-		shell_exec("cp -R /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa");
+		shell_exec("sudo mkdir /etc/openvpn/easy-rsa");
+		shell_exec("sudo cp -R /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa");
 		
+		shell_exec("sed -i 's/export KEY_SIZE=1024/export KEY_SIZE=" . $selectcrypto . "/g' /etc/openvpn/easy-rsa/vars");
 		
+		shell_exec("sudo sed -i 's/export KEY_COUNTRY=\"US\"/export KEY_COUNTRY=\"" . $txtcountry . "\"/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_PROVINCE=\"CA\"/export KEY_PROVINCE=\"" . $txtprovince . "\"/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_CITY=\"SanFrancisco\"/export KEY_CITY=\"" . $txtcity . "\"/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_ORG=\"Fort-Funston\"/export KEY_ORG=\"" . $txtorganisation . "\"/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_EMAIL=\"me@myhost.mydomain\"/export KEY_EMAIL=\"" . $txtemail . "\"/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_EMAIL=mail@host.domain//g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_CN=changeme/export KEY_CN=Raspberry Pi OpenVPN CA/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_NAME=changeme/export KEY_NAME=Raspberry Pi OpenVPN CA/g' /etc/openvpn/easy-rsa/vars");
+		shell_exec("sudo sed -i 's/export KEY_OU=changeme/export KEY_OU=Raspberry Pi OpenVPN CA/g' /etc/openvpn/easy-rsa/vars");
+		
+		shell_exec("source /etc/openvpn/easy-rsa/vars && sudo /etc/openvpn/easy-rsa/clean-all && sudo /etc/openvpn/easy-rsa/build-ca");
 
-		  
 	  }
 	  
 	  else {
