@@ -14,6 +14,17 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
+<script>
+function ReturnProgressCa() {
+    document.getElementById('ca_indicator').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function ReturnReadyCa() {
+    document.getElementById('ca_indicator').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+}
+function ReturnStatusCa(message) {
+    document.getElementById('ca_status').innerHTML = message;
+}
+</script>
 <?php include 'functions.php';?>
 <?php logmessage("Loading page Advanced-VpnServer.php");?>
 <!-- InstanceEndEditable --> 
@@ -91,7 +102,55 @@
     <!-- InstanceBeginEditable name="article" -->
 	<?php   	
       $configurationsettings = parse_ini_file("/var/www/routersettings.ini");
-    ?>
+	  
+	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['init_ca'])) {
+
+		$selectcrypto = $txtcountry = $txtprovince = $txtcity = $txtorganisation = $txtemail = "";
+		$selectcryptoerr = $txtcountryerr = $txtprovinceerr = $txtcityerr = $txtorganisationerr = $txtemailerr = "";
+		
+		if (!empty($_POST["selectcrypto"])) {
+		  $selectcrypto = test_input($_POST["selectcrypto"]);
+		  if (!strcmp($selectcrypto, "1024") && !strcmp($selectcrypto, "2048") && !strcmp($selectcrypto, "4096")) {
+			$selectcryptoerr = "Incorrect Selection data received!<br />"; 
+		  }
+		}
+		
+		if (!empty($_POST["txtcountry"])) {
+		  $txtcountry = test_input($_POST["txtcountry"]);
+		  if (!preg_match("/^[a-zA-Z0-9_-]*$/",$txtcountry)) {
+			$txtcountryerr = "Country field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  }
+		}
+		
+		if (!empty($_POST["txtprovince"])) {
+		  $txtprovince = test_input($_POST["txtprovince"]);
+		  if (!preg_match("/^[a-zA-Z0-9_-]*$/",$txtprovince)) {
+			$txtprovinceerr = "Province field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  }
+		}
+  
+		if (!empty($_POST["txtcity"])) {
+		  $txtcity = test_input($_POST["txtcity"]);
+		  if (!preg_match("/^[a-zA-Z0-9_-]*$/",$txtcity)) {
+			$txtcityerr = "City field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  }
+		}
+  
+		if (!empty($_POST["txtorganisation"])) {
+		  $txtorganisation = test_input($_POST["txtorganisation"]);
+		  if (!preg_match("/^[a-zA-Z0-9_-]*$/",$txtorganisation)) {
+			$txtorganisationerr = "Organisation field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  }
+		}
+  
+		if (!empty($_POST["txtemail"])) {
+		  $txtemail = test_input($_POST["txtemail"]);
+		  if (!preg_match("/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/",$txtemail)) {
+			$txtemailerr = "Email field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  }
+		}
+	  }
+	?>
 <!-- ********************************************************************************************************************** -->
 
   <div id="ContentTitle">
@@ -113,57 +172,49 @@
               <td colspan="2" align="center">Beware when choosing the Cryptographic Strength for this Certificate Authority, the higher u choose, the slower this will run on the Raspberry Pi</td>
               </tr>
             <tr>
-              <td width="40%" align="right"><label for="cryptoselect">Cryptographic strength:</label></td>
-              <td width="60%"><select name="cryptoselect" autofocus id="cryptoselect" form="frm_ca_init" tabindex="1">
+              <td width="40%" align="right"><label for="selectcrypto">Cryptographic strength:</label></td>
+              <td width="60%"><select name="selectcrypto" autofocus id="selectcrypto" form="frm_ca_init" tabindex="1">
                 <option value="1024">1024 bit - ok, default security</option>
                 <option value="2048">2048 bit - if you're beïng paranoid</option>
-                <option value="4096">4096 bit - protection against Nsa</option>
+                <option value="4096" selected="selected">4096 bit - protection against Nsa</option>
               </select></td>
             </tr>
             <tr>
               <td align="right"><label for="txtcountry">Country:</label></td>
-              <td><input name="txtcountry" type="text" id="txtcountry" form="frm_ca_init" placeholder="Belgium"></td>
+              <td><input name="txtcountry" type="text" required id="txtcountry" form="frm_ca_init" placeholder="Belgium" pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtprovince">Province:</label></td>
-              <td><input name="txtprovince" type="text" id="txtprovince" form="frm_ca_init" placeholder="East-Flanders"></td>
+              <td><input name="txtprovince" type="text" required id="txtprovince" form="frm_ca_init" placeholder="East-Flanders" pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtcity">City:</label></td>
-              <td><input name="txtcity" type="text" id="txtcity" form="frm_ca_init" placeholder="Hamme"></td>
+              <td><input name="txtcity" type="text" required id="txtcity" form="frm_ca_init" placeholder="Hamme" pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtorganisation">Organisation:</label></td>
-              <td><input name="txtorganisation" type="text" id="txtorganisation" form="frm_ca_init" placeholder="none-private individual"></td>
+              <td><input name="txtorganisation" type="text" required id="txtorganisation" form="frm_ca_init" placeholder="none-private individual" pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtemail">Email:</label></td>
-              <td><input name="txtemail" type="text" id="txtemail" form="frm_ca_init" placeholder="my-email@somedomain.com"></td>
+              <td><input name="txtemail" type="text" required id="txtemail" form="frm_ca_init" placeholder="my-email@somedomain.com" pattern="^[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></td>
             </tr>
             <tr>
               <td align="center">&nbsp;</td>
               <td><input name="init_ca" type="submit" id="init_ca" form="frm_uninit" value="Initialize Certificate Authority"></td>
             </tr>
+            <tr>
+              <td align="center">&nbsp;</td>
+              <td><span id="ca_indicator"></span></td>
+            </tr>
+            <tr>
+              <td align="center">&nbsp;</td>
+              <td id="ca_status">&nbsp;</td>
+            </tr>
           </table>
         </fieldset>
       </form>
     </div><!-- end div uninitialised -->
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   </div> <!-- end div ContentArticle -->
 
     <!-- InstanceEndEditable -->
@@ -186,7 +237,25 @@
 </div><!-- end .container -->
 
 <!-- InstanceBeginEditable name="code" -->
+	<?php
+      
+	  if(empty($selectcryptoerr) && empty($txtcountryerr) && empty($txtprovinceerr) && empty($txtcityerr) && empty($txtorganisationerr) && empty($txtemailerr)) {
+		echo "<script>ReturnProgressCa();</script>";
+		echo "<script>ReturnStatusCa('Starting Certificate Authority Initialisation');</script>";
+		flush();
+		shell_exec("cp -R /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa");
+		
+		
 
+		  
+	  }
+	  
+	  else {
+  		echo "<script>ReturnStatusCa('" . $selectcryptoerr . "'+'" . $txtcountryerr . "'+'" . $txtprovinceerr . "'+'" . $txtcityerr . "'+'" . $txtorganisationerr . "'+'" . $txtemailerr . "');</script>";
+	  }
+
+		  
+	?>
 
 
 
