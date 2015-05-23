@@ -12,6 +12,11 @@ CREATE TABLE openvpnusers ( \
   username varchar(64) NOT NULL default '', \
   firstname varchar(64) NOT NULL default '', \
   lastname varchar(64) NOT NULL default '', \
+  country varchar(2) NOT NULL default '', \
+  province varchar(64) NOT NULL default '', \
+  city varchar(64) NOT NULL default '', \
+  organisation varchar(64) NOT NULL default '', \
+  email varchar(64) NOT NULL default '', \
   packageurl varchar(64) NOT NULL default '', \
   PRIMARY KEY  (id) \
 ) ;" | mysql --host=localhost --user=root --password=raspberry --database login
