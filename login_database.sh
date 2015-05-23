@@ -9,6 +9,7 @@ CREATE TABLE users ( \
 
 CREATE TABLE openvpnusers ( \
   id int(11) NOT NULL auto_increment, \
+  openvpnservername varchar(64) NOT NULL default '', \
   username varchar(64) NOT NULL default '', \
   firstname varchar(64) NOT NULL default '', \
   lastname varchar(64) NOT NULL default '', \
