@@ -103,6 +103,21 @@ function ReturnStatusNewCertificate(message) {
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
+	<?php
+	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_vpnserver_enable'])) {
+		logmessage("Checking if we need to enable OpenVPN Server");
+		if 	(array_key_exists ("chk_enable_vpnserver" , $_POST)) {
+  		  logmessage("We need to enable the OpenVPN Server.");
+		  $configurationsettings['vpnserver'] = "enabled";
+		}
+		else {
+   		  logmessage("We need to disable the OpenVPN Server.");
+		  $configurationsettings['vpnserver'] = "disabled";
+		}
+		logmessage("Writing OpenVPN status to configuration file: /var/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+	  }
+	?>   	
 <!-- ********************************************************************************************************************** -->
 	<?php   	
       $configurationsettings = parse_ini_file("/var/www/routersettings.ini");
@@ -280,7 +295,25 @@ function ReturnStatusNewCertificate(message) {
 <!-- ********************************************************************************************************************** -->
   <div id="ContentArticle">
 <!-- ********************************************************************************************************************** -->
-    <div id="div_ca_init" <?php if($configurationsettings['certauth'] == "enabled") {echo 'style="display: none"';}?>>
+    <div id="div_vpnserver_enable">
+    <div id="ContentTitle"><span>OpenVPN Server</span></div>
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="frm_vpnserver_enable">
+      <fieldset><legend>Enable/Disable OpenVPN Server</legend>
+      	<table width="100%" border="0">
+          <tr>
+            <td align="right"><label for="chk_enable_vpnserver">Enable OpenVPN Server:</label></td>
+            <td><input name="chk_enable_vpnserver" type="checkbox" autofocus id="chk_enable_vpnserver" form="frm_vpnserver_enable" <?php if ($configurationsettings['vpnserver'] == "enabled") {echo "checked";}?>></td>
+          </tr>
+          <tr>
+            <td width="40%">&nbsp;</td>
+            <td width="60%"><input name="btn_vpnserver_enable" type="submit" id="btn_vpnserver_enable" form="frm_vpnserver_enable" value="Apply"></td>
+          </tr>
+        </table>
+      </fieldset>
+    </form>
+    </div><!-- end div div_vpnserver_enable -->
+<!-- ********************************************************************************************************************** -->
+    <div id="div_ca_init" <?php if($configurationsettings['certauth'] == "enabled" || $configurationsettings['vpnserver'] == "disabled") {echo 'style="display: none"';}?>>
     <div id="ContentTitle"><span>OpenVPN Server Certificate Authority</span></div>
 
       <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="frm_ca_init">
@@ -344,7 +377,7 @@ function ReturnStatusNewCertificate(message) {
       </form>
     </div><!-- end div div_ca_init -->
 <!-- ********************************************************************************************************************** -->
-    <div id="div_ca_reset" <?php if($configurationsettings['certauth'] == "enabled") {echo 'style="display: initial"';} else {echo 'style="display: none"';}?>>
+    <div id="div_ca_reset" <?php if($configurationsettings['certauth'] == "enabled" && $configurationsettings['vpnserver'] == "enabled") {echo 'style="display: initial"';} else {echo 'style="display: none"';}?>>
     
       <div id="ContentTitle"><span>OpenVPN Server Certificate Authority</span></div>      
 
@@ -371,7 +404,7 @@ function ReturnStatusNewCertificate(message) {
       </form>
     </div><!-- end div div_ca_reset -->
 <!-- ********************************************************************************************************************** -->
-   <div id="div_openvpn_newuser" <?php if($configurationsettings['certauth'] == "disabled") {echo 'style="display: none"';}?>>
+   <div id="div_openvpn_newuser" <?php if($configurationsettings['certauth'] == "enabled" && $configurationsettings['vpnserver'] == "enabled") {echo 'style="display: initial"';} else {echo 'style="display: none"';}?>>
       <div id="ContentTitle"><span>OpenVPN User Certificate Generation</span></div>      
 
       <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="frm_openvpn_newuser">
@@ -382,7 +415,7 @@ function ReturnStatusNewCertificate(message) {
               </tr>
             <tr>
               <td align="right"><label for="openvpnservername">OpenVPN FQDN/IP:</label></td>
-              <td><input name="openvpnservername" type="text" autofocus="autofocus" required="required" id="openvpnservername" form="frm_openvpn_newuser" placeholder="Raspberry Pi public FQDN/IP" pattern="^[a-zA-Z0-9_-.]*$" size="25"></td>
+              <td><input name="openvpnservername" type="text" autofocus required id="openvpnservername" form="frm_openvpn_newuser" placeholder="Raspberry Pi public FQDN/IP" pattern="^[a-zA-Z0-9_-.]*$" size="25"></td>
             </tr>
             <tr>
               <td width="30%" align="right"><label for="txtusername">Username:</label></td>
@@ -427,7 +460,7 @@ function ReturnStatusNewCertificate(message) {
       </form>
     </div><!-- end div div_openvpn_newuser -->
 <!-- ********************************************************************************************************************** -->
-   <div id="div_openvpn_deleteuser" <?php if($configurationsettings['certauth'] == "disabled") {echo 'style="display: none"';}?>>
+   <div id="div_openvpn_deleteuser" <?php if($configurationsettings['certauth'] == "enabled" && $configurationsettings['vpnserver'] == "enabled") {echo 'style="display: initial"';} else {echo 'style="display: none"';}?>>
       <div id="ContentTitle"><span>OpenVPN Delete Certificates</span></div>      
       <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="frm_openvpn_deleteuser">
         <fieldset>
@@ -488,6 +521,26 @@ function ReturnStatusNewCertificate(message) {
 <!-- InstanceBeginEditable name="code" -->
 <!-- ********************************************************************************************************************** -->
 	<?php
+	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_vpnserver_enable'])) {
+		flush();
+		if 	(array_key_exists ("chk_enable_vpnserver" , $_POST)) {
+		  logmessage("Scheduling OpenVPN Server to start at boot time.");
+		  shell_exec("sudo update-rc.d openvpn defaults 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+  		  if($configurationsettings['certauth'] == "enabled") {
+			logmessage("Starting OpenVPN Service.");
+			shell_exec("sudo service openvpn start 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  }
+		}
+		else {
+		  logmessage("Unscheduling OpenVPN Server to start at boot time.");
+		  shell_exec("sudo update-rc.d -f openvpn remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+  		  logmessage("Stopping OpenVPN Service.");
+		  shell_exec("sudo service openvpn stop 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		}
+	  }
+	?>   	
+<!-- ********************************************************************************************************************** -->
+	<?php
       
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['init_ca'])) {
 		if(empty($selectcryptoerr) && empty($txtcountryerr) && empty($txtprovinceerr) && empty($txtcityerr) && empty($txtorganisationerr) && empty($txtemailerr)) {
@@ -511,7 +564,7 @@ function ReturnStatusNewCertificate(message) {
 		  shell_exec("sudo sed -i 's/export KEY_ORG=\"Fort-Funston\"/export KEY_ORG=\"" . $txtorganisation . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_EMAIL=\"me@myhost.mydomain\"/export KEY_EMAIL=\"" . $txtemail . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_EMAIL=mail@host.domain//g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-		  shell_exec("sudo sed -i 's/export KEY_CN=changeme/export KEY_CN=\"Raspberry Pi OpenVPN Server\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  shell_exec("sudo sed -i 's/export KEY_CN=changeme/export KEY_CN=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_NAME=changeme/export KEY_NAME=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_OU=changeme/export KEY_OU=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  
@@ -519,7 +572,7 @@ function ReturnStatusNewCertificate(message) {
 		  echo('<script>ReturnStatusCa("Please wait ...  Generating Certificate Authority Private Key.");</script>');
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./clean-all && ./pkitool --initca $*)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-
+		  shell_exec("sudo sed -i 's/export KEY_CN=\"Raspberry Pi OpenVPN CA\"/export KEY_CN=\"Raspberry Pi OpenVPN Server\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  logmessage("Generating Server Certificate.");
 		  echo('<script>ReturnStatusCa("Please wait ...  Generating Server Certificate.");</script>');
 		  flush();
@@ -529,7 +582,7 @@ function ReturnStatusNewCertificate(message) {
 		  echo('<script>ReturnStatusCa("Please wait ...  Generating Diffie Hellman Parameters, this can take a while, so sit back and have a coffee :-)");</script>');
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./build-dh)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-		  shell_exec("sudo service openvpn restart 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  shell_exec("sudo service openvpn restart");
 		  $configurationsettings['certauth'] = "enabled";
 		  $configurationsettings['certstrenght'] = $selectcrypto;
 		  $configurationsettings['certcountry'] = $txtcountry;

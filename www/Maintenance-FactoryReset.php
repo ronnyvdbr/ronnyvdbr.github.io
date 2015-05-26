@@ -182,10 +182,8 @@ function GoToHome() {
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands to /etc/sudoers.d/wr_commands");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-
     	logmessage("Resetting admin password to default password 'raspberry'");
 		shell_exec("sudo echo \"update users set password = 'raspberry' where username = 'admin';\" | sudo mysql --host=localhost --user=root --password=raspberry --database login 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-
     	
 		logmessage("Dropping Radius database.");
 		shell_exec("sudo echo 'drop database radius;' | sudo mysql --host=localhost --user=root --password=raspberry 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -205,8 +203,6 @@ function GoToHome() {
     	logmessage("Populating radius database with 1 user account.");
 		shell_exec("sudo echo \"insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');\" | mysql --host=localhost --user=root --password=raspberry radius 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-
-
 		logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
 		shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
 		logmessage("Disabling iptables restore on boot in rc.local");
@@ -214,10 +210,36 @@ function GoToHome() {
 		logmessage("Disabling ip forwarding restore on boot in rc.local");
 		shell_exec("sudo sed -i 's/sysctl -w net.ipv4.ip_forward=1/# sysctl -w net.ipv4.ip_forward=1/g' /etc/rc.local");
 
-
-
 		logmessage("Stopping Captive Portal service and unscheduling chilli service at boot time");
 		shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
+//<!-- ********************************************************************************************************************** -->
+// vpn server reset
+		logmessage("Reading configuration file /var/www/routersettings.ini");
+		$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+		logmessage("Setting OpenVPN Parameters to default values.");
+		$configurationsettings['vpnserver'] = "disabled";
+		$configurationsettings['certauth'] = "disabled";
+		$configurationsettings['certstrenght'] = 1024;
+		$configurationsettings['certcountry'] = "";
+		$configurationsettings['certprovince'] = "";
+		$configurationsettings['certcity'] = "";
+		$configurationsettings['certorg'] = "";
+		$configurationsettings['certemail'] = "";
+		logmessage("Writing configuration file /var/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		logmessage("Unscheduling OpenVPN service to start at boot time.");
+		shell_exec("sudo update-rc.d -f openvpn remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing certificate authority files.");
+		shell_exec("sudo rm -rf /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing OpenVPN Client Certificate Packages.");
+		shell_exec("sudo rm -f /var/www/temp/OpenVPN_ClientPackages/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing temporary OpenVPN configuration parameters.");
+		shell_exec("sudo rm -f /tmp/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing registered login certificates from login database.");
+		shell_exec("sudo echo 'truncate openvpnusers' | mysql --host=localhost --user=root --password=raspberry --database login 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/server.conf to /etc/openvpn/server.conf");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/server.conf /etc/openvpn/server.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+//<!-- ********************************************************************************************************************** -->
 
 		session_start();
 		session_destroy();

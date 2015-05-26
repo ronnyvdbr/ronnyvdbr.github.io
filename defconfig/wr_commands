@@ -34,4 +34,3 @@ www-data ALL = (root) NOPASSWD: /bin/bash -c (cd /etc/openvpn/easy-rsa && . ./va
 www-data ALL = (root) NOPASSWD: /usr/bin/zip
 www-data ALL = (root) NOPASSWD: /bin/rm -f /var/www/temp/*
 www-data ALL = (root) NOPASSWD: /bin/rm -f /tmp/*
-
