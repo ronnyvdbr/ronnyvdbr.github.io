@@ -20,3 +20,6 @@ The init script of Chili dependance on Network daemon needs to be removed
 
 Raspberry WAP v1.3
 when starting the Raspberry without the network cable connected, U can't login to the web interface.
+
+Raspberry WAP v1.4
+to be documented ...
