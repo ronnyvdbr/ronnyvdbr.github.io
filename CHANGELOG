@@ -24,6 +24,9 @@ Release v1.3:
 * bugfixes for captive portal, the captive portal now works across reboots.
 * also other functions are retained across reboots
 
+Release v1.4:
+* implemented openvpn server on request
+
 
 Targeted for future releases:
 * Advanced wireless configuration (hostapd)
