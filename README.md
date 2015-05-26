@@ -65,6 +65,7 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 * sh /home/pi/Raspberry-Wifi-Router/installer.sh
 * sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
 * sh /home/pi/Raspberry-Wifi-Router/login_database.sh
+* * sh /home/pi/Raspberry-Wifi-Router/openvpn.sh
 
 
 
