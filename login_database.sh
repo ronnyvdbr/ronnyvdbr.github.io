@@ -7,6 +7,7 @@ CREATE TABLE users ( \
   PRIMARY KEY  (id) \
 ) ;" | mysql --host=localhost --user=root --password=raspberry --database login
 
+echo " \
 CREATE TABLE openvpnusers ( \
   id int(11) NOT NULL auto_increment, \
   openvpnservername varchar(64) NOT NULL default '', \
