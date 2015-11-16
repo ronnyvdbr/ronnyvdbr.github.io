@@ -21,7 +21,7 @@ $(document).ready(function(){
 	$('#LogsUl').show();
 });
 function Reload() {
-	window.location = '/Logs-Syslog.php';
+	window.location = '/Logs-Messages.php';
 }
 </script>
 <?php include 'functions.php';?>
