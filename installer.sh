@@ -6,23 +6,7 @@ sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 /usr/sbin/locale-gen
 apt-get -y install rpi-update
 rpi-update
-apt-get -y install sudo
-useradd pi
-echo 'pi:raspberry'|chpasswd
-usermod -a -G sudo pi
-mkdir /home/pi
-cp /root/.profile /home/pi/.profile
-cp /root/.bashrc /home/pi/.bashrc
-chown -R pi /home/pi
-chgrp -R pi /home/pi
-chmod -R 755 /home/pi
-sed -i 's/pi:x:1000:1000::\/home\/pi:\/bin\/sh/pi:x:1000:1000::\/home\/pi:\/bin\/bash/g' /etc/passwd
-sed -i 's/# export LS_OPTIONS=/export LS_OPTIONS=/g' /home/pi/.bashrc
-sed -i 's/# eval/eval/g' /home/pi/.bashrc
-sed -i "s/# alias ls=/alias ls=/g" /home/pi/.bashrc
-sed -i "s/# alias ll=/alias ll=/g" /home/pi/.bashrc
-sed -i "s/# alias l=/alias l=/g" /home/pi/.bashrc
-sudo apt-get -y install lighttpd php5-common php5-cgi php5
+sudo apt-get -y install sudo lighttpd php5-common php5-cgi php5
 sudo lighty-enable-mod fastcgi-php
 sudo rm -R /var/www
 sudo ln -s /home/pi/Raspberry-Wifi-Router/www /var/www
