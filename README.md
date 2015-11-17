@@ -63,11 +63,11 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 ##### You are now ready to continue the rest of the prep:
 * apt-get update
 * apt-get -y install git-core
-* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
-* sh /home/pi/Raspberry-Wifi-Router/installer.sh
-* sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
-* sh /home/pi/Raspberry-Wifi-Router/login_database.sh
-* * sh /home/pi/Raspberry-Wifi-Router/openvpn.sh
+* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git ~/Raspberry-Wifi-Router
+* sh ~/Raspberry-Wifi-Router/installer.sh
+* sh ~/Raspberry-Wifi-Router/chillispot.sh
+* sh ~/Raspberry-Wifi-Router/login_database.sh
+* sh ~/Raspberry-Wifi-Router/openvpn.sh
 
 
 
