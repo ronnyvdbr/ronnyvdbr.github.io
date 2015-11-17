@@ -64,4 +64,4 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 
 Login to your Raspberry Pi and paste below bootstrap in your shell, it will kick off the rest of the installation.
 
-* bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/bootstrap.sh)
+* apt-get -y install curl && bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/bootstrap.sh)
