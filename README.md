@@ -61,13 +61,6 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 * resize2fs /dev/mmcblk0p2
 
 ##### You are now ready to continue the rest of the prep:
-* apt-get update
-* apt-get -y install git-core
-* git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git ~/Raspberry-Wifi-Router
-* sh ~/Raspberry-Wifi-Router/installer.sh
-* sh ~/Raspberry-Wifi-Router/chillispot.sh
-* sh ~/Raspberry-Wifi-Router/login_database.sh
-* sh ~/Raspberry-Wifi-Router/openvpn.sh
 
-
-
+Login to your Raspberry Pi and paste below bootstrap in your shell, it will kick off the rest of the installation.
+bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/bootstrap.sh)
