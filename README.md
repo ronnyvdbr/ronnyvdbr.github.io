@@ -63,4 +63,5 @@ After the reboot you need to resize the filesystem on the partition. The resize2
 ##### You are now ready to continue the rest of the prep:
 
 Login to your Raspberry Pi and paste below bootstrap in your shell, it will kick off the rest of the installation.
-bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/bootstrap.sh)
+
+* bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/bootstrap.sh)
