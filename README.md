@@ -42,23 +42,25 @@ Based on that driver, look for a physical device which will work with that drive
 This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapter: http://www.alfa.com.tw/products_show.php?pc=34&ps=22
 
 ##### Preparing your Raspberry Pi:
-* For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card.
-* I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called miniban.
+* For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card of 2 Gb.
+* I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called minibian.
 * You can grab an image of their minimal Raspbian OS image from their website https://minibianpi.wordpress.com/ and write that to SD card with win32diskimager to get started.
+* The default username and password for minibian is root and raspberry
 
-After booting, we need to resize the partition to 2 Gb to fit the Wireless Router:
+After booting this image for the first time, we need to resize the partition to 2 Gb to fit the Wireless Router:
 * fdisk /dev/mmcblk0
-* Then delete partitions with d and create a new with n. You can view the existing table with p.
-* p to see the current start of the main partition
-* d, 2 to delete the main partition
-* n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and  enter +2G to expand the partition to 2 Gb, Check the p output!
-* w write the new partition table
+* Press p to view the current partition lay-out.
+* Note down the start sector of /dev/mmcblk0p2
+* Press d, then press 2 to delete partition /dev/mmcblk0p2
+* Now create a new parition with the same start sector, press n, then press p, then press 2, now enter the same start sector that u had written down.
+* Now enter +2G to expand the partition to 2 Gb, Check the p output!
+* Press w to write the new partition table.
 Now you need to reboot:
 * shutdown -r now
 After the reboot you need to resize the filesystem on the partition. The resize2fs command will resize your filesystem to the new size from the changed partition table.
 * resize2fs /dev/mmcblk0p2
 
-##### After bootup with your miniban image, login to your Raspberry Pi using root and raspberry as password, then continue the rest of the prep:
+##### You are now ready to continue the rest of the prep:
 * apt-get update
 * apt-get -y install git-core
 * git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
