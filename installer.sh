@@ -4,8 +4,6 @@ echo "Europe/Dublin" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
 sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 /usr/sbin/locale-gen
-apt-get -y install rpi-update
-rpi-update
 apt-get -y install sudo
 sudo apt-get -y install lighttpd php5-common php5-cgi php5
 sudo lighty-enable-mod fastcgi-php
