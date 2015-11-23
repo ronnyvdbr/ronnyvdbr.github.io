@@ -16,10 +16,5 @@ sed -i "s/# alias ll=/alias ll=/g" /home/pi/.bashrc
 sed -i "s/# alias l=/alias l=/g" /home/pi/.bashrc
 sh /home/pi/Raspberry-Wifi-Router/updater.sh
 
-
-
-
-
-
-sh /home/pi/Raspberry-Wifi-Router/login_database.sh
-sh /home/pi/Raspberry-Wifi-Router/openvpn.sh
+# sh /home/pi/Raspberry-Wifi-Router/login_database.sh
+# sh /home/pi/Raspberry-Wifi-Router/openvpn.sh
