@@ -21,9 +21,9 @@ sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/ini
 sudo apt-get -y install libnl-3-dev
 sudo apt-get -y install libnl-genl-3-dev
 sudo apt-get -y install libssl-dev
-wget http://w1.fi/releases/hostapd-2.3.tar.gz
-tar -zxvf hostapd-2.3.tar.gz
-cd ~/hostapd-2.3/hostapd
+wget http://w1.fi/releases/hostapd-2.5.tar.gz
+tar -zxvf hostapd-2.5.tar.gz
+cd ~/hostapd-2.5/hostapd
 cp defconfig .config
 sed -i 's/#CONFIG_LIBNL32=y/CONFIG_LIBNL32=y/g' .config
 sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
@@ -32,49 +32,15 @@ sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' .config
 cd /lib/arm-linux-gnueabihf
 sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so
 sudo ln -s libnl-3.so.200.5.2 libnl.so
-cd ~/hostapd-2.3/hostapd
-sudo apt-get -y install make
+cd ~/hostapd-2.5/hostapd
+sudo apt-get -y install build-essential pkg-config
 sudo make
-sudo cp ~/hostapd-2.3/hostapd/hostapd /usr/sbin/hostapd
-sudo cp ~/hostapd-2.3/hostapd/hostapd_cli /usr/sbin/hostapd_cli
+sudo cp ~/hostapd-2.5/hostapd/hostapd /usr/sbin/hostapd
+sudo cp ~/hostapd-2.5/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 sudo apt-get -y install iw
 sudo apt-get -y install bridge-utils
-sudo apt-get -y install macchanger
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install macchanger
 sudo apt-get -y install dnsmasq
 sudo apt-get -y install iptables
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands
 sudo chmod 644 /etc/sudoers.d/wr_commands
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
-sudo chgrp www-data /etc/network/interfaces
-sudo chmod g+w /etc/network/interfaces
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf
-sudo chgrp www-data /etc/ntp.conf
-sudo chmod g+w /etc/ntp.conf
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
-sudo chgrp www-data /etc/dnsmasq.conf
-sudo chmod g+w /etc/dnsmasq.conf
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
-sudo chgrp www-data /etc/hostapd/hostapd.conf
-sudo chmod g+w /etc/hostapd/hostapd.conf
-sudo update-rc.d hostapd defaults
-sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
-sudo chgrp www-data /etc/dhcp/dhclient.conf
-sudo chmod g+w /etc/dhcp/dhclient.conf
-sudo chgrp www-data /etc/timezone
-sudo chmod g+w /etc/timezone
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini
-sudo umount /dev/mmcblk0p1
-sudo sed -i 's/\/dev\/mmcblk0p1 \/boot vfat defaults 0 2/\/dev\/mmcblk0p1 \/boot vfat rw,relatime,fmask=0000,dmask=0000,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro 0 2/g' /etc/fstab
-sudo mount /dev/mmcblk0p1
-sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt
-sudo update-rc.d -f ntp remove
-rm /etc/udev/rules.d/*
-echo '# ' | sudo tee --append /etc/udev/rules.d/75-persistent-net-generator.rules
-sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
-apt-get update 
-apt-get -y install firmware-ralink
-sudo sed -i 's/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/g' /etc/apt/sources.list
-apt-get update
-sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
-reboot
-
