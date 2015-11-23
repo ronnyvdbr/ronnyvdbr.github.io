@@ -75,5 +75,6 @@ apt-get update
 apt-get -y install firmware-ralink
 sudo sed -i 's/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/g' /etc/apt/sources.list
 apt-get update
+sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
 reboot
 
