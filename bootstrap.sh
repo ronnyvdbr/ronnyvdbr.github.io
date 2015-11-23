@@ -1,4 +1,5 @@
 apt-get update
+apt-get -y install apt-utils
 apt-get -y install git-core
 useradd pi
 echo 'pi:raspberry'|chpasswd
