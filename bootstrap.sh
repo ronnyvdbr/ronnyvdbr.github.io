@@ -14,6 +14,9 @@ sed -i 's/# eval/eval/g' /home/pi/.bashrc
 sed -i "s/# alias ls=/alias ls=/g" /home/pi/.bashrc
 sed -i "s/# alias ll=/alias ll=/g" /home/pi/.bashrc
 sed -i "s/# alias l=/alias l=/g" /home/pi/.bashrc
+chown -R pi /home/pi
+chgrp -R pi /home/pi
+chmod -R 755 /home/pi
 sh /home/pi/Raspberry-Wifi-Router/updater.sh
 
 # sh /home/pi/Raspberry-Wifi-Router/login_database.sh
