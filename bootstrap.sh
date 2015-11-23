@@ -16,7 +16,28 @@ sed -i "s/# alias ll=/alias ll=/g" /home/pi/.bashrc
 sed -i "s/# alias l=/alias l=/g" /home/pi/.bashrc
 chown -R pi /home/pi
 chgrp -R pi /home/pi
-chmod -R 755 /home/pi
+chmod -R 644 /home/pi
+chmod u+x /home/pi
+chmod g+x /home/pi
+chmod u+x /home/pi/Raspberry-Wifi-Router
+chmod g+x /home/pi/Raspberry-Wifi-Router
+chmod u+x /home/pi/Raspberry-Wifi-Router/defconfig
+chmod g+x /home/pi/Raspberry-Wifi-Router/defconfig
+chmod u+x /home/pi/Raspberry-Wifi-Router/images
+chmod g+x /home/pi/Raspberry-Wifi-Router/images
+chmod u+x /home/pi/Raspberry-Wifi-Router/javascripts
+chmod g+x /home/pi/Raspberry-Wifi-Router/javascripts
+chmod u+x /home/pi/Raspberry-Wifi-Router/stylesheets
+chmod g+x /home/pi/Raspberry-Wifi-Router/stylesheets
+chmod u+x /home/pi/Raspberry-Wifi-Router/www
+chmod g+x /home/pi/Raspberry-Wifi-Router/www
+chmod 754 /home/pi/Raspberry-Wifi-Router/bootstrap.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/updater.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/installer.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/installer2.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/chillispot.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/login_database.sh
+chmod 754 /home/pi/Raspberry-Wifi-Router/openvpn.sh
 sh /home/pi/Raspberry-Wifi-Router/updater.sh
 
 # sh /home/pi/Raspberry-Wifi-Router/login_database.sh
