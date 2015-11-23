@@ -1,5 +1,4 @@
 apt-get -y install rpi-update
 rpi-update
-sed -i 's/\n//g' /etc/rc.local
-
-sed -i "15i /" Makefile.txt
+sed -i "15i /home/pi/Raspberry-Wifi-Router/installer.sh" /etc/rc.local
+reboot
