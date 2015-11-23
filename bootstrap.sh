@@ -19,7 +19,7 @@ sh /home/pi/Raspberry-Wifi-Router/updater.sh
 
 
 
-sh /home/pi/Raspberry-Wifi-Router/installer.sh
-sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
+
+
 sh /home/pi/Raspberry-Wifi-Router/login_database.sh
 sh /home/pi/Raspberry-Wifi-Router/openvpn.sh
