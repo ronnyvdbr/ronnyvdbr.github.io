@@ -21,9 +21,9 @@ sudo sed -i 's/DAEMON_CONF=/DAEMON_CONF=\/etc\/hostapd\/hostapd.conf/g' /etc/ini
 sudo apt-get -y install libnl-3-dev
 sudo apt-get -y install libnl-genl-3-dev
 sudo apt-get -y install libssl-dev
-wget http://w1.fi/releases/hostapd-2.5.tar.gz
-tar -zxvf hostapd-2.5.tar.gz
-cd ~/hostapd-2.5/hostapd
+wget -O /root/hostapd-2.5.tar.gz http://w1.fi/releases/hostapd-2.5.tar.gz
+tar -zxvf /root/hostapd-2.5.tar.gz -C /root
+cd /root/hostapd-2.5/hostapd
 cp defconfig .config
 sed -i 's/#CONFIG_LIBNL32=y/CONFIG_LIBNL32=y/g' .config
 sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' .config
@@ -32,7 +32,7 @@ sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' .config
 cd /lib/arm-linux-gnueabihf
 sudo ln -s libnl-genl-3.so.200.5.2 libnl-genl.so
 sudo ln -s libnl-3.so.200.5.2 libnl.so
-cd ~/hostapd-2.5/hostapd
+cd /root/hostapd-2.5/hostapd
 sudo apt-get -y install build-essential pkg-config
 sudo make
 sudo cp ~/hostapd-2.5/hostapd/hostapd /usr/sbin/hostapd
