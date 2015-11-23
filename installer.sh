@@ -35,8 +35,8 @@ sudo ln -s libnl-3.so.200.5.2 libnl.so
 cd /root/hostapd-2.5/hostapd
 sudo apt-get -y install build-essential pkg-config
 sudo make
-sudo cp ~/hostapd-2.5/hostapd/hostapd /usr/sbin/hostapd
-sudo cp ~/hostapd-2.5/hostapd/hostapd_cli /usr/sbin/hostapd_cli
+sudo cp /root/hostapd-2.5/hostapd/hostapd /usr/sbin/hostapd
+sudo cp /root/hostapd-2.5/hostapd/hostapd_cli /usr/sbin/hostapd_cli
 sudo apt-get -y install iw
 sudo apt-get -y install bridge-utils
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install macchanger
