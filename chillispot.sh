@@ -1,5 +1,3 @@
-sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
-apt-get update
 sudo apt-get -y install debhelper libcurl4-gnutls-dev
 echo 'mysql-server mysql-server/root_password password raspberry' | debconf-set-selections
 echo 'mysql-server mysql-server/root_password_again password raspberry' | debconf-set-selections
@@ -49,12 +47,3 @@ sudo sed -i 's/# Default-Start:  2 3 5/# Default-Start:  2 3 4 5/g' /etc/init.d/
 sudo sed -i 's/# Default-Stop:/# Default-Stop:  0 1 6/g' /etc/init.d/chilli
 chmod o+r /etc/freeradius/sql/mysql/schema.sql
 chmod o+r /etc/freeradius/sql/mysql/admin.sql
-reboot
-
-
-
-
-
-
-
-
