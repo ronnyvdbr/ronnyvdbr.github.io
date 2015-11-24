@@ -15,6 +15,7 @@ sudo chown -R pi:www-data /home/pi/Raspberry-Wifi-Router/www
 sudo chmod g+w /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
 sudo chmod 775 /var/www
 sudo usermod -a -G www-data pi
+sudo sed -i 's/\/var\/www\/html/\/var\/www/g' /etc/lighttpd/lighttpd.conf
 sudo sed -i 's/"index.php", "index.html", "index.lighttpd.html"/"home.php"/g' /etc/lighttpd/lighttpd.conf
 sudo /etc/init.d/lighttpd force-reload
 apt-get -y install wireless-tools hostapd
