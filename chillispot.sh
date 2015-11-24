@@ -13,9 +13,12 @@ sudo sed -i 's/#[[:space:]]$INCLUDE sql.conf/$INCLUDE sql.conf/g' /etc/freeradiu
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default /etc/freeradius/sites-available/default
 /etc/init.d/freeradius restart
 cd /usr/src
-wget https://coova.github.io/coova-chilli/coova-chilli-1.3.0.tar.gz
-tar xzf coova-chilli-1.3.0.tar.gz
-cd coova-chilli-1.3.0
+
+apt-get -y install libtool autoconf
+# 64838431d536eae4a0401477f9c9175986bba775 - sha1 from git commit - 24 nov 15
+git clone https://github.com/coova/coova-chilli.git
+cd coova-chilli
+./bootstrap
 ./configure  --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
 --sysconfdir=/etc --localstatedir=/var --enable-largelimits \
 --enable-binstatusfile --enable-statusfile --enable-chilliproxy \
@@ -25,8 +28,11 @@ cd coova-chilli-1.3.0
 --enable-libjson --enable-layer3 --enable-proxyvsa --enable-miniportal \
 --enable-chilliscript --enable-eapol --enable-uamdomainfile \
 --enable-modules --enable-multiroute
+
+
 echo 9 > debian/compat
-sed -i 's/$(MAKE) DESTDIR=$(CURDIR)\/debian\/tmp install/$(MAKE) DESTDIR=\/ install/g' /usr/src/coova-chilli-1.3.0/debian/rules
+
+cat csed -i 's/$(MAKE) DESTDIR=$(CURDIR)\/debian\/tmp install/$(MAKE) DESTDIR=\/ install/g' /usr/src/coova-chilli-1.3.0/debian/rules
 dpkg-buildpackage -us -uc
 cd ..
 echo N | dpkg -i /usr/src/coova-chilli_1.3.0_armhf.deb
