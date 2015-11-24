@@ -13,7 +13,7 @@ sudo sed -i 's/#[[:space:]]$INCLUDE sql.conf/$INCLUDE sql.conf/g' /etc/freeradiu
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default /etc/freeradius/sites-available/default
 /etc/init.d/freeradius restart
 cd /usr/src
-wget http://ap.coova.org/chilli/coova-chilli-1.3.0.tar.gz
+wget https://coova.github.io/coova-chilli/coova-chilli-1.3.0.tar.gz
 tar xzf coova-chilli-1.3.0.tar.gz
 cd coova-chilli-1.3.0
 ./configure  --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info \
