@@ -24,11 +24,4 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt
 sudo update-rc.d -f ntp remove
 rm /etc/udev/rules.d/*
 echo '# ' | sudo tee --append /etc/udev/rules.d/75-persistent-net-generator.rules
-sudo sed -i 's/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/g' /etc/apt/sources.list
-apt-get update 
-apt-get -y install firmware-ralink
-sudo sed -i 's/deb http:\/\/archive.raspbian.org\/raspbian wheezy main contrib non-free/deb http:\/\/mirrordirector.raspbian.org\/raspbian wheezy main firmware/g' /etc/apt/sources.list
-apt-get update
 sh /home/pi/Raspberry-Wifi-Router/chillispot.sh
-reboot
-
