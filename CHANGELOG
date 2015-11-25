@@ -27,6 +27,9 @@ Release v1.3:
 Release v1.4:
 * implemented openvpn server on request
 
+Release v1.5
+* switched to the latest minibian (Raspbian Jessie)
+
 
 Targeted for future releases:
 * Advanced wireless configuration (hostapd)
