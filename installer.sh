@@ -158,3 +158,35 @@ sudo sed -i 's/# Default-Start:  2 3 5/# Default-Start:  2 3 4 5/g' /etc/init.d/
 sudo sed -i 's/# Default-Stop:/# Default-Stop:  0 1 6/g' /etc/init.d/chilli
 chmod o+r /etc/freeradius/sql/mysql/schema.sql
 chmod o+r /etc/freeradius/sql/mysql/admin.sql
+
+
+########################################################################################
+# Login Database - Creating a login database and storing our user passwords
+########################################################################################
+echo 'create database login;' | mysql --host=localhost --user=root --password=raspberry
+echo " \
+CREATE TABLE users ( \
+  id int(11) NOT NULL auto_increment, \
+  username varchar(64) NOT NULL default '', \
+  password varchar(64) NOT NULL default '', \
+  PRIMARY KEY  (id) \
+) ;" | mysql --host=localhost --user=root --password=raspberry --database login
+
+echo " \
+CREATE TABLE openvpnusers ( \
+  id int(11) NOT NULL auto_increment, \
+  openvpnservername varchar(64) NOT NULL default '', \
+  username varchar(64) NOT NULL default '', \
+  firstname varchar(64) NOT NULL default '', \
+  lastname varchar(64) NOT NULL default '', \
+  country varchar(2) NOT NULL default '', \
+  province varchar(64) NOT NULL default '', \
+  city varchar(64) NOT NULL default '', \
+  organisation varchar(64) NOT NULL default '', \
+  email varchar(64) NOT NULL default '', \
+  packageurl varchar(64) NOT NULL default '', \
+  PRIMARY KEY  (id) \
+) ;" | mysql --host=localhost --user=root --password=raspberry --database login
+
+echo "INSERT INTO users (username,password) VALUES('admin','raspberry');" | \
+mysql --host=localhost --user=root --password=raspberry --database login
