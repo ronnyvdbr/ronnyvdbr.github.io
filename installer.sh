@@ -24,8 +24,12 @@ chmod -R 755 /home/pi
 ########################################################################################
 # Update - Making sure that your Raspbian OS is the latest version.
 ########################################################################################
+apt-get -y install rpi-update
+rpi-update
 
-
+########################################################################################
+# Installer - Install all requirements for our Wireless Router
+########################################################################################
 rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
 echo 'root:raspberry'|chpasswd
 echo "Europe/Dublin" > /etc/timezone    
