@@ -22,4 +22,8 @@
 <file name="underconstruction.jpg" server="192.168.20.135//var/www/" local="130715160280615330" remote="130711746030000000" Dst="1" />
 <file name="WiFi Logo Final.jpg" server="192.168.20.135//var/www/" local="130704004900000000" remote="130711746030000000" Dst="1" />
 <file name="WiFi Logo.jpg" server="192.168.20.135//var/www/" local="130704004900000000" remote="130711746030000000" Dst="1" />
+<file name="WiFi Logo.gif" server="192.168.20.174//var/www/" local="130927344473098896" remote="130929538700000000" Dst="1" />
+<file name="Ready.png" server="192.168.20.174//var/www/" local="130927344472868667" remote="130929538700000000" Dst="1" />
+<file name="Warning.png" server="192.168.20.174//var/www/" local="130927344472958157" remote="130929538700000000" Dst="1" />
+<file name="Alert.png" server="192.168.20.174//var/www/" local="130927344472633617" remote="130929538700000000" Dst="1" />
 </dwsync>

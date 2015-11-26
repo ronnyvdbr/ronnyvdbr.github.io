@@ -103,6 +103,9 @@ function ReturnStatusNewCertificate(message) {
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
+<!-- ********************************************************************************************************************** -->
+    <?php $configurationsettings = parse_ini_file("/var/www/routersettings.ini");?>
+<!-- ********************************************************************************************************************** -->
 	<?php
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_vpnserver_enable'])) {
 		logmessage("Checking if we need to enable OpenVPN Server");
@@ -143,21 +146,21 @@ function ReturnStatusNewCertificate(message) {
 		
 		if (!empty($_POST["txtprovince"])) {
 		  $txtprovince = test_input($_POST["txtprovince"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtprovince)) {
-			$txtprovinceerr = "Province field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtprovince)) {
+			$txtprovinceerr = $txtprovince . "Province field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
   
 		if (!empty($_POST["txtcity"])) {
 		  $txtcity = test_input($_POST["txtcity"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtcity)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtcity)) {
 			$txtcityerr = "City field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
   
 		if (!empty($_POST["txtorganisation"])) {
 		  $txtorganisation = test_input($_POST["txtorganisation"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtorganisation)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtorganisation)) {
 			$txtorganisationerr = "Organisation field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
@@ -168,6 +171,15 @@ function ReturnStatusNewCertificate(message) {
 			$txtemailerr = "Email field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
+	  $configurationsettings['certauth'] = "enabled";
+	  $configurationsettings['certstrenght'] = $selectcrypto;
+	  $configurationsettings['certcountry'] = $txtcountry;
+	  $configurationsettings['certprovince'] = $txtprovince;
+	  $configurationsettings['certcity'] = $txtcity;
+	  $configurationsettings['certorg'] = $txtorganisation;
+	  $configurationsettings['certemail'] = $txtemail;
+	  logmessage("Writing Certificate Authority form data to config file: /var/www/routersettings.ini");
+	  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
 	  }
 	?>
 <!-- ********************************************************************************************************************** -->
@@ -346,15 +358,15 @@ function ReturnStatusNewCertificate(message) {
             </tr>
             <tr>
               <td align="right"><label for="txtprovince">Province:</label></td>
-              <td><input name="txtprovince" type="text" required id="txtprovince" form="frm_ca_init" placeholder="East-Flanders"  <?php if(!empty($configurationsettings['certprovince'])) {echo 'value="' . $configurationsettings['certprovince'] . '"';}?>pattern="^[a-zA-Z0-9_-\s]*$"></td>
+              <td><input name="txtprovince" type="text" required id="txtprovince" form="frm_ca_init" placeholder="East-Flanders"  <?php if(!empty($configurationsettings['certprovince'])) {echo 'value="' . $configurationsettings['certprovince'] . '"';}?>pattern="^[a-zA-Z0-9_- ]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtcity">City:</label></td>
-              <td><input name="txtcity" type="text" required id="txtcity" form="frm_ca_init" placeholder="Hamme"  <?php if(!empty($configurationsettings['certcity'])) {echo 'value="' . $configurationsettings['certcity'] . '"';}?>pattern="^[a-zA-Z0-9_-\s]*$"></td>
+              <td><input name="txtcity" type="text" required id="txtcity" form="frm_ca_init" placeholder="Hamme"  <?php if(!empty($configurationsettings['certcity'])) {echo 'value="' . $configurationsettings['certcity'] . '"';}?>pattern="^[a-zA-Z0-9_- ]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtorganisation">Organisation:</label></td>
-              <td><input name="txtorganisation" type="text" required id="txtorganisation" form="frm_ca_init" placeholder="none-private individual"  <?php if(!empty($configurationsettings['certorg'])) {echo 'value="' . $configurationsettings['certorg'] . '"';}?>pattern="^[a-zA-Z0-9_-\s]*$"></td>
+              <td><input name="txtorganisation" type="text" required id="txtorganisation" form="frm_ca_init" placeholder="none-private individual"  <?php if(!empty($configurationsettings['certorg'])) {echo 'value="' . $configurationsettings['certorg'] . '"';}?>pattern="^[a-zA-Z0-9_- ]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtemail">Email:</label></td>
@@ -551,13 +563,10 @@ function ReturnStatusNewCertificate(message) {
 		  flush();
 		  
 		  logmessage("Creating new easy-rsa folder");
-		  shell_exec("sudo mkdir /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-		  
-		  logmessage("Copying new easy-rsa folder in place.");
-		  shell_exec("sudo cp -R /usr/share/doc/openvpn/examples/easy-rsa/2.0/* /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  shell_exec("sudo /usr/bin/make-cadir /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  
 		  logmessage("Modifying default Certificate Authority generation parameters.");
-		  shell_exec("sudo sed -i 's/export KEY_SIZE=1024/export KEY_SIZE=" . $selectcrypto . "/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  shell_exec("sudo sed -i 's/export KEY_SIZE=2048/export KEY_SIZE=" . $selectcrypto . "/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_COUNTRY=\"US\"/export KEY_COUNTRY=\"" . $txtcountry . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_PROVINCE=\"CA\"/export KEY_PROVINCE=\"" . $txtprovince . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_CITY=\"SanFrancisco\"/export KEY_CITY=\"" . $txtcity . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
@@ -583,15 +592,6 @@ function ReturnStatusNewCertificate(message) {
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./build-dh)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo service openvpn restart");
-		  $configurationsettings['certauth'] = "enabled";
-		  $configurationsettings['certstrenght'] = $selectcrypto;
-		  $configurationsettings['certcountry'] = $txtcountry;
-		  $configurationsettings['certprovince'] = $txtprovince;
-		  $configurationsettings['certcity'] = $txtcity;
-		  $configurationsettings['certorg'] = $txtorganisation;
-		  $configurationsettings['certemail'] = $txtemail;
-		  logmessage("Writing Certificate Authority form data to config file: /var/www/routersettings.ini");
-		  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
   		  echo '<script>document.getElementById("div_ca_init").style.display = "none";</script>';
 		  echo '<script>document.getElementById("div_ca_reset").style.display = "inline";</script>';
 		  echo '<script>document.getElementById("div_openvpn_newuser").style.display = "inline";</script>';

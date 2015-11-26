@@ -58,4 +58,8 @@
 <file name="Maintenance-FactoryReset.php" server="192.168.20.135//var/www/" local="130717835077841312" remote="130717835200000000" Dst="1" />
 <file name="Maintenance-Reboot.php" server="192.168.20.135//var/www/" local="130718691855358937" remote="130718691840000000" Dst="1" />
 <file name="Maintenance-RestoreConfig.php" server="192.168.20.135//var/www/" local="130717835163734095" remote="130717835200000000" Dst="1" />
+<file name="logincheck.php" server="192.168.20.174//var/www/" local="130927344474223676" remote="130929538690000000" Dst="1" />
+<file name="functions.php" server="192.168.20.174//var/www/" local="130927344472182097" remote="130929538700000000" Dst="1" />
+<file name="mysqlfunctions.php" server="192.168.20.174//var/www/" local="130927344474367879" remote="130929538700000000" Dst="1" />
+<file name="Advanced-VpnServer.php" server="192.168.20.174//var/www/" local="130929950750452182" remote="130929585540000000" Dst="1" />
 </dwsync>
