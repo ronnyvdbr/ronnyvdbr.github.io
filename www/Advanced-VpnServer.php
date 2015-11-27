@@ -13,23 +13,22 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
-<script>
-function ReturnProgressCa() {
-    document.getElementById('ca_indicator').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
-}
-function ReturnReadyCa() {
-    document.getElementById('ca_indicator').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
-}
-function ReturnStatusCa(message) {
-	document.getElementById('ca_status').innerHTML = '<span style="color:red">' + message + '</span>';
-}
-function ReturnStatusNewCertificate(message) {
-	document.getElementById('ReturnStatus_openvpn_newuser').innerHTML = '<span style="color:red">' + message + '</span>';
-}
-</script>
 <?php include 'functions.php';?>
-<?php include 'mysqlfunctions.php';?>
 <?php logmessage("Loading page Advanced-VpnServer.php");?>
+<script>
+  function ReturnProgressCa() {
+	  document.getElementById('ca_indicator').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+  }
+  function ReturnReadyCa() {
+	  document.getElementById('ca_indicator').innerHTML = '<img src="images/Ready.png" width="20" height="20"  alt="">';
+  }
+  function ReturnStatusCa(message) {
+	  document.getElementById('ca_status').innerHTML = '<span style="color:red">' + message + '</span>';
+  }
+  function ReturnStatusNewCertificate(message) {
+	  document.getElementById('ReturnStatus_openvpn_newuser').innerHTML = '<span style="color:red">' + message + '</span>';
+  }
+</script>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -103,6 +102,7 @@ function ReturnStatusNewCertificate(message) {
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
+<?php include 'mysqlfunctions.php';?>
 <!-- ********************************************************************************************************************** -->
     <?php $configurationsettings = parse_ini_file("/var/www/routersettings.ini");?>
 <!-- ********************************************************************************************************************** -->
@@ -123,8 +123,6 @@ function ReturnStatusNewCertificate(message) {
 	?>   	
 <!-- ********************************************************************************************************************** -->
 	<?php   	
-      $configurationsettings = parse_ini_file("/var/www/routersettings.ini");
-	  
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['init_ca'])) {
 		logmessage("Processing Certificate Authority form data.");
 		$selectcrypto = $txtcountry = $txtprovince = $txtcity = $txtorganisation = $txtemail = "";
@@ -171,7 +169,6 @@ function ReturnStatusNewCertificate(message) {
 			$txtemailerr = "Email field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
-	  $configurationsettings['certauth'] = "enabled";
 	  $configurationsettings['certstrenght'] = $selectcrypto;
 	  $configurationsettings['certcountry'] = $txtcountry;
 	  $configurationsettings['certprovince'] = $txtprovince;
@@ -221,14 +218,14 @@ function ReturnStatusNewCertificate(message) {
 		
 		if (!empty($_POST["txtfirstname"])) {
 		  $txtfirstname = test_input($_POST["txtfirstname"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtfirstname)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtfirstname)) {
 			$txtfirstnameerr = "Firstname field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
 
 		if (!empty($_POST["txtlastname"])) {
 		  $txtlastname = test_input($_POST["txtlastname"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtlastname)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtlastname)) {
 			$txtlastnameerr = "Lastname field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
@@ -242,21 +239,21 @@ function ReturnStatusNewCertificate(message) {
 		
 		if (!empty($_POST["txtprovince"])) {
 		  $txtprovince = test_input($_POST["txtprovince"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtprovince)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtprovince)) {
 			$txtprovinceerr = "Province field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
   
 		if (!empty($_POST["txtcity"])) {
 		  $txtcity = test_input($_POST["txtcity"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtcity)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtcity)) {
 			$txtcityerr = "City field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
   
 		if (!empty($_POST["txtorganisation"])) {
 		  $txtorganisation = test_input($_POST["txtorganisation"]);
-		  if (!preg_match("/^[a-zA-Z0-9_-\s]*$/",$txtorganisation)) {
+		  if (!preg_match("/^[a-zA-Z0-9_\- ]*$/",$txtorganisation)) {
 			$txtorganisationerr = "Organisation field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		  }
 		}
@@ -354,11 +351,11 @@ function ReturnStatusNewCertificate(message) {
             </tr>
             <tr>
               <td align="right"><label for="txtcountry">Country:</label></td>
-              <td><input name="txtcountry" type="text" required id="txtcountry" form="frm_ca_init" placeholder="BE" pattern="^[a-zA-Z]*$" size="2" maxlength="2" <?php if(!empty($configurationsettings['certcountry'])) {echo 'value="' . $configurationsettings['certcountry'] . '"';}?>($pattern="^[a-zA-Z0-9_-]*$"></td>
+              <td><input name="txtcountry" type="text" required id="txtcountry" form="frm_ca_init" placeholder="BE" pattern="^[a-zA-Z]*$" size="2" maxlength="2" <?php if(!empty($configurationsettings['certcountry'])) {echo 'value="' . $configurationsettings['certcountry'] . '"';}?> pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtprovince">Province:</label></td>
-              <td><input name="txtprovince" type="text" required id="txtprovince" form="frm_ca_init" placeholder="East-Flanders"  <?php if(!empty($configurationsettings['certprovince'])) {echo 'value="' . $configurationsettings['certprovince'] . '"';}?>pattern="^[a-zA-Z0-9_- ]*$"></td>
+              <td><input name="txtprovince" type="text" required id="txtprovince" form="frm_ca_init" placeholder="East-Flanders"  <?php if(!empty($configurationsettings['certprovince'])) {echo 'value="' . $configurationsettings['certprovince'] . '"';}?> pattern="^[a-zA-Z0-9_- ]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtcity">City:</label></td>
@@ -366,11 +363,11 @@ function ReturnStatusNewCertificate(message) {
             </tr>
             <tr>
               <td align="right"><label for="txtorganisation">Organisation:</label></td>
-              <td><input name="txtorganisation" type="text" required id="txtorganisation" form="frm_ca_init" placeholder="none-private individual"  <?php if(!empty($configurationsettings['certorg'])) {echo 'value="' . $configurationsettings['certorg'] . '"';}?>pattern="^[a-zA-Z0-9_- ]*$"></td>
+              <td><input name="txtorganisation" type="text" required id="txtorganisation" form="frm_ca_init" placeholder="none-private individual"  <?php if(!empty($configurationsettings['certorg'])) {echo 'value="' . $configurationsettings['certorg'] . '"';}?> pattern="^[a-zA-Z0-9_- ]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="txtemail">Email:</label></td>
-              <td><input name="txtemail" type="text" required id="txtemail" form="frm_ca_init" placeholder="my-email@somedomain.com" size="30"  <?php if(!empty($configurationsettings['certemail'])) {echo 'value="' . $configurationsettings['certemail'] . '"';}?>pattern="^[a-zA-Z0-9@.]*$"></td>
+              <td><input name="txtemail" type="text" required id="txtemail" form="frm_ca_init" placeholder="my-email@somedomain.com" size="30"  <?php if(!empty($configurationsettings['certemail'])) {echo 'value="' . $configurationsettings['certemail'] . '"';}?> pattern="^[a-zA-Z0-9@.]*$"></td>
             </tr>
             <tr>
               <td align="center">&nbsp;</td>
@@ -378,11 +375,11 @@ function ReturnStatusNewCertificate(message) {
             </tr>
             <tr>
               <td align="center">&nbsp;</td>
-              <td><span id="ca_indicator"></span></td>
+              <td><span id="ca_indicator">ca indicator</span></td>
             </tr>
             <tr>
               <td align="center">&nbsp;</td>
-              <td><span id="ca_status"></span></td>
+              <td><span id="ca_status">ca status</span></td>
             </tr>
           </table>
         </fieldset>
@@ -558,37 +555,62 @@ function ReturnStatusNewCertificate(message) {
 		if(empty($selectcryptoerr) && empty($txtcountryerr) && empty($txtprovinceerr) && empty($txtcityerr) && empty($txtorganisationerr) && empty($txtemailerr)) {
 		  logmessage("Starting Certificate Authority Initialisation.");
 
-  		  echo "<script>ReturnProgressCa();</script>";
-		  echo('<script>ReturnStatusCa("Starting Certificate Authority Initialisation.");</script>');
+  		  echo '<script>ReturnProgressCa();</script>';
+		  echo '<script>ReturnStatusCa("Starting Certificate Authority Initialisation.");</script>';
+		  
 		  flush();
 		  
-		  logmessage("Creating new easy-rsa folder");
+		  logmessage("Creating new easy-rsa folder # sudo /usr/bin/make-cadir /etc/openvpn/easy-rsa");
 		  shell_exec("sudo /usr/bin/make-cadir /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  
 		  logmessage("Modifying default Certificate Authority generation parameters.");
+		  
+		  logmessage("sudo sed -i 's/export KEY_SIZE=2048/export KEY_SIZE=" . $selectcrypto . "/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_SIZE=2048/export KEY_SIZE=" . $selectcrypto . "/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_COUNTRY=\"US\"/export KEY_COUNTRY=\"" . $txtcountry . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_COUNTRY=\"US\"/export KEY_COUNTRY=\"" . $txtcountry . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_PROVINCE=\"CA\"/export KEY_PROVINCE=\"" . $txtprovince . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_PROVINCE=\"CA\"/export KEY_PROVINCE=\"" . $txtprovince . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_CITY=\"SanFrancisco\"/export KEY_CITY=\"" . $txtcity . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_CITY=\"SanFrancisco\"/export KEY_CITY=\"" . $txtcity . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_ORG=\"Fort-Funston\"/export KEY_ORG=\"" . $txtorganisation . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_ORG=\"Fort-Funston\"/export KEY_ORG=\"" . $txtorganisation . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_EMAIL=\"me@myhost.mydomain\"/export KEY_EMAIL=\"" . $txtemail . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_EMAIL=\"me@myhost.mydomain\"/export KEY_EMAIL=\"" . $txtemail . "\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_EMAIL=mail@host.domain//g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_EMAIL=mail@host.domain//g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_CN=changeme/export KEY_CN=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_CN=changeme/export KEY_CN=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_NAME=changeme/export KEY_NAME=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_NAME=changeme/export KEY_NAME=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  logmessage("sudo sed -i 's/export KEY_OU=changeme/export KEY_OU=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_OU=changeme/export KEY_OU=\"Raspberry Pi OpenVPN CA\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  
 		  logmessage("Generating Certificate Authority Private Key.");
-		  echo('<script>ReturnStatusCa("Please wait ...  Generating Certificate Authority Private Key.");</script>');
+		  echo '<script>ReturnStatusCa("Please wait ...  Generating Certificate Authority Private Key.");</script>';
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./clean-all && ./pkitool --initca $*)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo sed -i 's/export KEY_CN=\"Raspberry Pi OpenVPN CA\"/export KEY_CN=\"Raspberry Pi OpenVPN Server\"/g' /etc/openvpn/easy-rsa/vars 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
+		  // disable subject alternative names
+		  shell_exec("sudo sed -i 's/subjectAltName=$ENV::KEY_ALTNAMES/# subjectAltName=$ENV::KEY_ALTNAMES/g' /etc/openvpn/easy-rsa/openssl-1.0.0.cnf 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		  
 		  logmessage("Generating Server Certificate.");
-		  echo('<script>ReturnStatusCa("Please wait ...  Generating Server Certificate.");</script>');
+		  echo '<script>ReturnStatusCa("Please wait ...  Generating Server Certificate.");</script>';
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./pkitool --server $*)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 
 		  logmessage("Generating Diffie Hellmann parameters.");
-		  echo('<script>ReturnStatusCa("Please wait ...  Generating Diffie Hellman Parameters, this can take a while, so sit back and have a coffee :-)");</script>');
+		  echo '<script>ReturnStatusCa("Please wait ...  Generating Diffie Hellman Parameters, this can take a while, so sit back and have a coffee :-)");</script>';
 		  flush();
 		  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && ./build-dh)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		  shell_exec("sudo service openvpn restart");
@@ -596,10 +618,15 @@ function ReturnStatusNewCertificate(message) {
 		  echo '<script>document.getElementById("div_ca_reset").style.display = "inline";</script>';
 		  echo '<script>document.getElementById("div_openvpn_newuser").style.display = "inline";</script>';
 		  echo '<script>document.getElementById("div_openvpn_deleteuser").style.display = "inline";</script>';
+		  $configurationsettings['certauth'] = "enabled";
+		  logmessage("Writing Certificate Authority enabled state to config file: /var/www/routersettings.ini");
+		  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+
 		}
 		else {
 		  logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
 		  echo "<script>ReturnStatusCa('" . $selectcryptoerr . "'+'" . $txtcountryerr . "'+'" . $txtprovinceerr . "'+'" . $txtcityerr . "'+'" . $txtorganisationerr . "'+'" . $txtemailerr . "');</script>";
+		  flush();
 		}
 	  }
 	?>
@@ -608,21 +635,35 @@ function ReturnStatusNewCertificate(message) {
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_openvpn_newuser'])) {
 		if(empty($openvpnservernameerr) && empty($txtusernameerr) && empty($txtfirstnameerr) && empty($txtlastnameerr) && empty($txtcountryerr) && empty($txtprovinceerr) && empty($txtcityerr) && empty($txtorganisationerr) && empty($txtemailerr)) {
 		  if(!empty($openvpnservername) && !empty($txtusername) && !empty($txtfirstname) && !empty($txtlastname) && !empty($txtcountry) && !empty($txtprovince) && !empty($txtcity) && !empty($txtorganisation) && !empty($txtemail)) {
+			  
 			  logmessage("Generating Client certificate.");
+			  echo '<script>ReturnStatus_openvpn_newuser("Generating Client Access Package.");</script>';
 			  flush();
-			  // generate client certificate
+			  
+			  logmessage("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && export KEY_COUNTRY=\"" . $txtcountry . "\"  && export KEY_PROVINCE=\"" . $txtprovince . "\"  && export KEY_CITY=\"" . $txtcity . "\"  && export KEY_ORG=\"" . $txtorganisation . "\" && export KEY_EMAIL=\"" . $txtemail . "\" && export KEY_CN=\"" . $txtusername . "\" && ./pkitool $*)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+			  
 			  shell_exec("sudo bash -c '(cd /etc/openvpn/easy-rsa && . ./vars && export KEY_COUNTRY=\"" . $txtcountry . "\"  && export KEY_PROVINCE=\"" . $txtprovince . "\"  && export KEY_CITY=\"" . $txtcity . "\"  && export KEY_ORG=\"" . $txtorganisation . "\" && export KEY_EMAIL=\"" . $txtemail . "\" && export KEY_CN=\"" . $txtusername . "\" && ./pkitool $*)' 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 			  
-			  shell_exec("sudo cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /tmp/" . $txtusername . ".ovpn");
+  			  logmessage("Fetching ovpn profile template.");
+			  shell_exec("sudo cp -v /usr/share/doc/openvpn/examples/sample-config-files/client.conf /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+
+  			  logmessage("Modifying client certificate file name on the ovpn template.");
 			  shell_exec("sudo sed -i 's/client.crt/remote " . $openvpnservername ." 1194/g' /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-  			  shell_exec("sudo sed -i 's/remote my-server-1 1194/remote " . $openvpnservername ." 1194/g' /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
   			  
+  			  logmessage("Modifying servername or ip address on the ovpn template.");
+			  shell_exec("sudo sed -i 's/remote my-server-1 1194/remote " . $openvpnservername ." 1194/g' /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+
+  			  logmessage("Modifying server certificate file name on the ovpn template.");
 			  shell_exec("sudo sed -i 's/cert remote/cert " . $txtusername . ".crt/g' /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+
+  			  logmessage("Modifying private key file name on the ovpn template.");
 			  shell_exec("sudo sed -i 's/key client.key/key " . $txtusername . ".key/g' /tmp/" . $txtusername . ".ovpn 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 
-
-			  
+  			  logmessage("Zipping all files as client package.");
 			  shell_exec("sudo zip -j /var/www" . $txtpackageurl . " /tmp/" . $txtusername . ".ovpn /etc/openvpn/easy-rsa/keys/ca.crt /etc/openvpn/easy-rsa/keys/" . $txtusername . ".crt /etc/openvpn/easy-rsa/keys/" . $txtusername . ".key 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+			  
+			  echo '<script>ReturnStatus_openvpn_newuser("Openvpn user created.");</script>';
+			  flush();
 
 		  }
 		  else {
@@ -632,17 +673,21 @@ function ReturnStatusNewCertificate(message) {
 		}
 		else {
 		  echo "error error!!!";
-		  echo('<script>ReturnStatusNewCertificate("' . $txtusernameerr . $txtfirstnameerr . $txtlastnameerr . $txtcountryerr . $txtcityerr . $txtprovinceerr . $txtorganisationerr . $txtemailerr . '");</script>');
+		  echo '<script>ReturnStatusNewCertificate("' . $txtusernameerr . $txtfirstnameerr . $txtlastnameerr . $txtcountryerr . $txtcityerr . $txtprovinceerr . $txtorganisationerr . $txtemailerr . '");</script>';
 		}
 	  }
 	?>
 <!-- ********************************************************************************************************************** -->
 	<?php
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_ca_reset'])) {
-		logmessage("Removing previous easy-rsa folder, if any.");
-		shell_exec("sudo rm -rf /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-		shell_exec("sudo rm -f /var/www/temp/OpenVPN_ClientPackages/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
-		shell_exec("sudo rm -f /tmp/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		flush();
+		logmessage("Removing easy-rsa folder /etc/openvpn/easy-rsa");
+		shell_exec("sudo rm -rfv /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing any generated openvpn client packages /var/www/temp/OpenVPN_ClientPackages/*");
+		shell_exec("sudo rm -fv /var/www/temp/OpenVPN_ClientPackages/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Removing Temp files.");
+		shell_exec("sudo rm -fv /tmp/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		logmessage("Purging openvpn user database.");
 		shell_exec("sudo echo 'truncate openvpnusers' | mysql --host=localhost --user=root --password=raspberry --database login 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 	  }
 	?>   	
