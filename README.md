@@ -7,8 +7,8 @@ a dynamic web interface designed in HTML/PHP.
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
 I'm putting my desing onto Github to share my work with the open source community, hoping to get some people interested in this project to contribute, the ultimate goal is to create a fantastic web gui for a cheap Raspberry Pi used as Wifi Router.
 
-For the people that are only interested in trying the router, you can download the latest version of the ssd card image below:
-* [Raspberry Pi Wifi Router v1.4](http://cheetah.dscloud.me:8080/RaspberryWAPv1.4.zip)
+For the people that are only interested in trying the router, you can download the latest version of the SD card image below:
+* [Raspberry Pi Wifi Router v1.4](https://ronnyvdbr.github.io/)
 
 The default configuration is set to obtain an IP address via DHCP from the wired ethernet connection.
 To access the web interface, enter 'admin' as username and 'raspberry' as password.
