@@ -24,3 +24,16 @@ sudo apt-get update && sudo apt-get -y upgrade
 ########################################################################################
 sudo apt-get -y install rpi-update
 sudo rpi-update
+sudo reboot
+########################################################################################
+# Getting our router software and install prerequisites
+########################################################################################
+# Install git and clone our repository
+sudo apt-get -y install git-core
+git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
+# Install our webserver with PHP support.
+sudo apt-get -y install nginx
+# Install php5 fast process manager.
+sudo apt-get -y install php5-fpm
+# Disable the nginx default website
+sudo rm /etc/nginx/sites-enabled/default
