@@ -1,4 +1,5 @@
 # Our wireless router design needs an update, it needs to be modified to Raspbian Jessie.
+# Main differences will be the switch to systemd instead of sysv init, 
 # This build procedure is built on top of a foundation raspbian jessie lite image from 18-03-2016
 # Download this image from the foundation web site, write to sd card with win32 disk imager.
 # Log into  your Raspberry Pi, with the pi username and raspberry as password.
@@ -31,9 +32,114 @@ sudo reboot
 # Install git and clone our repository
 sudo apt-get -y install git-core
 git clone https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git /home/pi/Raspberry-Wifi-Router
+
 # Install our webserver with PHP support.
-sudo apt-get -y install nginx
-# Install php5 fast process manager.
-sudo apt-get -y install php5-fpm
-# Disable the nginx default website
+sudo apt-get -y install nginx php5-fpm
 sudo rm /etc/nginx/sites-enabled/default
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/RaspberryWifiRouter.Nginx.Siteconf /etc/nginx/sites-available/RaspberryWifiRouter.Nginx.Siteconf
+sudo ln -s /etc/nginx/sites-available/RaspberryWifiRouter.Nginx.Siteconf /etc/nginx/sites-enabled/RaspberryWifiRouter.Nginx.Siteconf
+sudo systemctl restart nginx.service
+sudo chgrp www-data /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
+sudo chmod g+w /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
+
+# installing hostapd
+sudo apt-get install -y libnl-3-dev libnl-genl-3-dev libssl-dev
+wget -O /home/pi/hostapd-2.5.tar.gz http://w1.fi/releases/hostapd-2.5.tar.gz
+tar -zxvf /home/pi/hostapd-2.5.tar.gz -C /home/pi
+cp /home/pi/hostapd-2.5/hostapd/defconfig /home/pi/hostapd-2.5/hostapd/.config
+sed -i 's/#CONFIG_LIBNL32=y/CONFIG_LIBNL32=y/g' /home/pi/hostapd-2.5/hostapd/.config
+sed -i 's/#CFLAGS += -I$<path to libnl include files>/CFLAGS += -I\/usr\/include\/libnl3/g' /home/pi/hostapd-2.5/hostapd/.config
+sed -i 's/#LIBS += -L$<path to libnl library files>/LIBS += -L\/lib\/arm-linux-gnueabihf/g' /home/pi/hostapd-2.5/hostapd/.config
+sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/g' /home/pi/hostapd-2.5/hostapd/.config
+sudo ln -s /lib/arm-linux-gnueabihf/libnl-genl-3.so.200.5.2 /lib/arm-linux-gnueabihf/libnl-genl.so
+sudo ln -s /lib/arm-linux-gnueabihf/libnl-3.so.200.5.2 /lib/arm-linux-gnueabihf/libnl.so
+make -C /home/pi/hostapd-2.5/hostapd
+sudo make install -C /home/pi/hostapd-2.5/hostapd
+
+# install other network prerequisites
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install macchanger
+sudo apt-get -y install iw bridge-utils dnsmasq iptables
+
+# Copy some config files into place
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands
+sudo chmod 644 /etc/sudoers.d/wr_commands
+
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf
+sudo chgrp www-data /etc/ntp.conf
+sudo chmod g+w /etc/ntp.conf
+
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
+sudo chgrp www-data /etc/dnsmasq.conf
+sudo chmod g+w /etc/dnsmasq.conf
+
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
+sudo chgrp www-data /etc/hostapd/hostapd.conf
+sudo chmod g+w /etc/hostapd/hostapd.conf
+
+# modify some shit in existing config files
+sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
+sudo chgrp www-data /etc/dhcp/dhclient.conf
+sudo chmod g+w /etc/dhcp/dhclient.conf
+sudo chgrp www-data /etc/timezone
+sudo chmod g+w /etc/timezone
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
+sudo mount -o remount rw /boot
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt
+
+# disable ntp in default config
+sudo systemctl stop ntp
+sudo systemctl disable ntp
+
+# Install mysql & freeradius
+sudo apt-get -y install debhelper
+echo 'mysql-server mysql-server/root_password password raspberry' | debconf-set-selections
+echo 'mysql-server mysql-server/root_password_again password raspberry' | debconf-set-selections
+sudo apt-get -y install mysql-server php5-mysql freeradius freeradius-mysql
+
+echo 'create database radius;' | mysql --host=localhost --user=root --password=raspberry
+sudo cat /etc/freeradius/sql/mysql/schema.sql | mysql --host=localhost --user=root --password=raspberry radius
+sudo cat /etc/freeradius/sql/mysql/admin.sql | mysql --host=localhost --user=root --password=raspberry radius
+echo "insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');" | mysql --host=localhost --user=root --password=raspberry radius
+sudo sed -i 's/#[[:space:]]$INCLUDE sql.conf/$INCLUDE sql.conf/g' /etc/freeradius/radiusd.conf
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default /etc/freeradius/sites-available/default
+sudo systemctl restart freeradius.service
+
+########################################################################################
+# Login Database - Creating a login database and storing our user passwords
+########################################################################################
+echo 'create database login;' | mysql --host=localhost --user=root --password=raspberry
+echo " \
+CREATE TABLE users ( \
+  id int(11) NOT NULL auto_increment, \
+  username varchar(64) NOT NULL default '', \
+  password varchar(64) NOT NULL default '', \
+  PRIMARY KEY  (id) \
+) ;" | mysql --host=localhost --user=root --password=raspberry --database login
+
+echo " \
+CREATE TABLE openvpnusers ( \
+  id int(11) NOT NULL auto_increment, \
+  openvpnservername varchar(64) NOT NULL default '', \
+  username varchar(64) NOT NULL default '', \
+  firstname varchar(64) NOT NULL default '', \
+  lastname varchar(64) NOT NULL default '', \
+  country varchar(2) NOT NULL default '', \
+  province varchar(64) NOT NULL default '', \
+  city varchar(64) NOT NULL default '', \
+  organisation varchar(64) NOT NULL default '', \
+  email varchar(64) NOT NULL default '', \
+  packageurl varchar(64) NOT NULL default '', \
+  PRIMARY KEY  (id) \
+) ;" | mysql --host=localhost --user=root --password=raspberry --database login
+
+echo "INSERT INTO users (username,password) VALUES('admin','raspberry');" | \
+mysql --host=localhost --user=root --password=raspberry --database login
+
+########################################################################################
+# OpenVPN - Installing OpenVPN Requirements
+########################################################################################
+sudo apt-get -y install openvpn
+sudo apt-get -y install zip
+mkdir /home/pi/Raspberry-Wifi-Router/www/temp
+mkdir /home/pi/Raspberry-Wifi-Router/www/temp/OpenVPN_ClientPackages
+sudo systemctl disable openvpn.service
