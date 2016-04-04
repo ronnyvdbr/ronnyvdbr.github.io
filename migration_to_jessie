@@ -108,10 +108,7 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf
 sudo chgrp www-data /etc/dnsmasq.conf
 sudo chmod g+w /etc/dnsmasq.conf
 
-
-
 # modify some shit in existing config files
-
 sudo chgrp www-data /etc/dhcp/dhclient.conf
 sudo chmod g+w /etc/dhcp/dhclient.conf
 
