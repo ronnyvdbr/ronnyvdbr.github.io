@@ -48,7 +48,7 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/RaspberryWifiRouter.Nginx.Sitec
 # Lets enable our website
 sudo ln -s /etc/nginx/sites-available/RaspberryWifiRouter.Nginx.Siteconf /etc/nginx/sites-enabled/RaspberryWifiRouter.Nginx.Siteconf
 # Disable output buffering in php.
-sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/cgi/php.ini
+sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/fpm/php.ini
 # Set permissions for our router's config file
 sudo chgrp www-data /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
 sudo chmod g+w /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
