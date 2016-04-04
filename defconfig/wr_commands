@@ -1,6 +1,4 @@
 www-data ALL = (root) NOPASSWD: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
-www-data ALL = (root) NOPASSWD: /etc/init.d/ntp force-reload
-www-data ALL = (root) NOPASSWD: /etc/init.d/ntp stop
 www-data ALL = (root) NOPASSWD: /etc/init.d/networking restart
 www-data ALL = (root) NOPASSWD: /sbin/ifconfig
 www-data ALL = (root) NOPASSWD: /sbin/brctl
@@ -35,3 +33,7 @@ www-data ALL = (root) NOPASSWD: /usr/bin/zip
 www-data ALL = (root) NOPASSWD: /bin/rm -fv /var/www/temp/*
 www-data ALL = (root) NOPASSWD: /bin/rm -fv /tmp/*
 www-data ALL = (root) NOPASSWD: /usr/bin/make-cadir /etc/openvpn/easy-rsa
+www-data ALL = (root) NOPASSWD: /bin/systemctl start ntp.service
+www-data ALL = (root) NOPASSWD: /bin/systemctl stop ntp.service
+www-data ALL = (root) NOPASSWD: /bin/systemctl enable ntp.service
+www-data ALL = (root) NOPASSWD: /bin/systemctl disable ntp.service
