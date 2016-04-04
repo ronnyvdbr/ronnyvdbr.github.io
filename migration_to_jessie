@@ -57,6 +57,10 @@ make -C /home/pi/hostapd-2.5/hostapd
 sudo make install -C /home/pi/hostapd-2.5/hostapd
 sudo mkdir /etc/hostapd
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.service /etc/systemd/system/hostapd.service
+sudo systemctl daemon-reload
+sudo systemctl enable hostapd.service
+
 
 
 
