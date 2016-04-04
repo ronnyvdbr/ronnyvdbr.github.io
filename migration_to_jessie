@@ -55,6 +55,10 @@ sudo ln -s /lib/arm-linux-gnueabihf/libnl-genl-3.so.200.5.2 /lib/arm-linux-gnuea
 sudo ln -s /lib/arm-linux-gnueabihf/libnl-3.so.200.5.2 /lib/arm-linux-gnueabihf/libnl.so
 make -C /home/pi/hostapd-2.5/hostapd
 sudo make install -C /home/pi/hostapd-2.5/hostapd
+sudo mkdir /etc/hostapd
+sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
+
+
 
 # install other network prerequisites
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install macchanger
