@@ -170,8 +170,8 @@ function GoToHome() {
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf to /etc/ntp.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/ntp.conf /etc/ntp.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini to /var/www/routersettings.ini");
-		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /var/www/routersettings.ini 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini to /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /home/pi/Raspberry-Wifi-Router/www/routersettings.ini 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf to /etc/freeradius/radiusd.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf /etc/freeradius/radiusd.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -214,8 +214,8 @@ function GoToHome() {
 		shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
 //<!-- ********************************************************************************************************************** -->
 // vpn server reset
-		logmessage("Reading configuration file /var/www/routersettings.ini");
-		$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+		logmessage("Reading configuration file /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		$configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		logmessage("Setting OpenVPN Parameters to default values.");
 		$configurationsettings['vpnserver'] = "disabled";
 		$configurationsettings['certauth'] = "disabled";
@@ -225,8 +225,8 @@ function GoToHome() {
 		$configurationsettings['certcity'] = "";
 		$configurationsettings['certorg'] = "";
 		$configurationsettings['certemail'] = "";
-		logmessage("Writing configuration file /var/www/routersettings.ini");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		logmessage("Writing configuration file /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		logmessage("Unscheduling OpenVPN service to start at boot time.");
 		shell_exec("sudo update-rc.d -f openvpn remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Removing certificate authority files.");

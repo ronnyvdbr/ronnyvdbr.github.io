@@ -103,7 +103,7 @@ function ReturnReadyOperation() {
     <!-- InstanceBeginEditable name="article" -->
 <!-- ********************************************************************************************************************** -->
   <?php   	
-	$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+	$configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
   ?>
 <!-- ********************************************************************************************************************** -->
   <?php
@@ -227,8 +227,8 @@ function ReturnReadyOperation() {
 		  $configurationsettings['wifiwepkey'] = $wepkey;
   		  $configurationsettings['wifiwpapassword'] = $wpakey;
 	      
-		  logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
-		  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		  logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		  write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  }
 	}
 ?>

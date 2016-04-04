@@ -26,4 +26,15 @@
 <file name="Ready.png" server="192.168.20.174//var/www/" local="130927344472868667" remote="130929538700000000" Dst="1" />
 <file name="Warning.png" server="192.168.20.174//var/www/" local="130927344472958157" remote="130929538700000000" Dst="1" />
 <file name="Alert.png" server="192.168.20.174//var/www/" local="130927344472633617" remote="130929538700000000" Dst="1" />
+<file name="Login_Page_Icons.png" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941271851" remote="131042314480000000" Dst="2" />
+<file name="WiFi Logo.gif" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941331918" remote="131042314480000000" Dst="2" />
+<file name="Alert.png" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941241825" remote="131042316120000000" Dst="2" />
+<file name="Fail.jpg" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941266854" remote="131042316120000000" Dst="2" />
+<file name="ProgressIndicator.GIF" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941281864" remote="131042316120000000" Dst="2" />
+<file name="Ready.png" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941286873" remote="131042316120000000" Dst="2" />
+<file name="SpinningGears.gif" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941291871" remote="131042316120000000" Dst="2" />
+<file name="underconstruction.jpg" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941397227" remote="131042316120000000" Dst="2" />
+<file name="Warning.png" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941301886" remote="131042316120000000" Dst="2" />
+<file name="WiFi Logo Final.jpg" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941326909" remote="131042316120000000" Dst="2" />
+<file name="WiFi Logo.jpg" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941356938" remote="131042316120000000" Dst="2" />
 </dwsync>

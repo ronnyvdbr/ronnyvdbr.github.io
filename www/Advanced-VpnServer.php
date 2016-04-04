@@ -104,7 +104,7 @@
     <!-- InstanceBeginEditable name="article" -->
 <?php include 'mysqlfunctions.php';?>
 <!-- ********************************************************************************************************************** -->
-    <?php $configurationsettings = parse_ini_file("/var/www/routersettings.ini");?>
+    <?php $configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");?>
 <!-- ********************************************************************************************************************** -->
 	<?php
 	  if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['btn_vpnserver_enable'])) {
@@ -117,8 +117,8 @@
    		  logmessage("We need to disable the OpenVPN Server.");
 		  $configurationsettings['vpnserver'] = "disabled";
 		}
-		logmessage("Writing OpenVPN status to configuration file: /var/www/routersettings.ini");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		logmessage("Writing OpenVPN status to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  }
 	?>   	
 <!-- ********************************************************************************************************************** -->
@@ -175,8 +175,8 @@
 	  $configurationsettings['certcity'] = $txtcity;
 	  $configurationsettings['certorg'] = $txtorganisation;
 	  $configurationsettings['certemail'] = $txtemail;
-	  logmessage("Writing Certificate Authority form data to config file: /var/www/routersettings.ini");
-	  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+	  logmessage("Writing Certificate Authority form data to config file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+	  write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  }
 	?>
 <!-- ********************************************************************************************************************** -->
@@ -190,8 +190,8 @@
 		$configurationsettings['certcity'] = "";
 		$configurationsettings['certorg'] = "";
 		$configurationsettings['certemail'] = "";
-		logmessage("Writing reset changes to configuration file: /var/www/routersettings.ini");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		logmessage("Writing reset changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  }
 	?>   	
 <!-- ********************************************************************************************************************** -->
@@ -619,12 +619,12 @@
 		  echo '<script>document.getElementById("div_openvpn_newuser").style.display = "inline";</script>';
 		  echo '<script>document.getElementById("div_openvpn_deleteuser").style.display = "inline";</script>';
 		  $configurationsettings['certauth'] = "enabled";
-		  logmessage("Writing Certificate Authority enabled state to config file: /var/www/routersettings.ini");
-		  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		  logmessage("Writing Certificate Authority enabled state to config file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		  write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 
 		}
 		else {
-		  logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
+		  logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		  echo "<script>ReturnStatusCa('" . $selectcryptoerr . "'+'" . $txtcountryerr . "'+'" . $txtprovinceerr . "'+'" . $txtcityerr . "'+'" . $txtorganisationerr . "'+'" . $txtemailerr . "');</script>";
 		  flush();
 		}

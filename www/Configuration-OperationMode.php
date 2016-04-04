@@ -100,7 +100,7 @@ function ReturnReadyOperation() {
   <div id="ContentTitle">
   <span>Operation Mode</span>
   </div>
-  <?php $configurationsettings = parse_ini_file("/var/www/routersettings.ini");?>
+  <?php $configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");?>
 
   <div id="ContentArticle">
   <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="formtimesync">
@@ -176,9 +176,9 @@ function ReturnReadyOperation() {
 				logmessage("Rewriting /etc/network/interfaces file with settings for router mode");
 				update_interfaces_file("Router");
 				
-				logmessage("Updating /var/www/routersettings.ini for Router operation mode");
+				logmessage("Updating /home/pi/Raspberry-Wifi-Router/www/routersettings.ini for Router operation mode");
 				$configurationsettings['operationmode'] = "Router";
-				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+				write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 				
 				logmessage("Updating rc.local to add IP address on wlan interface on boot.");
 				shell_exec("sudo sed -i 's/# ip addr add 192.168.1.1\/24 dev wlan0/ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
@@ -269,9 +269,9 @@ function ReturnReadyOperation() {
 				logmessage("Rewriting /etc/network/interfaces file with settings for Access Point mode");
 				update_interfaces_file("Access Point");
 				
-				logmessage("Updating /var/www/routersettings.ini for Access Point operation mode");
+				logmessage("Updating /home/pi/Raspberry-Wifi-Router/www/routersettings.ini for Access Point operation mode");
 				$configurationsettings['operationmode'] = "Access Point";
-				write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+				write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 				
 				logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
 				shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
@@ -294,8 +294,8 @@ function ReturnReadyOperation() {
 				  shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
 				  logmessage("Setting Captiveportal as disabled in configuration.");
 				  $configurationsettings['captiveportal'] = "disabled";
-				  logmessage("Saving configuration to /var/www/routersettings.ini");
-				  write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+				  logmessage("Saving configuration to /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+				  write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 				}
 				
 				

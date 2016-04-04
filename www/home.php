@@ -86,7 +86,7 @@
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
   <?php date_default_timezone_set(trim(file_get_contents("/etc/timezone"),"\n"));?>
-  <?php $routersettingsini = parse_ini_file("/var/www/routersettings.ini");?>
+  <?php $routersettingsini = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");?>
   <?php $hostapdconf = parse_ini_file("/etc/hostapd/hostapd.conf");?>
 
   

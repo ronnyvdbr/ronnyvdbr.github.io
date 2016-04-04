@@ -115,7 +115,7 @@ function ReturnFailurePppoe(error) {
 
 
   <?php   	
-	$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+	$configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
   ?>
 <!-- ********************************************************************************************************************** -->
   <?php 
@@ -210,8 +210,8 @@ function ReturnFailurePppoe(error) {
 			$configurationsettings['lanmac'] = '';
 		else 
 			$configurationsettings['lanmac'] = $mac;
-	    logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
@@ -297,8 +297,8 @@ function ReturnFailurePppoe(error) {
 		else 
 			$configurationsettings['lanmac'] = $mac;
 
-	    logmessage("Writing changes to configuration file: /var/www/routersettings.ini");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 
 		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
 		update_interfaces_file($configurationsettings['operationmode']);

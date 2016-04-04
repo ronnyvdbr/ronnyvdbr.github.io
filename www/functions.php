@@ -112,7 +112,7 @@
 
 	function update_interfaces_file($select)
 	{
-	  $configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+	  $configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  $networksettings = array();
 	  switch ($select) {
 		  case "Router":

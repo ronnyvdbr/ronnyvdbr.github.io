@@ -14,4 +14,7 @@
 <file name="CssMenuStylesheet.css" server="192.168.20.135//var/www/" local="130704794880000000" remote="130708005690000000" Dst="1" />
 <file name="stylesheet.css" server="192.168.20.174//var/www/" local="130927344471792573" remote="130929538690000000" Dst="1" />
 <file name="CssMenuStylesheet.css" server="192.168.20.174//var/www/" local="130927344471587370" remote="130929538690000000" Dst="1" />
+<file name="login.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940546124" remote="131042314480000000" Dst="2" />
+<file name="CssMenuStylesheet.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940506086" remote="131042316120000000" Dst="2" />
+<file name="stylesheet.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940586166" remote="131042316120000000" Dst="2" />
 </dwsync>

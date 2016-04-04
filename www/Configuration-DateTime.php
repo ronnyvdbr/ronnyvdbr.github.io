@@ -108,7 +108,7 @@ function ReturnFailure(error) {
     <!-- InstanceBeginEditable name="article" -->
 <!-- ********************************************************************************************************************** -->
   <?php date_default_timezone_set(trim(file_get_contents("/etc/timezone"),"\n"));
-  		$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+  		$configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
   ?>
 <!-- ********************************************************************************************************************** -->
   <?php
@@ -173,7 +173,7 @@ function ReturnFailure(error) {
 		}
 		array_splice($arrconfigfilecontents,20,0,$insertservers);
 		file_put_contents("/etc/ntp.conf", implode($arrconfigfilecontents));
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 
 	}
   }
@@ -314,12 +314,16 @@ function ReturnFailure(error) {
 		echo "<script>ReturnProgressTimesync();</script>";
 		flush();
 		if 	(array_key_exists ("timesync_checkbox" , $_POST)) {
-			shell_exec("sudo /etc/init.d/ntp force-reload");
-			shell_exec("sudo update-rc.d ntp defaults");
+			logmessage("Enabling ntp service in systemd.");
+			shell_exec("sudo /bin/systemctl enable ntp.service");
+			logmessage("Starting ntp service in systemd.");
+			shell_exec("sudo /bin/systemctl start ntp.service");
 		}
 		else {
-			shell_exec("sudo /etc/init.d/ntp stop");
-			shell_exec("sudo update-rc.d -f ntp remove");
+			logmessage("Stopping ntp service in systemd.");
+			shell_exec("sudo /bin/systemctl stop ntp.service");
+			logmessage("Disabling ntp service in systemd.");
+			shell_exec("sudo /bin/systemctl disable ntp.service");
 		}
 		echo "<script>ReturnReadyTimesync();</script>";
 	  }

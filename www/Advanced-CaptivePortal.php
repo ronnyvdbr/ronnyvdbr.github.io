@@ -118,7 +118,7 @@ function ReturnStatus_form_deleteusers(error) {
     <!-- InstanceBeginEditable name="article" -->
 
   <?php   	
-	$configurationsettings = parse_ini_file("/var/www/routersettings.ini");
+	$configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
   ?>
 <!-- ********************************************************************************************************************** -->
   <?php 
@@ -140,7 +140,7 @@ function ReturnStatus_form_deleteusers(error) {
 	  }
 	  if($doactions) {
 		logmessage("Writing captive portal state to configuration file.");
-		write_php_ini($configurationsettings, "/var/www/routersettings.ini");
+		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 	  }
 	}
   ?>
