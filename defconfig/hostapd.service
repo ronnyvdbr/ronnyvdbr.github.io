@@ -1,0 +1,18 @@
+[Unit]
+Description=hostapd service
+Wants=network.target
+Before=network.target
+BindsTo=sys-subsystem-net-devices-wlan0.device
+After=sys-subsystem-net-devices-wlan0.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/ip link set dev wlan0 up
+ExecStart=/usr/local/bin/hostapd -B /etc/hostapd/hostapd.conf
+
+ExecStop=/sbin/ip addr flush dev wlan0
+ExecStop=/sbin/ip link set dev wlan0 down
+
+[Install]
+WantedBy=multi-user.target
