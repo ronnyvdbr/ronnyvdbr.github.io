@@ -151,3 +151,10 @@ sudo apt-get -y install zip
 mkdir /home/pi/Raspberry-Wifi-Router/www/temp
 mkdir /home/pi/Raspberry-Wifi-Router/www/temp/OpenVPN_ClientPackages
 sudo systemctl disable openvpn.service
+
+
+########################################################################################
+# Reconfigure networking
+########################################################################################
+
+iw set 4addr on # for bridging the wlan interface
