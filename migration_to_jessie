@@ -90,6 +90,7 @@ sudo systemctl enable hostapd.service
 ########################################################################################
 sudo apt-get -y install iw bridge-utils dnsmasq iptables
 # disable dnsmasq?
+sudo sed -i 's/netdev:x:108:pi/netdev:x:108:pi,www-data/g' /etc/group
 # Copy some config files into place
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/interfaces /etc/network/interfaces
 sudo chgrp www-data /etc/network/interfaces
