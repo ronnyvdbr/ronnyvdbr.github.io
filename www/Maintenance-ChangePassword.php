@@ -1,4 +1,3 @@
-<!-- check if our login_user is set, otherwise redirect to the logon screen -->
 <?php include('logincheck.php');?>
 <!doctype html>
 <html lang="en"><!-- InstanceBegin template="/Templates/RWR-Template.dwt" codeOutsideHTMLIsLocked="false" -->
@@ -151,7 +150,7 @@ function ReturnFailure(error) {
           <table width="100%" border="0">
             <tr>
               <td width="40%" align="right"><label for="password">Password:</label></td>
-              <td width="60%"><input name="password" type="password" autofocus="autofocus" required="required" id="password" pattern="^[a-zA-Z0-9_-]*$"></td>
+              <td width="60%"><input name="password" type="password" autofocus required="required" id="password" pattern="^[a-zA-Z0-9_-]*$"></td>
             </tr>
             <tr>
               <td align="right"><label for="password2">Repeat Password:</label> </td>

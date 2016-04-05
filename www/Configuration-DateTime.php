@@ -1,4 +1,3 @@
-<!-- check if our login_user is set, otherwise redirect to the logon screen -->
 <?php include('logincheck.php');?>
 <!doctype html>
 <html lang="en"><!-- InstanceBegin template="/Templates/RWR-Template.dwt" codeOutsideHTMLIsLocked="false" -->
@@ -303,7 +302,7 @@ function ReturnFailure(error) {
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttontimezone'])) {
 	  echo "<script>ReturnProgressTimezone();</script>";
 	  flush();
-	  shell_exec("sudo dpkg-reconfigure -f noninteractive tzdata");
+	  shell_exec("sudo dpkg-reconfigure -f noninteractive tzdata 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 	  echo "<script>ReturnReadyTimezone();</script>";
 	}
   ?>
@@ -315,15 +314,15 @@ function ReturnFailure(error) {
 		flush();
 		if 	(array_key_exists ("timesync_checkbox" , $_POST)) {
 			logmessage("Enabling ntp service in systemd.");
-			shell_exec("sudo /bin/systemctl enable ntp.service");
+			shell_exec("sudo /bin/systemctl enable ntp.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			logmessage("Starting ntp service in systemd.");
-			shell_exec("sudo /bin/systemctl start ntp.service");
+			shell_exec("sudo /bin/systemctl start ntp.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 		}
 		else {
 			logmessage("Stopping ntp service in systemd.");
-			shell_exec("sudo /bin/systemctl stop ntp.service");
+			shell_exec("sudo /bin/systemctl stop ntp.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			logmessage("Disabling ntp service in systemd.");
-			shell_exec("sudo /bin/systemctl disable ntp.service");
+			shell_exec("sudo /bin/systemctl disable ntp.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 		}
 		echo "<script>ReturnReadyTimesync();</script>";
 	  }

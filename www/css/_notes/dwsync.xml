@@ -17,4 +17,7 @@
 <file name="login.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940546124" remote="131042314480000000" Dst="2" />
 <file name="CssMenuStylesheet.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940506086" remote="131042316120000000" Dst="2" />
 <file name="stylesheet.css" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309940586166" remote="131042316120000000" Dst="2" />
+<file name="stylesheet.css" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309940586166" remote="131043136260000000" Dst="2" />
+<file name="CssMenuStylesheet.css" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309940506086" remote="131043136260000000" Dst="2" />
+<file name="login.css" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309940546124" remote="131043136490000000" Dst="2" />
 </dwsync>

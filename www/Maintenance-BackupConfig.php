@@ -1,4 +1,3 @@
-<!-- check if our login_user is set, otherwise redirect to the logon screen -->
 <?php include('logincheck.php');?>
 <!doctype html>
 <html lang="en"><!-- InstanceBegin template="/Templates/RWR-Template.dwt" codeOutsideHTMLIsLocked="false" -->
