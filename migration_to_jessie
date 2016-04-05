@@ -82,6 +82,9 @@ sudo chgrp www-data /etc/hostapd/hostapd.conf
 sudo chmod g+w /etc/hostapd/hostapd.conf
 # Copy our own systemd service unit into place for starting hostapd during boot time and load it in systemd.
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.service /etc/systemd/system/hostapd.service
+sudo chgrp www-data /etc/systemd/system/hostapd.service
+sudo chmod g+w /etc/systemd/system/hostapd.service
+
 sudo systemctl daemon-reload
 sudo systemctl enable hostapd.service
 
