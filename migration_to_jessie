@@ -196,5 +196,4 @@ sudo systemctl disable openvpn.service
 ########################################################################################
 # Reconfigure networking
 ########################################################################################
-
-iw set 4addr on # for bridging the wlan interface
+sudo iw wlan0 set 4addr on # for bridging the wlan interface
