@@ -17,7 +17,7 @@
 
 	function cidr2broadcast($network, $cidr)
 	{
-		$broadcast = long2ip(ip2long($network) + pow(2, (32 - $cidr)) - 1);
+		$broadcast = long2ip(ip2long($network) + pow(2, (32 - $cidr)) - 2);
 	
 	  return $broadcast;
 	}
@@ -197,9 +197,26 @@
 			  array_push($interfaces,"iface eth0 inet manual\n");
 			
 			//if a mac address has been entered for the lan, configure it at boot time	
-			  if(!empty($configurationsettings['lanmac'])) {
-				array_push($interfaces,"post-up ip link set eth0 address " . $configurationsettings['lanmac'] . "\n");
+
+			  $strdata = file_get_contents ("/boot/cmdline.txt");
+			  $arrdata = explode (" ",$strdata);
+			  foreach($arrdata as $key => $value) {
+				if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
+				  unset($arrdata[$key]);
+				}
 			  }
+			  if(!empty($configurationsettings['lanmac'])) {
+				array_push($arrdata,"smsc95xx.macaddr=" . $configurationsettings['lanmac']);
+			  }
+			  else {
+				array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:55");
+			  }
+			  
+			  $arrdata = str_replace("\n","",$arrdata);
+			  
+			  shell_exec("sudo mount -o rw,remount,rw /boot");
+			  file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
+			  shell_exec("sudo mount -o ro,remount,ro /boot");
 			
 			//if there is a mtu value entered, push it up the stack
 			  if(!empty($configurationsettings['lanmtu'])) {
@@ -283,8 +300,32 @@
 			  array_push($interfaces,"iface lo inet loopback\n\n");
 
 			//push the settings for the eth0 adapter up the array
-			  array_push($interfaces,"iface eth0 inet manual\n\n");
-			
+			  array_push($interfaces,"iface eth0 inet manual\n");
+			  
+			//if a mac address is defined for the lan, configure it for the interfaces file
+			  if(!empty($configurationsettings['lanmac'])) 
+				  array_push($interfaces,"hwaddress ether " . $configurationsettings['lanmac'] . "\n");
+			  
+			//if no mac address is defined, set our default mac address on the bridge interface
+			  else {
+				  array_push($interfaces,"hwaddress ether 20:11:22:33:44:55" . "\n");
+				  
+				  //change eth0 mac address in our boot config, since both br0 and eth0 cannot be the same
+				  $strdata = file_get_contents ("/boot/cmdline.txt");
+				  $arrdata = explode (" ",$strdata);
+				  foreach($arrdata as $key => $value) {
+					if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
+					  unset($arrdata[$key]);
+					}
+				  }
+				  array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:56");
+				  $arrdata = str_replace("\n","",$arrdata);
+				  
+			  shell_exec("sudo mount -o rw,remount,rw /boot");
+			  file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
+			  shell_exec("sudo mount -o ro,remount,ro /boot");
+			  }
+			  		
 			//push the settings for the br0 adapter up the array
 			  array_push($interfaces,"auto br0\n");
 			  array_push($interfaces,"iface br0 inet manual\n");
@@ -299,8 +340,9 @@
 			//if no mac address has been entered for the interface br0, configure our default mac address
 			  else {
 				array_push($interfaces,"post-up ip link set br0 address 20:11:22:33:44:55" . "\n");
+			  }
 			  
-			  //configure our eth0 interface with another mac address because both br0 and eth0 cannot be the same
+			  /*configure our eth0 interface with another mac address because both br0 and eth0 cannot be the same
 				$strdata = file_get_contents ("/boot/cmdline.txt");
 				$arrdata = explode (" ",$strdata);
 				foreach($arrdata as $key => $value) {
@@ -318,7 +360,7 @@
 					array_push($interfaces,"post-up ip link set br0 mtu " . $configurationsettings['lanmtu'] . "\n");
 				}
 			  //set br0 as only interfaces for DHCP
-				array_push($dhcpcd,"allowinterfaces br0\n");
+				array_push($dhcpcd,"allowinterfaces br0\n");*/
 
 			
 			//configure access point for dhcp addressing
