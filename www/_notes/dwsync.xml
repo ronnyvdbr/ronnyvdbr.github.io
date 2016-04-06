@@ -120,9 +120,9 @@
 <file name="phpinfo.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309941677501" remote="131043136490000000" Dst="2" />
 <file name="routersettings.ini" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309941697521" remote="131043136490000000" Dst="2" />
 <file name="test.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042309941797615" remote="131043136490000000" Dst="2" />
-<file name="functions.php" server="192.168.20.118//home/pi/Raspberry-Wifi-Router/www/" local="131044276448348780" remote="131044375490000000" Dst="2" />
+<file name="functions.php" server="192.168.20.118//home/pi/Raspberry-Wifi-Router/www/" local="131044411443203424" remote="131044411180000000" Dst="2" />
 <file name="logincheck.php" server="192.168.20.118//home/pi/Raspberry-Wifi-Router/www/" local="131043580589251500" remote="131044402070000000" Dst="2" />
-<file name="Configuration-OperationMode.php" server="192.168.20.118//home/pi/Raspberry-Wifi-Router/www/" local="131044402331688778" remote="131044402070000000" Dst="2" />
+<file name="Configuration-OperationMode.php" server="192.168.20.118//home/pi/Raspberry-Wifi-Router/www/" local="131044414053828204" remote="131044413790000000" Dst="2" />
 <file name="logincheck.php" server="192.168.20.132//home/pi/Raspberry-Wifi-Router/www/" local="131043580589251500" remote="131044242660000000" Dst="2" />
 <file name="functions.php" server="192.168.20.132//home/pi/Raspberry-Wifi-Router/www/" local="131044262823777314" remote="131044242660000000" Dst="2" />
 <file name="Configuration-OperationMode.php" server="192.168.20.132//home/pi/Raspberry-Wifi-Router/www/" local="131044265522203457" remote="131044242660000000" Dst="2" />

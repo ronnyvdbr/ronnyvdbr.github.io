@@ -283,9 +283,11 @@
 			array_push($interfaces,"netmask " . $configurationsettings['wifimask'] . "\n");
 			*/
 			
-			
+			logmessage("Writing changes to /etc/network/interfaces");
 			file_put_contents("/etc/network/interfaces",implode($interfaces));
+			logmessage("Writing changes to /etc/dhcpcd.conf");
 			file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
+			logmessage("Writing changes to /etc/systemd/system/hostapd.service");
 			file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
 			shell_exec("sudo systemctl daemon-reload");
 		  break;
@@ -430,8 +432,11 @@
 			}
 			*/
 			
+			logmessage("Writing changes to /etc/network/interfaces");
 			file_put_contents("/etc/network/interfaces",implode($interfaces));
+			logmessage("Writing changes to /etc/dhcpcd.conf");
 			file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
+			logmessage("Writing changes to /etc/systemd/system/hostapd.service");
 			file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
 			shell_exec("sudo systemctl daemon-reload");
 		  break;

@@ -180,7 +180,7 @@ function ReturnReadyOperation() {
 			if(strcmp($opsmode,'Router') == 0) {
 				logmessage("Reconfiguring operation mode to Router");
 				
-				logmessage("Rewriting /etc/network/interfaces file with settings for router mode");
+				logmessage("Rewriting configuration files.");
 				update_interfaces_file("Router");
 				
 				logmessage("Updating /home/pi/Raspberry-Wifi-Router/www/routersettings.ini for Router operation mode");
@@ -265,7 +265,7 @@ function ReturnReadyOperation() {
 			if(strcmp($opsmode,'Access Point') == 0) {
 				logmessage("Reconfiguring operation mode to Access Point");
 				
-				logmessage("Rewriting /etc/network/interfaces file with settings for Access Point mode");
+				logmessage("Rewriting configuration files.");
 				update_interfaces_file("Access Point");
 				
 				logmessage("Updating /home/pi/Raspberry-Wifi-Router/www/routersettings.ini for Access Point operation mode");
@@ -314,17 +314,14 @@ function ReturnReadyOperation() {
 				logmessage("Adding bridge parameter to hostapd config.");
 				hostapd_addbridge("enable");
 
-				logmessage("Starting Access Point Management hostapd");
-				shell_exec("sudo systemctl start hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				
 				logmessage("Creating bridge interface");
 				shell_exec("sudo brctl addbr br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
 				logmessage("Adding eth0 to bridge");
 				shell_exec("sudo brctl addif br0 eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
-				logmessage("Adding wlan0 to bridge");
-				shell_exec("sudo brctl addif br0 wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				//logmessage("Adding wlan0 to bridge");
+				//shell_exec("sudo brctl addif br0 wlan0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Setting STP to off");
 				shell_exec("sudo brctl stp br0 off 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -343,7 +340,9 @@ function ReturnReadyOperation() {
 				logmessage("Bringing interface br0 up");
 				shell_exec("sudo ip link set br0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-				
+				logmessage("Starting Access Point Management hostapd");
+				shell_exec("sudo systemctl start hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
 				logmessage("Configuring interface br0");
 				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
 				
