@@ -44,4 +44,5 @@ www-data ALL = (root) NOPASSWD: /bin/systemctl disable dnsmasq.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl start dnsmasq.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl stop dnsmasq.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl daemon-reload
+www-data ALL = (root) NOPASSWD: /bin/systemctl restart dhcpcd.service
 www-data ALL = (root) NOPASSWD: /bin/mount
