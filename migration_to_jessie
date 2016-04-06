@@ -77,6 +77,8 @@ sudo make install -C /home/pi/hostapd-2.5/hostapd
 # Create config folder and copy our default hostapd config file into place.
 sudo mkdir /etc/hostapd
 sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.conf /etc/hostapd/hostapd.conf
+sudo chgrp www-data /etc/hostapd/hostapd.conf
+sudo chmod g+w /etc/hostapd/hostapd.conf
 # Set permissions on config file so our router can modify it.
 sudo chgrp www-data /etc/hostapd/hostapd.conf
 sudo chmod g+w /etc/hostapd/hostapd.conf
