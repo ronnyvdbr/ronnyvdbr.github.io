@@ -187,9 +187,6 @@ function ReturnReadyOperation() {
 				$configurationsettings['operationmode'] = "Router";
 				write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 				
-				logmessage("Stopping Access Point Daemon");
-				shell_exec("sudo systemctl stop hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-
 				logmessage("Removing any ip addresses from br0");
 				shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
@@ -206,16 +203,20 @@ function ReturnReadyOperation() {
 				shell_exec("sudo brctl delbr br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				//
+
+				logmessage("Stopping Access Point Daemon");
+				shell_exec("sudo systemctl stop hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
 				logmessage("Bringing interface eth0 down");
 				shell_exec("sudo ip link set eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				if(empty($configurationsettings['lanmac'])) {
 					logmessage("Configuring default mac address 20:11:22:33:44:55 on interface eth0");
-					shell_exec("sudo ifconfig eth0 hwaddr ether 20:00:11:22:33:44:55 dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+					shell_exec("sudo ip link set addr 20:11:22:33:44:55 dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				}
 				else {
 					logmessage("Configuring mac address " . $configurationsettings['lanmac'] . " from configuration file on interface eth0");
-					shell_exec("sudo ifconfig eth0 hwaddr ether " . $configurationsettings['lanmac'] . " dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+					shell_exec("sudo ip link set addr " . $configurationsettings['lanmac'] . " dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				}
 				logmessage("Bringing interface eth0 up");
 				shell_exec("sudo ip link set eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -305,7 +306,7 @@ function ReturnReadyOperation() {
 				shell_exec("sudo ip link set eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
 				logmessage("Setting default mac address 20:11:22:33:44:56 on eth0 for access point mode");
-				shell_exec("sudo ifconfig eth0 hwaddr ether 20:11:22:33:44:56 dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo ip link set addr 20:11:22:33:44:56 dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				
 				logmessage("Bringing interface eth0 up");
 				shell_exec("sudo ip link set eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -313,6 +314,9 @@ function ReturnReadyOperation() {
 				logmessage("Adding bridge parameter to hostapd config.");
 				hostapd_addbridge("enable");
 
+				logmessage("Starting Access Point Management hostapd");
+				shell_exec("sudo systemctl start hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
 				logmessage("Creating bridge interface");
 				shell_exec("sudo brctl addbr br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
@@ -325,8 +329,20 @@ function ReturnReadyOperation() {
 				logmessage("Setting STP to off");
 				shell_exec("sudo brctl stp br0 off 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-				logmessage("Starting Access Point Management hostapd");
-				shell_exec("sudo systemctl start hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Bringing interface br0 down");
+				shell_exec("sudo ip link set br0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				
+				if(empty($configurationsettings['lanmac'])) {
+					logmessage("Configuring default mac address 20:11:22:33:44:55 on interface br0");
+					shell_exec("sudo ip link set addr 20:11:22:33:44:55 dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+					logmessage("Configuring mac address " . $configurationsettings['lanmac'] . " from configuration file on interface br0");
+					shell_exec("sudo ip link set addr " . $configurationsettings['lanmac'] . " dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				logmessage("Bringing interface br0 up");
+				shell_exec("sudo ip link set br0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+
 				
 				logmessage("Configuring interface br0");
 				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");			
