@@ -211,7 +211,7 @@ function ReturnFailurePppoe(error) {
 			$configurationsettings['lanmac'] = $mac;
 	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
-		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
+		logmessage("Rewriting configuration files.");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
 	}
@@ -299,7 +299,7 @@ function ReturnFailurePppoe(error) {
 	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 
-		logmessage("Writing changes to interfaces file: /etc/network/interfaces");
+		logmessage("Rewriting configuration files");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
 	}
@@ -588,25 +588,49 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 		// in case of mac change
 		if($macchange) { // and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				/*logmessage("Remove all ip addresses from br0. - sudo ip addr flush dev br0");
+				shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service");
 			  } // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				/*logmessage("Setting interface eth0 down. - sudo ip link set eth0 down");
+				shell_exec("sudo ip link set eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Changing Mac address on interface eth0. - sudo ip link set addr $mac dev eth0");
+				shell_exec("sudo ip link set addr " . $mac . " dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Removing any ip addresses from eth0. - sudo ip addr flush dev eth0");
+				shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Unconfiguring interface eth0 (ifdown)");
 				shell_exec("sudo ifdown eth0");
 				logmessage("Changing Mac address on interface eth0");
 				shell_exec("sudo ifconfig eth0 hw ether " . $mac);
 				logmessage("Configuring interface eth0 (ifup)");
 				shell_exec("sudo ifup eth0");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service");
 			  }
 		}
 		// in case of no mac change
 		else { //and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				/*logmessage("Remove all ip addresses from br0. - sudo ip addr flush dev br0");
+				shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");
 			} // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				/*logmessage("Removing any ip addresses from eth0. - sudo ip addr flush dev eth0");
+				shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
 				shell_exec("sudo ifdown eth0 && sudo ifup eth0");
 			}

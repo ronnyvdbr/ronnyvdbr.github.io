@@ -91,13 +91,13 @@
 <file name="phpinfo.php" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941677501" remote="131042316120000000" Dst="2" />
 <file name="routersettings.ini" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941697521" remote="131042316120000000" Dst="2" />
 <file name="test.php" server="192.168.20.133//home/pi/Raspberry-Wifi-Router/www/" local="131042309941797615" remote="131042316120000000" Dst="2" />
-<file name="logincheck.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043138388639154" remote="131043138390000000" Dst="2" />
-<file name="functions.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042697523301165" remote="131043136260000000" Dst="2" />
+<file name="logincheck.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043580589251500" remote="131044516980000000" Dst="2" />
+<file name="functions.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131045312387709209" remote="131044956850000000" Dst="2" />
 <file name="home.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043136120339832" remote="131043136260000000" Dst="2" />
 <file name="Advanced-CaptivePortal.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043139742429784" remote="131043275950000000" Dst="2" />
 <file name="Advanced-VpnServer.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131042697520470078" remote="131043136490000000" Dst="2" />
 <file name="Configuration-DateTime.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043279206829891" remote="131043279150000000" Dst="2" />
-<file name="Configuration-NetworkSettings.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043141740859457" remote="131043141690000000" Dst="2" />
+<file name="Configuration-NetworkSettings.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131045236781383464" remote="131044881340000000" Dst="2" />
 <file name="Configuration-OperationMode.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043141811105507" remote="131043141760000000" Dst="2" />
 <file name="Configuration-WirelessSettings.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043141878969832" remote="131043141830000000" Dst="2" />
 <file name="Maintenance-FactoryReset.php" server="192.168.20.120//home/pi/Raspberry-Wifi-Router/www/" local="131043142673602028" remote="131043142620000000" Dst="2" />
