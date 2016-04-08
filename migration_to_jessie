@@ -130,6 +130,8 @@ sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt
 sudo systemctl stop ntp
 sudo systemctl disable ntp
 
+# fix a bug in which dnsmasq overwrites our resolv.conf file's dns servers
+echo "DNSMASQ_EXCEPT=lo" | sudo tee -a /etc/default/dnsmasq
 
 
 ########################################################################################
