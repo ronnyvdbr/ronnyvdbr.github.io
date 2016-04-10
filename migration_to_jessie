@@ -133,6 +133,10 @@ sudo systemctl disable ntp
 # fix a bug in which dnsmasq overwrites our resolv.conf file's dns servers
 echo "DNSMASQ_EXCEPT=lo" | sudo tee -a /etc/default/dnsmasq
 
+# set security rights on /etc/rc.local
+sudo chgrp www-data /etc/rc.local
+sudo chmod g+w /etc/rc.local
+
 
 ########################################################################################
 # Set-up mysql
