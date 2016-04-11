@@ -120,13 +120,13 @@ function ReturnFailurePppoe(error) {
   <?php 
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttondynamic'])) {
 	  logmessage("Processing Dynamic IP form data.");
-	  $macchange = false;
-	  $dhcpuid = $primarydns = $secondarydns = $mtus = $mac = "";
-	  $dhcpuiderr = $primarydnserr = $secondarydnserr = $mtuerr = $macerr = "";
-	  if (!empty($_POST["dhcpuid"])) {
-		$dhcpuid = test_input($_POST["dhcpuid"]);
-		if (!preg_match("/^[a-zA-Z0-9_-]*$/",$dhcpuid)) {
-		  $dhcpuiderr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+	  $macchangeflag = false;
+	  $dhcpclientid = $primarydns = $secondarydns = $mtus = $mac = "";
+	  $dhcpclientiderr = $primarydnserr = $secondarydnserr = $mtuerr = $macerr = "";
+	  if (!empty($_POST["dhcpclientid"])) {
+		$dhcpclientid = test_input($_POST["dhcpclientid"]);
+		if (!preg_match("/^[a-zA-Z0-9_-]*$/",$dhcpclientid)) {
+		  $dhcpclientiderr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["primarydns"])) {
@@ -153,63 +153,41 @@ function ReturnFailurePppoe(error) {
 		  $macerr = "mac field contains incorrect data, only 0-9: allowed!<br />"; 
 		}
 	  }
-	  if(empty($dhcpuiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
+	  
+	  //check if our form contained any errors, if not, start updating our configuration
+	  if(empty($dhcpclientiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
+		
+		//define some change flags
+		$dhcpclientidchangeflag = $primarydnschangeflag = $secondarydnschangeflag = $mtuchangeflag = $macchangeflag = false;
+		
+		//set configuration flags for actions on the bottom of this page
+		if(strcmp($dhcpclientid,$configurationsettings['dhcpclientid']) !== 0)
+		  $dhcpclientidchangeflag = true;
+		if(strcmp($primarydns,$configurationsettings['dns1']) !== 0)
+		  $primarydnschangeflag = true;
+		if(strcmp($secondarydns,$configurationsettings['dns2']) !== 0)
+		  $secondarydnschangeflag = true;
+		if(strcmp($mtus,$configurationsettings['lanmtu']) !== 0)
+		   $mtuchangeflag = true;
+		if(strcmp($mac,$configurationsettings['lanmac']) !== 0)
+		  $macchangeflag = true;
+
+		//update configuration settings array
 		$configurationsettings['lantype'] = "dhcp";
-		$configurationsettings['dhcpuid'] = $dhcpuid;
+		$configurationsettings['dhcpclientid'] = $dhcpclientid;
 		if(isset($_POST['overridedns'])) {
-		  logmessage("Setting DNS override, reading /etc/dhcp/dhclient.conf and changing settings.");
 		  $configurationsettings['dhcpdnsoverride'] = "enabled";
-		  $dhclientconf = file("/etc/dhcp/dhclient.conf");
-		  foreach($dhclientconf as $key => $value) {
-			if (strpos($value, 'supersede domain-name-servers') !== FALSE) {
-			  unset($dhclientconf[$key]);
-			}
-		  }
-		  if(!empty($primarydns) || !empty($secondarydns)) {
-			  if(!empty($primarydns) && empty($secondarydns)) {
-				array_push($dhclientconf,"supersede domain-name-servers " . $primarydns . ";\n");
-			  }
-			  else if(empty($primarydns) && !empty($secondarydns)) {
-				array_push($dhclientconf,"supersede domain-name-servers " . $secondarydns . ";\n");
-			  }
-			  else if(!empty($primarydns) && !empty($secondarydns)) {
-				array_push($dhclientconf,"supersede domain-name-servers " . $primarydns . "," . $secondarydns . ";\n");
-			  }
-		  }
-		  //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
-		  //file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
 		}
 		else {
-		  logmessage("DNS override not set, setting config file accordingly, reading /etc/dhcp/dhclient.conf");
 		  $configurationsettings['dhcpdnsoverride'] = "disabled";
-		  $dhclientconf = file("/etc/dhcp/dhclient.conf");
-		  foreach($dhclientconf as $key => $value) {
-			if (strpos($value, 'supersede domain-name-servers') !== FALSE) {
-			  unset($dhclientconf[$key]);
-			}
-		  }
-		  //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
-		  //file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
 		}
 		$configurationsettings['dns1'] = $primarydns;
 		$configurationsettings['dns2'] = $secondarydns;
 		$configurationsettings['lanmtu'] = $mtus;
-	    //logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
-		//$dhclientconf = file("/etc/dhcp/dhclient.conf");
-		foreach($dhclientconf as $key => $value) {
-		  if (strpos($value, 'send host-name =') !== FALSE) {
-			$dhclientconf[$key] = "send host-name = \"" . $dhcpuid . "\";\n";
-		  }
-		}
-	    logmessage("Writing back changes to /etc/dhcp/dhclient.conf");
-		file_put_contents("/etc/dhcp/dhclient.conf",$dhclientconf);
-		$macchange = false;
-		if(strcmp($mac,$configurationsettings['lanmac']) !== 0) {$macchange = true;}
-		if(empty($mac))
-			$configurationsettings['lanmac'] = '';
-		else 
-			$configurationsettings['lanmac'] = $mac;
-	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
+		$configurationsettings['lanmac'] = $mac;
+		
+		//write the configuration changes back to our configuration files
+		logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		logmessage("Rewriting configuration files.");
 		update_interfaces_file($configurationsettings['operationmode']);
@@ -312,61 +290,61 @@ function ReturnFailurePppoe(error) {
 	  if (!empty($_POST["ipaddress"])) {
 		$ipaddress = test_input($_POST["ipaddress"]);
 		if (!preg_match("/^[0-9.]*$/",$ipaddress)) {
-		  $ipaddresserr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $ipaddresserr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["username"])) {
 		$username = test_input($_POST["username"]);
 		if (!preg_match("/^[a-zA-Z0-9_-@]*$/",$username)) {
-		  $usernameerr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $usernameerr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["password"])) {
 		$password = test_input($_POST["password"]);
 		if (!preg_match("/^[a-zA-Z0-9_-@]*$/",$password)) {
-		  $passworderr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $passworderr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["repeatpassword"])) {
 		$repeatpassword = test_input($_POST["repeatpassword"]);
 		if (!preg_match("/^[a-zA-Z0-9_-@]*$/",$repeatpassword)) {
-		  $repeatpassworderr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $repeatpassworderr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["servicename"])) {
 		$servicename = test_input($_POST["servicename"]);
 		if (!preg_match("/^[a-zA-Z0-9_-@]*$/",$servicename)) {
-		  $servicenameerr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $servicenameerr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["idledisconnect"])) {
 		$idledisconnect = test_input($_POST["idledisconnect"]);
 		if (!preg_match("/^[0-9]*$/",$idledisconnect)) {
-		  $idledisconnecterr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $idledisconnecterr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["primarydns"])) {
 		$primarydns = test_input($_POST["primarydns"]);
 		if (!preg_match("/^[a-zA-Z0-9.]*$/",$primarydns)) {
-		  $primarydnserr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $primarydnserr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["secondarydns"])) {
 		$secondarydns = test_input($_POST["secondarydns"]);
 		if (!preg_match("/^[a-zA-Z0-9.]*$/",$secondarydns)) {
-		  $secondarydnserr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $secondarydnserr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["mtus"])) {
 		$mtus = test_input($_POST["mtus"]);
 		if (!preg_match("/^[0-9]*$/",$mtus)) {
-		  $mtuerr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $mtuerr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	  if (!empty($_POST["mac"])) {
 		$mac = test_input($_POST["mac"]);
 		if (!preg_match("/^[a-fA-F0-9:]*$/",$mac)) {
-		  $macerr = "dhcpuid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
+		  $macerr = "dhcpclientid field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
 	}
@@ -405,8 +383,8 @@ function ReturnFailurePppoe(error) {
       <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="dynamic">
         <table width="100%" border="0">
           <tr>
-            <td width="40%" align="right">DHCP UID:</td>
-            <td><input name="dhcpuid" type="text" autofocus id="dhcpuid" form="dynamic" placeholder="RaspberryWifi" pattern="^[a-zA-Z0-9_-]*$" maxlength="17" <?php if(!empty($configurationsettings['dhcpuid'])) {echo "value=" . $configurationsettings['dhcpuid'];}?>></td>
+            <td width="40%" align="right">DHCP ClientID:</td>
+            <td><input name="dhcpclientid" type="text" autofocus id="dhcpclientid" form="dynamic" placeholder="RaspberryWifi" pattern="^[a-zA-Z0-9_-]*$" maxlength="17" <?php if(!empty($configurationsettings['dhcpclientid'])) {echo "value=" . $configurationsettings['dhcpclientid'];}?>></td>
           </tr>
           <tr>
             <td align="right">Override DNS servers:</td>
@@ -580,66 +558,128 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 <!-- ********************************************************************************************************************** -->
   <?php //apply shell actions to modify network configuration for the DHCP form
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttondynamic'])) {
+	  
 	  // only apply shell actions when no form errors are present
-	  if(empty($dhcpuiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
+	  if(empty($dhcpclientiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
+
+		//display form busy animation
 		logmessage("Starting to apply dhcp form changes.");
 		echo "<script>ReturnProgressDynamic();</script>";
 		flush();
-		// in case of mac change
-		if($macchange) { // and when in access point mode
+		
+		//change dhcpclientid, primary dns, or secondary dns
+		if($dhcpclientidchangeflag || $primarydnschangeflag || $secondarydnschangeflag) {
+			shell_exec("sudo systemctl restart dhcpcd.service");
+		}
+		
+		//change mtu value
+		if($mtuchangeflag) {
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				/*logmessage("Remove all ip addresses from br0. - sudo ip addr flush dev br0");
-				shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
+			  if(!empty($configurationsettings['lanmtu'])) {
+				logmessage("Reconfiguring mtu value for interface br0.");
+				shell_exec("sudo ip link set dev br0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  }
+			  else {
+				logmessage("Mtu value was removed, setting br0 default mtu value 1500.");
+				shell_exec("sudo ip link set dev br0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  }
+			}
+			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				if(!empty($configurationsettings['lanmtu'])) {
+				  logmessage("Reconfiguring mtu value for interface eth0.");
+				  shell_exec("sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Mtu value was removed, setting eth0 default mtu value 1500.");
+				  shell_exec("sudo ip link set dev eth0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+			}
+		}
+
+		//change mac address
+		if($macchangeflag) {
+			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Changing mac address for interface br0");
+				shell_exec("sudo ip link set dev br0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo ip link set dev br0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo ip link set dev br0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			} 
+			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				logmessage("Changing mac address for interface eth0");
+				shell_exec("sudo ip link set dev eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo ip link set dev eth0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo ip link set dev eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+		}
+		
+
+/*		// in case of mac change
+		if($macchangeflag) { // and when in access point mode
+			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
 				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0");
+				shell_exec("sudo ifdown br0 && sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			  } // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				/*logmessage("Setting interface eth0 down. - sudo ip link set eth0 down");
-				shell_exec("sudo ip link set eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Changing Mac address on interface eth0. - sudo ip link set addr $mac dev eth0");
-				shell_exec("sudo ip link set addr " . $mac . " dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Removing any ip addresses from eth0. - sudo ip addr flush dev eth0");
-				shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Unconfiguring interface eth0 (ifdown)");
-				shell_exec("sudo ifdown eth0");
+				shell_exec("sudo ifdown eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Changing Mac address on interface eth0");
-				shell_exec("sudo ifconfig eth0 hw ether " . $mac);
+				shell_exec("sudo ifconfig eth0 hw ether " . $mac . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Configuring interface eth0 (ifup)");
-				shell_exec("sudo ifup eth0");
+				shell_exec("sudo ifup eth0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service");
+				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			  }
 		}
 		// in case of no mac change
 		else { //and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				/*logmessage("Remove all ip addresses from br0. - sudo ip addr flush dev br0");
-				shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0");
+				shell_exec("sudo ifdown br0 && sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			} // or when in router mode
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				/*logmessage("Removing any ip addresses from eth0. - sudo ip addr flush dev eth0");
-				shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");*/
 				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
-				shell_exec("sudo ifdown eth0 && sudo ifup eth0");
+				shell_exec("sudo ifdown eth0 && sudo ifup eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			}
 		}
+		// in case of dns change
+		if($configurationsettings['dhcpdnsoverride'] == "enabled" && ($primarydnschangeflag == True || $secondarydnschangeflag == True)) {
+			logmessage("Running dhclient to update dns changes");
+			shell_exec("sudo dhclient 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		}
+		
+		// in case of mtu change in acces point mode
+		if($mtuchangeflag) {
+			logmessage("Mtu change requested, processing the same.");
+			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				if(!empty($configurationsettings['lanmtu'])) {
+				  logmessage("Reconfiguring mtu value for interface br0.");
+				  shell_exec("sudo ip link set dev br0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Mtu value was removed, setting br0 default mtu value 1500.");
+				  shell_exec("sudo ip link set dev br0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+			} 
+			// in case of mtu change in router mode
+			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				if(!empty($configurationsettings['lanmtu'])) {
+				  logmessage("Reconfiguring mtu value for interface eth0.");
+				  shell_exec("sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Mtu value was removed, setting eth0 default mtu value 1500.");
+				  shell_exec("sudo ip link set dev eth0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+			}
+		}*/
+	  
 		echo "<script>ReturnReadyDynamic();</script>";
 	  }
 	  else { // if form errors are present, show them in the status cell on the form
-		logmessage("Wrong form data received: " . $dhcpuiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr);
-		echo "<script>ReturnFailureDynamic('" . $dhcpuiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr . "');</script>";
+		logmessage("Wrong form data received: " . $dhcpclientiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr);
+		echo "<script>ReturnFailureDynamic('" . $dhcpclientiderr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macerr . "');</script>";
 	  }
 	}
   ?>
@@ -652,7 +692,7 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 		echo "<script>ReturnProgressStatic();</script>";
 		// in case of mac change
 		flush();
-		if($macchange) { // and when in access point mode
+		if($macchangeflag) { // and when in access point mode
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
 				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
 				shell_exec("sudo ifdown br0 && sudo ifup br0");

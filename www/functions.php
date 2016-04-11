@@ -15,10 +15,8 @@
 			
 	}
 
-	function cidr2broadcast($network, $cidr)
-	{
-		$broadcast = long2ip(ip2long($network) + pow(2, (32 - $cidr)) - 2);
-	
+	function cidr2broadcast($network, $cidr) {
+	  $broadcast = long2ip(ip2long($network) + pow(2, (32 - $cidr)) - 2);
 	  return $broadcast;
 	}
 
@@ -31,19 +29,19 @@
 	
 
 	function hostapd_addbridge($action) {
-		$hostapdconfig = parse_ini_file("/etc/hostapd/hostapd.conf");
-		switch($action) {
-			case "enable":
-				if(!walk($hostapdconfig, 'bridge'))
-					$hostapdconfig['bridge'] = "br0";
-					write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
-			break;
-			case "disable":
-				if(walk($hostapdconfig, 'bridge'))
-					unset($hostapdconfig['bridge']);
-					write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
-			break;
-		}
+	  $hostapdconfig = parse_ini_file("/etc/hostapd/hostapd.conf");
+	  switch($action) {
+		  case "enable":
+			  if(!walk($hostapdconfig, 'bridge'))
+				  $hostapdconfig['bridge'] = "br0";
+				  write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
+		  break;
+		  case "disable":
+			  if(walk($hostapdconfig, 'bridge'))
+				  unset($hostapdconfig['bridge']);
+				  write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
+		  break;
+	  }
 	}
 
   
@@ -184,86 +182,117 @@
 	  array_push($hostapdservice,"[Install]\n");
 	  array_push($hostapdservice,"WantedBy=multi-user.target\n");
 
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	  switch ($select) {
-		  //////////////
-		  case "Router":
-			//operationmode Router - prepare interfaces file contents
-			
-			//push the settings for the loopback adapter up the array
-			  array_push($interfaces,"auto lo\n");
-			  array_push($interfaces,"iface lo inet loopback\n\n");
+		case "Router":
+		  //operationmode Router - prepare interfaces file contents
+		  
+		  //push the settings for the loopback adapter up the array
+			array_push($interfaces,"auto lo\n");
+			array_push($interfaces,"iface lo inet loopback\n\n");
 
-			//push the settings for the eth0 adapter up the array
-			  array_push($interfaces,"iface eth0 inet manual\n");
+		  //push the settings for the eth0 adapter up the array
+			array_push($interfaces,"iface eth0 inet manual\n");
+		  
+		  //if a mac address has been entered for the lan, configure it at boot time	
 			
-			//if a mac address has been entered for the lan, configure it at boot time	
-			  
-			  $strdata = file_get_contents ("/boot/cmdline.txt");
-			  $arrdata = explode (" ",$strdata);
-			  
-			  foreach($arrdata as $key => $value) {
-				if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
-				  unset($arrdata[$key]);
+			$strdata = file_get_contents ("/boot/cmdline.txt");
+			$arrdata = explode (" ",$strdata);
+			
+			foreach($arrdata as $key => $value) {
+			  if (strpos($value, 'smsc95xx.macaddr=') !== FALSE) {
+				unset($arrdata[$key]);
+			  }
+			}
+			
+			if(!empty($configurationsettings['lanmac'])) {
+			  array_push($arrdata,"smsc95xx.macaddr=" . $configurationsettings['lanmac']);
+			}
+			else {
+			  array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:55");
+			}
+			$arrdata = str_replace("\n","",$arrdata);
+			
+			logmessage("Unmounting boot partition.");
+			shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			logmessage("Mounting boot partition read-write.");
+			shell_exec("sudo mount -o rw,relatime,fmask=0000,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro /dev/mmcblk0p1 /boot 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			logmessage("Saving mac address changes to /boot/cmdline.txt");
+			file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
+			logmessage("Unmounting boot partition.");
+			shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			logmessage("Mounting boot partition read-only.");
+			shell_exec("sudo mount -o ro,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro /dev/mmcblk0p1 /boot 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		  
+		  //if there is a mtu value entered, save it to /etc/rc.local for reboot activation
+			$strdata = file_get_contents ("/etc/rc.local");
+			$arrdata = explode ("\n",$strdata);
+			
+			foreach($arrdata as $value) {
+			  if (strpos($value, 'sudo ip link set dev') !== FALSE) {
+				unset($arrdata[$value]);
+			  }
+			}
+			
+			if(!empty($configurationsettings['lanmtu'])) {
+				array_splice($arrdata,13,0,"sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu']);
+			}			
+		  
+		  //set our fixed ip address for the wifi network
+			array_splice($hostapdservice,10,0,"ExecStart=/sbin/ip addr add " . $configurationsettings['wifiip'] . "/" . mask2cidr($configurationsettings['wifimask']) . " broadcast " . cidr2broadcast($configurationsettings['wifiip'], mask2cidr($configurationsettings['wifimask'])) . " dev wlan0\n");
+		  
+		  //set dhcp clientid if given
+		  if(!empty($configurationsettings['dhcpclientid'])) {
+			  array_push($dhcpcd,"clientid " . $configurationsettings['dhcpclientid'] . "\n\n");
+		  }
+		  
+		  //set eth0 as only allowed interface for addressing by dhcpcd
+			array_push($dhcpcd,"allowinterfaces eth0\n\n");
+			
+		  //set static dns entries if in dhcp mode and dns override enabled
+			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'] = "enabled") == 0) {
+				array_push($dhcpcd,"interface eth0\n");
+				
+				if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
+					if(!empty($configurationsettings['dns1']) && empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . "\n");
+					}
+					else if(empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns2'] . "\n");
+					}
+					else if(!empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . " " . $configurationsettings['dns2'] . "\n");
+					}
 				}
-			  }
-			  
-			  if(!empty($configurationsettings['lanmac'])) {
-				array_push($arrdata,"smsc95xx.macaddr=" . $configurationsettings['lanmac']);
-			  }
-			  else {
-				array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:55");
-			  }
-			  $arrdata = str_replace("\n","",$arrdata);
-			  
-			  logmessage("Unmounting boot partition.");
-			  shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  logmessage("Mounting boot partition read-write.");
-			  shell_exec("sudo mount -o rw,relatime,fmask=0000,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro /dev/mmcblk0p1 /boot 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  logmessage("Saving mac address changes to /boot/cmdline.txt");
-			  file_put_contents("/boot/cmdline.txt",implode(" ",$arrdata));
-			  logmessage("Unmounting boot partition.");
-			  shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  logmessage("Mounting boot partition read-only.");
-			  shell_exec("sudo mount -o ro,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro /dev/mmcblk0p1 /boot 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+
+		  //if static details are entered configure them for dhcpcd
+			if (strcmp($configurationsettings['lantype'],"static") == 0) {
+				array_push($dhcpcd,"interface eth0\n");
+				array_push($dhcpcd,"static ip_address=" . $configurationsettings['lanip'] . "/" . mask2cidr($configurationsettings['lanmask']) . "\n");
+				if(!empty($configurationsettings['langw'])) {
+				  array_push($dhcpcd,"static routers=" . $configurationsettings['langw'] . "\n");
+				}
+				if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
+					array_push($dhcpcd,"static domain_name_servers=");
+					if(!empty($configurationsettings['dns1'])) {
+					  array_push($dhcpcd,$configurationsettings['dns1'] . " ");
+					}
+					if(!empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,$configurationsettings['dns2']);
+					}
+				}
+			}
 			
-			//if there is a mtu value entered, push it up the stack
-			  if(!empty($configurationsettings['lanmtu'])) {
-					array_push($interfaces,"post-up ifconfig eth0 mtu " . $configurationsettings['lanmtu'] . "\n");
-			  }
-			
-			//set our fixed ip address for the wifi network
-				array_splice($hostapdservice,10,0,"ExecStart=/sbin/ip addr add " . $configurationsettings['wifiip'] . "/" . mask2cidr($configurationsettings['wifimask']) . " broadcast " . cidr2broadcast($configurationsettings['wifiip'], mask2cidr($configurationsettings['wifimask'])) . " dev wlan0\n");
-			
-			//set eth0 as only allowed interface for addressing by dhcpcd
-			  array_push($dhcpcd,"allowedinterfaces eth0\n\n");
-			  
-			//if static details are entered configure them for dhcpcd
-			  if (strcmp($configurationsettings['lantype'],"static") == 0) {
-				  array_push($dhcpcd,"interface eth0\n");
-				  array_push($dhcpcd,"static ip_address=" . $configurationsettings['lanip'] . "/" . mask2cidr($configurationsettings['lanmask']) . "\n");
-				  if(!empty($configurationsettings['langw']))
-					array_push($dhcpcd,"static routers=" . $configurationsettings['langw'] . "\n");
-				  if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['langw'] . "\n");
-					  if(!empty($configurationsettings['dns1']))
-						array_push($dhcpcd,$configurationsettings['dns1'] . " ");
-					  if(!empty($configurationsettings['dns2']))
-						array_push($dhcpcd,$configurationsettings['dns2']);
-				  }
-			  }
-			  
-			//write configuration files back to disk
-			  logmessage("Writing changes to /etc/network/interfaces");
-			  file_put_contents("/etc/network/interfaces",implode($interfaces));
-			  logmessage("Writing changes to /etc/dhcpcd.conf");
-			  file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
-			  logmessage("Writing changes to /etc/systemd/system/hostapd.service");
-			  file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
-			  shell_exec("sudo systemctl daemon-reload");
-		  break;
+		  //write configuration files back to disk
+			logmessage("Writing changes to /etc/network/interfaces");
+			file_put_contents("/etc/network/interfaces",implode($interfaces));
+			logmessage("Writing changes to /etc/dhcpcd.conf");
+			file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
+			logmessage("Writing changes to /etc/systemd/system/hostapd.service");
+			file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
+			shell_exec("sudo systemctl daemon-reload");
+		break;
 	
-		  //////////////
 		  case "Access Point":
 			//operationmode access point - prepare interfaces file contents	
 
@@ -298,6 +327,7 @@
 				}
 				array_push($arrdata,"smsc95xx.macaddr=20:11:22:33:44:56");
 				$arrdata = str_replace("\n","",$arrdata);
+			  }
 
 			  logmessage("Unmounting boot partition.");
 			  shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -309,23 +339,62 @@
 			  shell_exec("sudo umount /dev/mmcblk0p1 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			  logmessage("Mounting boot partition read-only.");
 			  shell_exec("sudo mount -o ro,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro /dev/mmcblk0p1 /boot 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  }
 
+			//if there is a mtu value entered, save it to /etc/rc.local for reboot activation
+			  $strdata = file_get_contents ("/etc/rc.local");
+			  $arrdata = explode ("\n",$strdata);
+			  
+			  foreach($arrdata as $value) {
+				if (strpos($value, 'sudo ip link set dev') !== FALSE) {
+				  unset($arrdata[$value]);
+				}
+			  }
+			  
+			  if(!empty($configurationsettings['lanmtu'])) {
+				  array_splice($arrdata,13,0,"sudo ip link set dev br0 mtu " . $configurationsettings['lanmtu']);
+			  }			
+
+			//set dhcp clientid if given
+			if(!empty($configurationsettings['dhcpclientid'])) {
+				array_push($dhcpcd,"clientid " . $configurationsettings['dhcpclientid'] . "\n\n");
+			}
+		
 			//set br0 as only allowed interface for addressing by dhcpcd
-			  array_push($dhcpcd,"allowedinterfaces br0\n\n");
+			  array_push($dhcpcd,"allowinterfaces br0\n\n");
+
+		  //set static dns entries if in dhcp mode and dns override enabled
+			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'] = "enabled") == 0) {
+				array_push($dhcpcd,"interface br0\n");
+				
+				if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
+					if(!empty($configurationsettings['dns1']) && empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . "\n");
+					}
+					else if(empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns2'] . "\n");
+					}
+					else if(!empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
+					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . " " . $configurationsettings['dns2'] . "\n");
+					}
+				}
+			}
+
 			  
 			//if static details entered, reconfigure dhcpcd
 			  if (strcmp($configurationsettings['lantype'],"static") == 0) {
 				  array_push($dhcpcd,"interface br0\n");
 				  array_push($dhcpcd,"static ip_address=" . $configurationsettings['lanip'] . "/" . mask2cidr($configurationsettings['lanmask']) . "\n");
-				  if(!empty($configurationsettings['langw']))
+				  if(!empty($configurationsettings['langw'])) {
 					array_push($dhcpcd,"static routers=" . $configurationsettings['langw'] . "\n");
+				  }
 				  if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
 					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['langw'] . "\n");
-					  if(!empty($configurationsettings['dns1']))
+					  if(!empty($configurationsettings['dns1'])) {
 						array_push($dhcpcd,$configurationsettings['dns1'] . " ");
-					  if(!empty($configurationsettings['dns2']))
+					  }
+					  if(!empty($configurationsettings['dns2'])) {
 						array_push($dhcpcd,$configurationsettings['dns2']);
+					  }
 				  }
 			  }
 
@@ -339,8 +408,7 @@
 			  shell_exec("sudo systemctl daemon-reload");
 		  break;
 	  }
-	}
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	} // end function
 
 ?> 
 
