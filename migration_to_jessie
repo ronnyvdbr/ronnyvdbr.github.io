@@ -137,6 +137,11 @@ echo "DNSMASQ_EXCEPT=lo" | sudo tee -a /etc/default/dnsmasq
 sudo chgrp www-data /etc/rc.local
 sudo chmod g+w /etc/rc.local
 
+# create empty /etc/resolv.conf.head file for dns override
+sudo touch /etc/resolv.conf.head
+sudo chgrp www-data /etc/resolv.conf.head
+sudo chmod g+w /etc/resolv.conf.head
+
 
 ########################################################################################
 # Set-up mysql
