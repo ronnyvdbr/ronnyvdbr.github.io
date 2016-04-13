@@ -26,3 +26,10 @@ sudo mysqldump --host=localhost --user=root --password=raspberry radius > /tmp/r
 mysql restore
 sudo mysql --host=localhost --user=root --password=raspberry login < /tmp/login.db
 sudo mysql --host=localhost --user=root --password=raspberry radius < /tmp/radius.db
+
+services
+ntp.service
+dhcpcd.service
+hostapd.service
+openvpn.service
+
