@@ -44,22 +44,20 @@
                <li><a href='Configuration-WirelessSettings.php'><span>Wireless Settings</span></a></li>
             </ul>
          </li>
-         <li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
+         <!--<li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
             <ul id="AdvancedUl">
                <li><a href='Advanced-PortForwarding.php'><span>Port Forwarding</span></a></li>
                <li><a href='Advanced-CaptivePortal.php'><span>Captive Portal</span></a></li>
-               <li><a href='Advanced-VpnServer.php'><span>VPN Server</span></a></li>
                <li><a href='Advanced-NetworkFilter.php'><span>Network Filter</span></a></li>
                <li><a href='Advanced-WebFilter.php'><span>Web Filter</span></a></li>
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
-         </li>
+         </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
-               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -205,7 +203,7 @@
       <tr>
         <td align="right">Primary DNS Server:</td>
         <td>
-		<?php echo shell_exec("cat /etc/resolv.conf | awk -v n=1 '/^nameserver/{l++} (l==n){print}' | sed -e 's/nameserver //g'");
+		<?php echo shell_exec("cat /etc/resolv.conf | grep nameserver | awk -v n=1 '/^nameserver/{l++} (l==n){print}' | sed -e 's/nameserver //g'");
 		?>
         </td>
       </tr>
@@ -213,7 +211,7 @@
         <td align="right">Secondary DNS Server:</td>
         <td>
 		<?php 
-		echo shell_exec("cat /etc/resolv.conf | awk -v n=2 '/^nameserver/{l++} (l==n){print}' | sed -e 's/nameserver //g'");
+		echo shell_exec("cat /etc/resolv.conf | grep nameserver | awk -v n=2 '/^nameserver/{l++} (l==n){print}' | sed -e 's/nameserver //g'");
 		?>
         </td>
       </tr>

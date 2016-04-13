@@ -24,7 +24,7 @@ function GoToHome() {
 }
 </script>
 <?php include 'functions.php';?>
-<?php logmessage("Loading page Advanced-NetworkFilter.php");?>
+<?php logmessage("Loading page Maintenance-FactoryReset.php");?>
 <!-- InstanceEndEditable --> 
 </head>
  
@@ -54,22 +54,20 @@ function GoToHome() {
                <li><a href='Configuration-WirelessSettings.php'><span>Wireless Settings</span></a></li>
             </ul>
          </li>
-         <li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
+         <!--<li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
             <ul id="AdvancedUl">
                <li><a href='Advanced-PortForwarding.php'><span>Port Forwarding</span></a></li>
                <li><a href='Advanced-CaptivePortal.php'><span>Captive Portal</span></a></li>
-               <li><a href='Advanced-VpnServer.php'><span>VPN Server</span></a></li>
                <li><a href='Advanced-NetworkFilter.php'><span>Network Filter</span></a></li>
                <li><a href='Advanced-WebFilter.php'><span>Web Filter</span></a></li>
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
-         </li>
+         </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
-               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -150,12 +148,12 @@ function GoToHome() {
 
 		echo "<script>ReturnProgress();</script>";
 		echo "<script>setTimeout(GoToHome, 60000);</script>";
-
+		flush();
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/rc.local to /etc/rc.local");
-		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/rc.local /etc/rc.local 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf to /etc/dnsmasq.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/dnsmasq.conf /etc/dnsmasq.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
@@ -172,6 +170,9 @@ function GoToHome() {
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini to /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/routersettings.ini /home/pi/Raspberry-Wifi-Router/www/routersettings.ini 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.service to /etc/systemd/system/hostapd.service");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/hostapd.service /etc/systemd/system/hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf to /etc/freeradius/radiusd.conf");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/radiusd.conf /etc/freeradius/radiusd.conf 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
@@ -202,15 +203,12 @@ function GoToHome() {
     	logmessage("Populating radius database with 1 user account.");
 		shell_exec("sudo echo \"insert into radcheck (username, attribute, op, value) values ('user', 'Cleartext-Password', ':=', 'password');\" | mysql --host=localhost --user=root --password=raspberry radius 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-		logmessage("Disabling wlan0 ip address restore on boot in rc.local.");
-		shell_exec("sudo sed -i 's/ip addr add 192.168.1.1\/24 dev wlan0/# ip addr add 192.168.1.1\/24 dev wlan0/g' /etc/rc.local");
-		logmessage("Disabling iptables restore on boot in rc.local");
-		shell_exec("sudo sed -i 's/iptables-restore < \/var\/tmp\/iptables/# iptables-restore < \/var\/tmp\/iptables/g' /etc/rc.local");
-		logmessage("Disabling ip forwarding restore on boot in rc.local");
-		shell_exec("sudo sed -i 's/sysctl -w net.ipv4.ip_forward=1/# sysctl -w net.ipv4.ip_forward=1/g' /etc/rc.local");
+		logmessage("Disabling ntp service.");
+		shell_exec("sudo systemctl disable ntp.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		
+		logmessage("Disabling dnsmasq service.");
+		shell_exec("sudo systemctl disable dnsmasq.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-		logmessage("Stopping Captive Portal service and unscheduling chilli service at boot time");
-		shell_exec("sudo killall chilli ; sudo update-rc.d -f chilli remove");
 //<!-- ********************************************************************************************************************** -->
 // vpn server reset
 		logmessage("Reading configuration file /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
@@ -227,13 +225,13 @@ function GoToHome() {
 		logmessage("Writing configuration file /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		logmessage("Unscheduling OpenVPN service to start at boot time.");
-		shell_exec("sudo update-rc.d -f openvpn remove 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		shell_exec("sudo systemctl disable openvpn.service 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Removing certificate authority files.");
-		shell_exec("sudo rm -rf /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		shell_exec("sudo rm -rfv /etc/openvpn/easy-rsa 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Removing OpenVPN Client Certificate Packages.");
-		shell_exec("sudo rm -f /var/www/temp/OpenVPN_ClientPackages/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		shell_exec("sudo rm -fv /var/www/temp/OpenVPN_ClientPackages/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Removing temporary OpenVPN configuration parameters.");
-		shell_exec("sudo rm -f /tmp/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
+		shell_exec("sudo rm -fv /tmp/* 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Removing registered login certificates from login database.");
 		shell_exec("sudo echo 'truncate openvpnusers' | mysql --host=localhost --user=root --password=raspberry --database login 2>&1 | sudo tee -a /var/log/raspberrywap.log");
 		logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/server.conf to /etc/openvpn/server.conf");

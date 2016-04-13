@@ -43,7 +43,7 @@
                <li><a href='Configuration-WirelessSettings.php'><span>Wireless Settings</span></a></li>
             </ul>
          </li>
-         <li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
+         <!--<li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
             <ul id="AdvancedUl">
                <li><a href='Advanced-PortForwarding.php'><span>Port Forwarding</span></a></li>
                <li><a href='Advanced-CaptivePortal.php'><span>Captive Portal</span></a></li>
@@ -51,7 +51,7 @@
                <li><a href='Advanced-WebFilter.php'><span>Web Filter</span></a></li>
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
-         </li>
+         </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>

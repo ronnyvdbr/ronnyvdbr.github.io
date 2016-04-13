@@ -119,10 +119,12 @@
 	{
 	//read our config file
 	  $configurationsettings = parse_ini_file("/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
-	//declare two arrays which will hold our configuration settings
+	//declare arrays which will hold our configuration settings
 	  $interfaces = array();
 	  $dhcpcd = array();
 	  $hostapdservice = array();
+	  $resolvconfhead = array();
+	  
 	
 	//populate our interfaces array with some original file contents
 	  array_push($interfaces,"# interfaces(5) file used by ifup(8) and ifdown(8)\n\n");
@@ -249,18 +251,16 @@
 			array_push($dhcpcd,"allowinterfaces eth0\n\n");
 			
 		  //set static dns entries if in dhcp mode and dns override enabled
-			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'] = "enabled") == 0) {
-				array_push($dhcpcd,"interface eth0\n");
-				
+			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'],"enabled") == 0) {
 				if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
 					if(!empty($configurationsettings['dns1']) && empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns1'] . "\n");
 					}
 					else if(empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns2'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns2'] . "\n");
 					}
 					else if(!empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . " " . $configurationsettings['dns2'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns1'] . "\n" . "nameserver " . $configurationsettings['dns2'] . "\n");
 					}
 				}
 			}
@@ -288,6 +288,8 @@
 			file_put_contents("/etc/network/interfaces",implode($interfaces));
 			logmessage("Writing changes to /etc/dhcpcd.conf");
 			file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
+			logmessage("Writing changes to /etc/resolv.conf.head");
+			file_put_contents("/etc/resolv.conf.head",implode($resolvconfhead));
 			logmessage("Writing changes to /etc/systemd/system/hostapd.service");
 			file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
 			shell_exec("sudo systemctl daemon-reload");
@@ -363,18 +365,18 @@
 			  array_push($dhcpcd,"allowinterfaces br0\n\n");
 
 		  //set static dns entries if in dhcp mode and dns override enabled
-			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'] = "enabled") == 0) {
+			if (strcmp($configurationsettings['lantype'],"dhcp") == 0 && strcmp($configurationsettings['dhcpdnsoverride'],"enabled") == 0) {
 				array_push($dhcpcd,"interface br0\n");
 				
 				if(!empty($configurationsettings['dns1']) || !empty($configurationsettings['dns2'])) {
 					if(!empty($configurationsettings['dns1']) && empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns1'] . "\n");
 					}
 					else if(empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns2'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns2'] . "\n");
 					}
 					else if(!empty($configurationsettings['dns1']) && !empty($configurationsettings['dns2'])) {
-					  array_push($dhcpcd,"static domain_name_servers=" . $configurationsettings['dns1'] . " " . $configurationsettings['dns2'] . "\n");
+					  array_push($resolvconfhead,"nameserver " . $configurationsettings['dns1'] . "\n" . "nameserver " . $configurationsettings['dns2'] . "\n");
 					}
 				}
 			}
@@ -403,6 +405,8 @@
 			  file_put_contents("/etc/network/interfaces",implode($interfaces));
 			  logmessage("Writing changes to /etc/dhcpcd.conf");
 			  file_put_contents("/etc/dhcpcd.conf",implode($dhcpcd));
+			  logmessage("Writing changes to /etc/resolv.conf.head");
+			  file_put_contents("/etc/resolv.conf.head",implode($resolvconfhead));
 			  logmessage("Writing changes to /etc/systemd/system/hostapd.service");
 			  file_put_contents("/etc/systemd/system/hostapd.service",implode($hostapdservice));
 			  shell_exec("sudo systemctl daemon-reload");

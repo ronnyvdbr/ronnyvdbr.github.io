@@ -67,22 +67,20 @@ function ReturnFailurePppoe(error) {
                <li><a href='Configuration-WirelessSettings.php'><span>Wireless Settings</span></a></li>
             </ul>
          </li>
-         <li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
+         <!--<li class='has-sub' id="Advanced"><a href='#'><span>Advanced</span></a>
             <ul id="AdvancedUl">
                <li><a href='Advanced-PortForwarding.php'><span>Port Forwarding</span></a></li>
                <li><a href='Advanced-CaptivePortal.php'><span>Captive Portal</span></a></li>
-               <li><a href='Advanced-VpnServer.php'><span>VPN Server</span></a></li>
                <li><a href='Advanced-NetworkFilter.php'><span>Network Filter</span></a></li>
                <li><a href='Advanced-WebFilter.php'><span>Web Filter</span></a></li>
                <li class='last'><a href='Advanced-Wireless.php'><span>Advanced Wireless</span></a></li>
             </ul>
-         </li>
+         </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
-               <li><a href='Maintenance-ChangePassword.php'><span>Change Password</span></a></li>
                <li class='last'><a href='Maintenance-Reboot.php'><span>Reboot</span></a></li>
             </ul>
          </li>
@@ -158,9 +156,11 @@ function ReturnFailurePppoe(error) {
 	  if(empty($dhcpclientiderr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macerr)) {
 		
 		//define some change flags
-		$dhcpclientidchangeflag = $primarydnschangeflag = $secondarydnschangeflag = $mtuchangeflag = $macchangeflag = false;
+		$lantypechangeflag = $dhcpclientidchangeflag = $dhcpoverrideflag = $primarydnschangeflag = $secondarydnschangeflag = $mtuchangeflag = $macchangeflag = false;
 		
 		//set configuration flags for actions on the bottom of this page
+		if(strcmp($configurationsettings['lantype'],"dhcp") !== 0)
+		  $lantypechangeflag = true;
 		if(strcmp($dhcpclientid,$configurationsettings['dhcpclientid']) !== 0)
 		  $dhcpclientidchangeflag = true;
 		if(strcmp($primarydns,$configurationsettings['dns1']) !== 0)
@@ -176,9 +176,13 @@ function ReturnFailurePppoe(error) {
 		$configurationsettings['lantype'] = "dhcp";
 		$configurationsettings['dhcpclientid'] = $dhcpclientid;
 		if(isset($_POST['overridedns'])) {
+		  if(strcmp($configurationsettings['dhcpdnsoverride'],"disabled") == 0)
+		  	$dhcpoverrideflag = true;
 		  $configurationsettings['dhcpdnsoverride'] = "enabled";
 		}
 		else {
+		  if(strcmp($configurationsettings['dhcpdnsoverride'],"enabled") == 0)
+		  	$dhcpoverrideflag = true;
 		  $configurationsettings['dhcpdnsoverride'] = "disabled";
 		}
 		$configurationsettings['dns1'] = $primarydns;
@@ -244,40 +248,46 @@ function ReturnFailurePppoe(error) {
 		  $macaddresserr = "macaddress field contains incorrect data, only a-zA-Z0-9_- allowed!<br />"; 
 		}
 	  }
+
+	  //check if our form contained any errors, if not, start updating our configuration
 	  if(empty($ipaddresserr) && empty($subnetmaskerr) && empty($defaultgatewayerr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macaddresserr) && !empty($ipaddress) && !empty($subnetmask)) {
+
+		//define some change flags
+		$lantypechangeflag = $ipaddresschangeflag = $subnetmaskchangeflag = $defaultgwchangeflag = $primarydnschangeflag = $secondarydnschangeflag = $mtuchangeflag = $macchangeflag = false;
+		
+		//set configuration flags for actions on the bottom of this page
+		
+		if(strcmp($configurationsettings['lantype'],"static") !== 0)
+		  $lantypechangeflag = true;
+		if(strcmp($ipaddress,$configurationsettings['lanip']) !== 0)
+		  $ipaddresschangeflag = true;
+		if(strcmp($subnetmask,$configurationsettings['lanmask']) !== 0)
+		  $subnetmaskchangeflag = true;
+		if(strcmp($defaultgateway,$configurationsettings['langw']) !== 0)
+		  $defaultgwchangeflag = true;
+		if(strcmp($primarydns,$configurationsettings['dns1']) !== 0)
+		  $primarydnschangeflag = true;
+		if(strcmp($secondarydns,$configurationsettings['dns2']) !== 0)
+		  $secondarydnschangeflag = true;
+		if(strcmp($mtus,$configurationsettings['lanmtu']) !== 0)
+		   $mtuchangeflag = true;
+		if(strcmp($macaddress,$configurationsettings['lanmac']) !== 0)
+		  $macchangeflag = true;
+
+		//update configuration settings array
 		$configurationsettings['lantype'] = "static";
 		$configurationsettings['lanip'] = $ipaddress;
 		$configurationsettings['lanmask'] = $subnetmask;
+		$configurationsettings['langw'] = $defaultgateway;
+		$configurationsettings['dns1'] = $primarydns;
+		$configurationsettings['dns2'] = $secondarydns;
+		$configurationsettings['lanmtu'] = $mtus;
+		$configurationsettings['lanmac'] = $macaddress;
 
-		if(!empty($defaultgateway)) 
-			$configurationsettings['langw'] = $defaultgateway;
-		else
-			$configurationsettings['langw'] = "";
-
-		if(!empty($primarydns)) 
-			$configurationsettings['dns1'] = $primarydns;
-		else
-			$configurationsettings['dns1'] = "";
-
-		if(!empty($secondarydns)) 
-			$configurationsettings['dns2'] = $secondarydns;
-		else
-			$configurationsettings['dns2'] = "";
-
-		if(!empty($mtus)) 
-			$configurationsettings['lanmtu'] = $mtus;
-		else
-			$configurationsettings['lanmtu'] = "";
-
-		if(empty($mac))
-			$configurationsettings['lanmac'] = '';
-		else 
-			$configurationsettings['lanmac'] = $mac;
-
+		//write the configuration changes back to our configuration files
 	    logmessage("Writing changes to configuration file: /home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
 		write_php_ini($configurationsettings, "/home/pi/Raspberry-Wifi-Router/www/routersettings.ini");
-
-		logmessage("Rewriting configuration files");
+		logmessage("Rewriting configuration files.");
 		update_interfaces_file($configurationsettings['operationmode']);
 	  }
 	}
@@ -366,7 +376,7 @@ function ReturnFailurePppoe(error) {
               <select name="selectnetconf" id="selectnetconf">
                 <option value="conf-dhcp" <?php if($configurationsettings['lantype'] == "dhcp") {echo "selected='selected'";}?>>Dynamic IP (DHCP)</option>
                 <option value="conf-static" <?php if($configurationsettings['lantype'] == "static") {echo "selected='selected'";}?>>Static IP</option>
-                <option value="conf-pppoe" <?php if($configurationsettings['lantype'] == "pppoe") {echo "selected='selected'";}?>>PPPoE (username/password)</option>
+                <!--<option value="conf-pppoe" <?php if($configurationsettings['lantype'] == "pppoe") {echo "selected='selected'";}?>>PPPoE (username/password)</option>-->
               </select>
             </td>
           </tr>
@@ -567,11 +577,27 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 		echo "<script>ReturnProgressDynamic();</script>";
 		flush();
 		
-		//change dhcpclientid, primary dns, or secondary dns
-		if($dhcpclientidchangeflag || $primarydnschangeflag || $secondarydnschangeflag) {
+		//restart dhcpcd daemon if coming from static config
+		
+		
+		//change dhcpclientid
+		if($lantypechangeflag) {
 			shell_exec("sudo systemctl restart dhcpcd.service");
 		}
 		
+		//override primary dns, secondary dns, or both
+		if($primarydnschangeflag || $secondarydnschangeflag) {
+			shell_exec("sudo resolvconf -u");
+		}
+		
+		if($dhcpoverrideflag && strcmp($configurationsettings['dhcpdnsoverride'],"disabled") == 0) {
+		  shell_exec("sudo resolvconf -u");
+		}
+
+		if($dhcpoverrideflag && strcmp($configurationsettings['dhcpdnsoverride'],"enabled") == 0) {
+		  shell_exec("sudo resolvconf -u");
+		}
+
 		//change mtu value
 		if($mtuchangeflag) {
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
@@ -601,79 +627,23 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
 				logmessage("Changing mac address for interface br0");
 				shell_exec("sudo ip link set dev br0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				shell_exec("sudo ip link set dev br0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(!empty($configurationsettings['lanmac'])) 
+				  shell_exec("sudo ip link set dev br0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				else
+				  shell_exec("sudo ip link set dev br0 address 20:11:22:33:44:55 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				shell_exec("sudo ip link set dev br0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			} 
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
 				logmessage("Changing mac address for interface eth0");
 				shell_exec("sudo ip link set dev eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				shell_exec("sudo ip link set dev eth0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(!empty($configurationsettings['lanmac'])) 
+				  shell_exec("sudo ip link set dev eth0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				else
+				  shell_exec("sudo ip link set dev eth0 address 20:11:22:33:44:55 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				shell_exec("sudo ip link set dev eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 			}
 		}
 		
-
-/*		// in case of mac change
-		if($macchangeflag) { // and when in access point mode
-			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  } // or when in router mode
-			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				logmessage("Unconfiguring interface eth0 (ifdown)");
-				shell_exec("sudo ifdown eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Changing Mac address on interface eth0");
-				shell_exec("sudo ifconfig eth0 hw ether " . $mac . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Configuring interface eth0 (ifup)");
-				shell_exec("sudo ifup eth0  2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Restarting dhcpcd.service. - sudo systemctl restart dhcpcd.service");
-				shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			  }
-		}
-		// in case of no mac change
-		else { //and when in access point mode
-			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			} // or when in router mode
-			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
-				shell_exec("sudo ifdown eth0 && sudo ifup eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-			}
-		}
-		// in case of dns change
-		if($configurationsettings['dhcpdnsoverride'] == "enabled" && ($primarydnschangeflag == True || $secondarydnschangeflag == True)) {
-			logmessage("Running dhclient to update dns changes");
-			shell_exec("sudo dhclient 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-		}
-		
-		// in case of mtu change in acces point mode
-		if($mtuchangeflag) {
-			logmessage("Mtu change requested, processing the same.");
-			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				if(!empty($configurationsettings['lanmtu'])) {
-				  logmessage("Reconfiguring mtu value for interface br0.");
-				  shell_exec("sudo ip link set dev br0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				}
-				else {
-				  logmessage("Mtu value was removed, setting br0 default mtu value 1500.");
-				  shell_exec("sudo ip link set dev br0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				}
-			} 
-			// in case of mtu change in router mode
-			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				if(!empty($configurationsettings['lanmtu'])) {
-				  logmessage("Reconfiguring mtu value for interface eth0.");
-				  shell_exec("sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				}
-				else {
-				  logmessage("Mtu value was removed, setting eth0 default mtu value 1500.");
-				  shell_exec("sudo ip link set dev eth0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				}
-			}
-		}*/
 	  
 		echo "<script>ReturnReadyDynamic();</script>";
 	  }
@@ -686,43 +656,131 @@ if(strcmp($configurationsettings['lantype'],"pppoe") == 0) {echo '<script>$("#co
 <!-- ********************************************************************************************************************** -->
   <?php //apply shell actions to modify network configuration for the static form
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buttonstatic'])) {
+	  
 	  // only apply shell actions when no form errors are present
 	  if(empty($ipaddresserr) && empty($subnetmaskerr) && empty($defaultgatewayerr) && empty($primarydnserr) && empty($secondarydnserr) && empty($mtuerr) && empty($macaddresserr)) {
+		
+		// show our busy animation
 		logmessage("Starting to apply Static IP form changes.");
 		echo "<script>ReturnProgressStatic();</script>";
-		// in case of mac change
 		flush();
-		if($macchangeflag) { // and when in access point mode
-			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0");
-			  } // or when in router mode
-			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				logmessage("Unconfiguring interface eth0 (ifdown)");
-				shell_exec("sudo ifdown eth0");
-				logmessage("Changing Mac address on interface eth0");
-				shell_exec("sudo ifconfig eth0 hw ether " . $mac);
-				logmessage("Configuring interface eth0 (ifup)");
-				shell_exec("sudo ifup eth0");
-			  }
+		//$ipaddresschangeflag = $subnetmaskchangeflag = $defaultgwchangeflag = $primarydnschangeflag = $secondarydnschangeflag = $mtuchangeflag = $macchangeflag = false;
+
+		// change ip addresses & subnet mask
+		if($lantypechangeflag || $ipaddresschangeflag || $subnetmaskchangeflag) {
+		  if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+			if(!empty($configurationsettings['lanip'])) {
+			  logmessage("Reconfiguring ip value for interface br0.");
+			  logmessage("Flushing existing ip addresses for interface br0.");
+			  shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  logmessage("Adding static ip address to interface br0.");
+			  shell_exec("sudo ip addr add " . $configurationsettings['lanip'] . "/" . mask2cidr($configurationsettings['lanmask']) . " broadcast " . cidr2broadcast($configurationsettings['lanip'], mask2cidr($configurationsettings['lanmask'])) . " dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+			else {
+			  logmessage("Reconfiguring ip value for interface br0 - no value found, setting default value 192.168.2.1/24");
+  			  logmessage("Flushing existing ip addresses for interface br0.");
+			  shell_exec("sudo ip addr flush dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  logmessage("Adding default static ip address to interface br0.");
+			  shell_exec("sudo ip addr add 192.168.2.1/24 broadcast 192.168.2.255 dev br0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+		  }
+		  if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+			if(!empty($configurationsettings['lanip'])) {
+			  logmessage("Reconfiguring ip value for interface eth0.");
+  			  logmessage("Flushing existing ip addresses for interface eth0.");
+			  shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  logmessage("Adding static ip address to interface eth0.");
+			  shell_exec("sudo ip addr add " . $configurationsettings['lanip'] . "/" . mask2cidr($configurationsettings['lanmask']) . " broadcast " . cidr2broadcast($configurationsettings['lanip'], mask2cidr($configurationsettings['lanmask'])) . " dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+			else {
+			  logmessage("Reconfiguring ip value for interface eth0 - no value found, setting default value 192.168.2.1/24");
+  			  logmessage("Flushing existing ip addresses for interface eth0.");
+			  shell_exec("sudo ip addr flush dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  logmessage("Adding default static ip address to interface eth0.");
+			  shell_exec("sudo ip addr add 192.168.2.1/24 broadcast 192.168.2.255 dev eth0 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+		  }
 		}
-		// in case of no mac change
-		else { //and when in access point mode
+
+		// change default gateway
+		if($lantypechangeflag || $defaultgwchangeflag) {
+		  logmessage("Reconfiguring default route.");
+		  logmessage("Deleting current default route.");
+		  shell_exec("sudo ip route del default 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		  logmessage("Adding new default route.");
+		  shell_exec("sudo ip route add default via " . $configurationsettings['langw'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		}
+			
+		//override primary dns, secondary dns, or both
+		if($lantypechangeflag || $primarydnschangeflag || $secondarydnschangeflag) {
+			logmessage("Restarting dhcpcd service because there was a lan type, or dns change."); 
+			shell_exec("sudo systemctl restart dhcpcd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		}
+
+		//change mtu value
+		if($lantypechangeflag || $mtuchangeflag) {
 			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
-				logmessage("Reconfiguring interface br0 (ifdown-ifup)");
-				shell_exec("sudo ifdown br0 && sudo ifup br0");
-			} // or when in router mode
+			  if(!empty($configurationsettings['lanmtu'])) {
+				logmessage("Reconfiguring mtu value for interface eth0.");
+				shell_exec("sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  }
+			  else {
+				logmessage("Mtu value was removed, setting eth0 default mtu value 1500.");
+				shell_exec("sudo ip link set dev eth0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			  }
+			}
 			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
-				logmessage("Reconfiguring interface eth0 (ifdown-ifup)");
-				shell_exec("sudo ifdown eth0 && sudo ifup eth0");
+				if(!empty($configurationsettings['lanmtu'])) {
+				  logmessage("Reconfiguring mtu value for interface eth0.");
+				  shell_exec("sudo ip link set dev eth0 mtu " . $configurationsettings['lanmtu'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Mtu value was removed, setting eth0 default mtu value 1500.");
+				  shell_exec("sudo ip link set dev eth0 mtu 1500 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
 			}
 		}
+
+		//change mac address
+		if($lantypechangeflag || $macchangeflag) {
+			if(strcmp($configurationsettings['operationmode'],"Access Point") == 0) {
+				logmessage("Changing mac address for interface br0");
+				logmessage("Bringing down interface br0.");
+				shell_exec("sudo ip link set dev br0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(!empty($configurationsettings['lanmac'])) {
+				  logmessage("Changing mac address of interface br0.");
+				  shell_exec("sudo ip link set dev br0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Setting default mac address of interface br0.");
+				  shell_exec("sudo ip link set dev br0 address 20:11:22:33:44:55 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				  logmessage("Bringing up interface br0.");
+				}
+				shell_exec("sudo ip link set dev br0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			} 
+			if(strcmp($configurationsettings['operationmode'],"Router") == 0) {
+				logmessage("Changing mac address for interface eth0");
+				logmessage("Bringing down interface eth0.");
+				shell_exec("sudo ip link set dev eth0 down 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				if(!empty($configurationsettings['lanmac'])) {
+				  logmessage("Changing mac address of interface eth0.");
+				  shell_exec("sudo ip link set dev eth0 address " . $configurationsettings['lanmac'] . " 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				else {
+				  logmessage("Setting default mac address of interface eth0.");
+				  shell_exec("sudo ip link set dev eth0 address 20:11:22:33:44:55 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				}
+				logmessage("Bringing up interface eth0.");
+				shell_exec("sudo ip link set dev eth0 up 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+			}
+		}
+		
 		echo "<script>ReturnReadyStatic();</script>";
 	  }
 	  else { // if form errors are present, show them in the status cell on the form
 		if(empty($ipaddress) || empty($subnetmask))
 		  echo "<script>ReturnFailureStatic('IP Address and Subnet Mask are required values!'";
-		logmessage("Reconfiguring interface eth0 (ifdown-ifup)" . $ipaddresserr . "'+'" . $subnetmaskerr . "'+'" . $defaultgatewayerr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macaddresserr);
+		logmessage("Static form errors: " . $ipaddresserr . "'+'" . $subnetmaskerr . "'+'" . $defaultgatewayerr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macaddresserr);
 		echo "<script>ReturnFailureStatic('" . $ipaddresserr . "'+'" . $subnetmaskerr . "'+'" . $defaultgatewayerr . "'+'" . $primarydnserr . "'+'" . $secondarydnserr . "'+'" . $mtuerr . "'+'" . $macaddresserr . "');</script>";
 	  }
 	}
