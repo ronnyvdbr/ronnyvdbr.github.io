@@ -15,6 +15,8 @@
 /etc/openvpn/*
 /var/www/temp/OpenVPN_ClientPackages/*
 
+tar -cf /home/pi/Raspberry-Wifi-Router/www/temp/RaspberryWifiRouterBackup.bak /etc/timezone /etc/dhcpcd.conf /boot/cmdline.txt /etc/rc.local /etc/dnsmasq.conf /etc/hostapd/hostapd.conf /etc/systemd/system/hostapd.service /etc/network/interfaces /etc/ntp.conf /home/pi/Raspberry-Wifi-Router/www/routersettings.ini /etc/systemd/system/hostapd.service /etc/freeradius/radiusd.conf /etc/freeradius/sites-available-default /etc/sudoers.d/wr_commands /etc/openvpn/* /var/www/temp/OpenVPN_ClientPackages/*
+
 mysql backup
 sudo mysqldump --host=localhost --user=root --password=raspberry login > /tmp/login.db
 sudo mysqldump --host=localhost --user=root --password=raspberry radius > /tmp/radius.db
