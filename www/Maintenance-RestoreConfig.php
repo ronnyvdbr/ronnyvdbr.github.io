@@ -86,12 +86,26 @@
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-            <table width="100%" border="0">
-      <tr>
-        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
-      </tr>
-    </table>
-
+  <div id="ContentTitle">
+  <span>Backup Configuration</span></div>
+      
+  <div id="ContentArticle">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="restore">
+      <fieldset>
+        <table width="100%" border="0">
+          <tr>
+            <td height="25" align="center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center"><span id="status"><input name="backup" type="submit" id="backup" form="restore" value="Upload Configuration Back-Up"></span></td>
+          </tr>
+          <tr>
+            <td align="center"><span id="progress"></span></td>
+          </tr>
+        </table>
+      </fieldset>
+    </form>
+  </div>
       
       
     <!-- InstanceEndEditable -->

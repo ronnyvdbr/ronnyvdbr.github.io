@@ -149,7 +149,11 @@ function GoToHome() {
 		echo "<script>ReturnProgress();</script>";
 		echo "<script>setTimeout(GoToHome, 60000);</script>";
 		flush();
-    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
+		
+		logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/timezone to /etc/timezone");
+		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/timezone /etc/timezone 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+		
+		logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt to /boot/cmdline.txt");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/cmdline.txt /boot/cmdline.txt 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/rc.local to /etc/rc.local");
@@ -179,7 +183,8 @@ function GoToHome() {
     	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default to /etc/freeradius/sites-available-default");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/sites-available-default  /etc/freeradius/sites-available-default 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
-    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands to /etc/sudoers.d/wr_commands");
+    	logmessage("Copying /home/pi/Raspberry-Wifi-Router/defconfig/wr_comman
+		ds to /etc/sudoers.d/wr_commands");
 		shell_exec("sudo cp /home/pi/Raspberry-Wifi-Router/defconfig/wr_commands /etc/sudoers.d/wr_commands 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 
     	logmessage("Resetting admin password to default password 'raspberry'");

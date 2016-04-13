@@ -13,6 +13,16 @@
 <script src="Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
 <script src="Scripts/CssMenuScript.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
+<script>
+function ReturnProgress() {
+    
+	document.getElementById('status').innerHTML = 'Please stand by, rebooting ...';
+	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
+}
+function GoToHome() {
+	window.location = '/login.php';
+}
+</script>
 <?php include 'functions.php';?>
 <?php logmessage("Loading page Maintenance-BackupConfig.php");?>
 <!-- InstanceEndEditable --> 
@@ -86,12 +96,26 @@
   
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
-         <table width="100%" border="0">
-      <tr>
-        <td align="center"><img src="images/underconstruction.jpg" width="300" height="289"  alt=""/></td>
-      </tr>
-    </table>
-   
+  <div id="ContentTitle">
+  <span>Backup Configuration</span></div>
+      
+  <div id="ContentArticle">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="backup">
+      <fieldset>
+        <table width="100%" border="0">
+          <tr>
+            <td height="25" align="center">&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center"><span id="status"><input name="backup" type="submit" id="backup" form="backup" value="Download Configuration Back-Up"></span></td>
+          </tr>
+          <tr>
+            <td align="center"><span id="progress"></span></td>
+          </tr>
+        </table>
+      </fieldset>
+    </form>
+  </div>
       
       
     <!-- InstanceEndEditable -->
@@ -119,7 +143,22 @@
 
 <!-- InstanceBeginEditable name="code" -->
 
+  <?php 
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['backup'])) {
 
+		echo "<script>ReturnProgress();</script>";
+		flush();
+		logmessage("Backing up database login.");
+		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry login > /tmp/login.db");
+		logmessage("Backing up database radius.");
+		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry radius > /tmp/radius.db");
+		logmessage("Backing up configuration files.");
+		shell_exec("sudo tar -cf /home/pi/Raspberry-Wifi-Router/www/temp/RaspberryWifiRouterBackup.tar /etc/timezone /etc/dhcpcd.conf /boot/cmdline.txt /etc/rc.local /etc/dnsmasq.conf /etc/hostapd/hostapd.conf /etc/systemd/system/hostapd.service /etc/network/interfaces /etc/ntp.conf /home/pi/Raspberry-Wifi-Router/www/routersettings.ini /etc/systemd/system/hostapd.service /etc/freeradius/radiusd.conf /etc/freeradius/sites-available-default /etc/sudoers.d/wr_commands /etc/openvpn/* /home/pi/Raspberry-Wifi-Router/www/temp/OpenVPN_ClientPackages/* /tmp/login.db /tmp/radius.db");
+		
+		
+	
+	
+	}
 
 
 
