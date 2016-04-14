@@ -58,3 +58,4 @@ www-data ALL = (root) NOPASSWD: /bin/umount
 www-data ALL = (root) NOPASSWD: /sbin/dhclient
 www-data ALL = (root) NOPASSWD: /sbin/resolvconf -u
 www-data ALL = (root) NOPASSWD: /usr/bin/mysqldump
+www-data ALL = (root) NOPASSWD: /usr/bin/pgrep
