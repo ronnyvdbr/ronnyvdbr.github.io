@@ -55,6 +55,7 @@
          </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
+              <li><a href='Maintenance-ChangePassword.php'><span>Password</span></a></li>
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>

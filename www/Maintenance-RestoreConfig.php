@@ -55,6 +55,7 @@
          </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
+              <li><a href='Maintenance-ChangePassword.php'><span>Password</span></a></li>
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
@@ -87,23 +88,34 @@
   <article class="content">
     <!-- InstanceBeginEditable name="article" -->
   <div id="ContentTitle">
-  <span>Backup Configuration</span></div>
+  <span>Restore Configuration</span></div>
       
   <div id="ContentArticle">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="restore">
-      <fieldset>
-        <table width="100%" border="0">
-          <tr>
-            <td height="25" align="center">&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center"><span id="status"><input name="backup" type="submit" id="backup" form="restore" value="Upload Configuration Back-Up"></span></td>
-          </tr>
-          <tr>
-            <td align="center"><span id="progress"></span></td>
-          </tr>
-        </table>
-      </fieldset>
+   <form action="upload.php" method="post" enctype="multipart/form-data">
+    <table width="100%" border="0">
+      <tbody>
+        <tr>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="40%" align="right">
+       
+                Select back-up to upload:
+          
+          </td>
+          <td width="60%" align="left">
+            <input type="file" name="fileToUpload" id="fileToUpload"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>
+            <input type="submit" value="Upload back-up" name="submit">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
     </form>
   </div>
       

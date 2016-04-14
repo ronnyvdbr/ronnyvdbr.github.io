@@ -16,9 +16,15 @@
 <script>
 function ReturnProgress() {
     
-	document.getElementById('status').innerHTML = 'Please stand by, rebooting ...';
+	document.getElementById('status').innerHTML = 'Please stand by, creating back-up ...';
 	document.getElementById('progress').innerHTML = '<img src="images/ProgressIndicator.GIF" width="100" height="15"  alt="">';
 }
+
+function ReturnFinish(date) {
+	document.getElementById('status').innerHTML = 'Click below link to download your back-up.<br><a href="temp/RaspberryWifiRouterBackup-'+date+'.tar" target="_blank">RaspberryWifiRouterBackup-'+date+'.tar</a>';
+	document.getElementById('progress').innerHTML = '<img src="images/Ready.png" width="115" height="115" alt=""/>';
+}
+
 function GoToHome() {
 	window.location = '/login.php';
 }
@@ -65,6 +71,7 @@ function GoToHome() {
          </li>-->
         <li class='has-sub' id="Maintenance"><a href='#'><span>Maintenance</span></a>
             <ul id="MaintenanceUl">
+              <li><a href='Maintenance-ChangePassword.php'><span>Password</span></a></li>
                <li><a href='Maintenance-BackupConfig.php'><span>Backup Config</span></a></li>
                <li><a href='Maintenance-RestoreConfig.php'><span>Restore Config</span></a></li>
                <li><a href='Maintenance-FactoryReset.php'><span>Factory Reset</span></a></li>
@@ -146,22 +153,57 @@ function GoToHome() {
   <?php 
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['backup'])) {
 
+		$date = date('Y-m-d-H-i-s');
+		$servicestates = array("ntp.service" => "","dhcpcd.service" => "","hostapd.service" => "","openvpn.service" => "");
+		
 		echo "<script>ReturnProgress();</script>";
 		flush();
+		
+		
+		$servicestates['ntp.service'] = shell_exec("pgrep ntp");
+		$servicestates['dhcpcd.service'] = shell_exec("pgrep dhcpcd");
+		$servicestates['hostapd.service'] = shell_exec("pgrep hostapd");
+		$servicestates['openvpn.service'] = shell_exec("pgrep openvpn");
+		
+		if($servicestates['ntp.service'] == "") {
+		  $servicestates['ntp.service'] = "disabled";
+		}
+		else {
+		  $servicestates['ntp.service'] = "enabled";
+		}
+		if($servicestates['dhcpcd.service'] == "") {
+		  $servicestates['dhcpcd.service'] = "disabled";
+		}
+		else {
+		  $servicestates['dhcpcd.service'] = "enabled";
+		}
+		if($servicestates['hostapd.service'] == "") {
+		  $servicestates['hostapd.service'] = "disabled";
+		}
+		else {
+		  $servicestates['hostapd.service'] = "enabled";
+		}
+		if($servicestates['openvpn.service'] == "") {
+		  $servicestates['openvpn.service'] = "disabled";
+		}
+		else {
+		  $servicestates['openvpn.service'] = "enabled";
+		}
+
+		write_php_ini($servicestates, "/home/pi/Raspberry-Wifi-Router/www/temp/servicestates.ini");
+		
 		logmessage("Backing up database login.");
-		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry login > /tmp/login.db");
+		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry login > /tmp/login.db 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 		logmessage("Backing up database radius.");
-		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry radius > /tmp/radius.db");
+		shell_exec("sudo mysqldump --host=localhost --user=root --password=raspberry radius > /tmp/radius.db 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 		logmessage("Backing up configuration files.");
-		shell_exec("sudo tar -cf /home/pi/Raspberry-Wifi-Router/www/temp/RaspberryWifiRouterBackup.tar /etc/timezone /etc/dhcpcd.conf /boot/cmdline.txt /etc/rc.local /etc/dnsmasq.conf /etc/hostapd/hostapd.conf /etc/systemd/system/hostapd.service /etc/network/interfaces /etc/ntp.conf /home/pi/Raspberry-Wifi-Router/www/routersettings.ini /etc/systemd/system/hostapd.service /etc/freeradius/radiusd.conf /etc/freeradius/sites-available-default /etc/sudoers.d/wr_commands /etc/openvpn/* /home/pi/Raspberry-Wifi-Router/www/temp/OpenVPN_ClientPackages/* /tmp/login.db /tmp/radius.db");
-		
-		
+		shell_exec("sudo tar -cf /home/pi/Raspberry-Wifi-Router/www/temp/RaspberryWifiRouterBackup-" . $date . ".tar /etc/timezone /etc/dhcpcd.conf /boot/cmdline.txt /etc/rc.local /etc/dnsmasq.conf /etc/hostapd/hostapd.conf /etc/systemd/system/hostapd.service /etc/network/interfaces /etc/ntp.conf /home/pi/Raspberry-Wifi-Router/www/routersettings.ini /etc/freeradius/radiusd.conf /etc/freeradius/sites-available-default /etc/sudoers.d/wr_commands /etc/openvpn/* /home/pi/Raspberry-Wifi-Router/www/temp/OpenVPN_ClientPackages/* /tmp/login.db /tmp/radius.db /home/pi/Raspberry-Wifi-Router/www/temp/servicestates.ini 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 	
-	
+
+		echo "<script>ReturnFinish('$date');</script>";
 	}
-
-
-
+	
+?>
 
 <!-- InstanceEndEditable -->
 </body>
