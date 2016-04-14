@@ -142,6 +142,9 @@ sudo touch /etc/resolv.conf.head
 sudo chgrp www-data /etc/resolv.conf.head
 sudo chmod g+w /etc/resolv.conf.head
 
+# set permissions on temp folder for router
+sudo chgrp -R www-data /home/pi/Raspberry-Wifi-Router/www/temp
+sudo chmod -R 664 /home/pi/Raspberry-Wifi-Router/www/temp
 
 ########################################################################################
 # Set-up mysql
