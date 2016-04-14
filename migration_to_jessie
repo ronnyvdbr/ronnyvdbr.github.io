@@ -52,6 +52,8 @@ sudo sed -i 's/output_buffering = 4096/;output_buffering = 4096/g' /etc/php5/fpm
 # Set permissions for our router's config file
 sudo chgrp www-data /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
 sudo chmod g+w /home/pi/Raspberry-Wifi-Router/www/routersettings.ini
+# enable file uploads
+sudo sed -i 's/;file_uploads = On/file_uploads = On/g' /etc/php5/fpm/php.ini
 
 ########################################################################################
 # Set-up hostapd.
