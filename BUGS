@@ -22,4 +22,7 @@ Raspberry WAP v1.3
 when starting the Raspberry without the network cable connected, U can't login to the web interface.
 
 Raspberry WAP v1.4
-to be documented ...
+If the wireless access point is booted without network cable, people cannot log in to the web gui.
+
+Raspberry WAP v1.5
+to be determined ...
