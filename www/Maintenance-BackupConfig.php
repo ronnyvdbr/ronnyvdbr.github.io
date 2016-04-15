@@ -108,11 +108,8 @@ function GoToHome() {
       
   <div id="ContentArticle">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="application/x-www-form-urlencoded" id="backup">
-      <fieldset>
+      <fieldset><legend>Download back-up</legend>
         <table width="100%" border="0">
-          <tr>
-            <td height="25" align="center">&nbsp;</td>
-          </tr>
           <tr>
             <td align="center"><span id="status"><input name="backup" type="submit" id="backup" form="backup" value="Download Configuration Back-Up"></span></td>
           </tr>
