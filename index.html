@@ -68,7 +68,7 @@
 <h3>
 <a id="welcome-to-the-raspberry-wifi-router-project" class="anchor" href="#welcome-to-the-raspberry-wifi-router-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to the Raspberry-Wifi-Router project.</h3>
 
-<p>If anyone cares to donate a Raspberry Pi 3 for further development, please ctc me at vandenbroeckronny at gmail dot com.</p>
+<p><h4>If anyone cares to donate a Raspberry Pi 3 for further development, please ctc me at vandenbroeckronny at gmail dot com.</h4></p>
 <p>This project aims to build a descent Wifi Router out of a Raspberry Pi which is easily configurable via
 a dynamic web interface designed in HTML/PHP.
 This project came to life out of personal interest in hardware embedded design and software design in linux with PHP.
@@ -78,8 +78,8 @@ I'm putting my desing onto Github to share my work with the open source communit
 
 <ul>
 <li>
-<a href="http://cheetah.dscloud.me:8080/RaspberryWAPv1.4.zip"
-   onclick="ga('send','event','download','RaspberryWAPv1.4.zip')" target="_blank">Raspberry Pi Wifi Router v1.4</a>
+<a href="http://cheetah.dscloud.me:8080/RaspberryWAPv1.5.zip"
+   onclick="ga('send','event','download','RaspberryWAPv1.5.zip')" target="_blank">Raspberry Pi Wifi Router v1.5</a>
 </li>
 </ul>
 
@@ -124,37 +124,16 @@ This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapt
 <a id="preparing-your-raspberry-pi" class="anchor" href="#preparing-your-raspberry-pi" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing your Raspberry Pi:</h5>
 
 <ul>
-<li>For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card.</li>
-<li>I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called miniban.</li>
-<li>You can grab an image of their minimal Raspbian OS image from their website <a href="https://minibianpi.wordpress.com/">https://minibianpi.wordpress.com/</a> and write that to SD card with win32diskimager to get started.</li>
+  <li>This project is built on top of a foundation Raspbian Jessie Lite image which can be downloaded from the foundation website at https://www.raspberrypi.org/downloads/raspbian/</li>
+  <li>Download your copy of the image and write this to SD card with win32diskimager, boot it up in your Raspberry Pi.</li>
+  <li>Login to your Raspberry Pi with username 'pi' and password 'raspberry'</li>
+  <li>Follow the instructions in <a href="https://github.com/ronnyvdbr/ronnyvdbr.github.io/blob/v1.5/installer-jessie.sh">the github installer</a> to get everything installed.</li>
 </ul>
 
-<p>After booting, we need to resize the partition to 2 Gb to fit the Wireless Router:</p>
 
-<ul>
-<li>fdisk /dev/mmcblk0</li>
-<li>Then delete partitions with d and create a new with n. You can view the existing table with p.</li>
-<li>p to see the current start of the main partition</li>
-<li>d, 2 to delete the main partition</li>
-<li>n p 2 to create a new primary partition, next you need to enter the start of the old main partition (just press enter), and  enter +2G to expand the partition to 2 Gb, Check the p output!</li>
-<li>w write the new partition table
-Now you need to reboot:</li>
-<li>shutdown -r now
-After the reboot you need to resize the filesystem on the partition. The resize2fs command will resize your filesystem to the new size from the changed partition table.</li>
-<li>resize2fs /dev/mmcblk0p2</li>
-</ul>
 
-<h5>
-<a id="after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" class="anchor" href="#after-bootup-with-your-miniban-image-login-to-your-raspberry-pi-using-root-and-raspberry-as-password-then-continue-the-rest-of-the-prep" aria-hidden="true"><span class="octicon octicon-link"></span></a>After bootup with your miniban image, login to your Raspberry Pi using root and raspberry as password, then continue the rest of the prep:</h5>
 
-<ul>
-<li>apt-get update</li>
-<li>apt-get -y install git-core</li>
-<li>git clone <a href="https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git">https://github.com/ronnyvdbr/Raspberry-Wifi-Router.git</a> /home/pi/Raspberry-Wifi-Router</li>
-<li>sh /home/pi/Raspberry-Wifi-Router/installer.sh</li>
-<li>sh /home/pi/Raspberry-Wifi-Router/chillispot.sh</li>
-<li>sh /home/pi/Raspberry-Wifi-Router/login_database.sh</li>
-</ul>
+
       </section>
     </div>
 
@@ -163,13 +142,13 @@ After the reboot you need to resize the filesystem on the partition. The resize2
       <footer class="inner">
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
-    </div>
+  </div>
 
-              <script type="text/javascript">
+  <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
-          <script type="text/javascript">
+  <script type="text/javascript">
             try {
               var pageTracker = _gat._getTracker("UA-18361926-2");
             pageTracker._trackPageview();
