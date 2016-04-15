@@ -28,10 +28,16 @@ Release v1.4:
 * implemented openvpn server on request
 
 Release v1.5
-* switched to the latest minibian (Raspbian Jessie)
+* os version now switched to Raspbian Jessie Lite image
+* took offline pages which contain errors
+* backup & restore functions are now working
+* password change is now working
+
 
 
 Targeted for future releases:
+* coova chilli hotspot
+* open vpn server
 * Advanced wireless configuration (hostapd)
 * Port forwarding (iptables)
 * Network Filter (firewall)
