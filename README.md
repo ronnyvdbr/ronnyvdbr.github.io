@@ -42,26 +42,7 @@ Based on that driver, look for a physical device which will work with that drive
 This project was developed and tested with an Alfa Awus036NEH Usb Wireless Adapter: http://www.alfa.com.tw/products_show.php?pc=34&ps=22
 
 ##### Preparing your Raspberry Pi:
-* For this project I chose to start off with a minimal installation of Raspbian, the Wireless Router should be able to fit on a small sd card of 2 Gb.
-* I didn't care to build a minimal Raspbian install myself, since there is already a very nice project for this on the net called minibian.
-* You can grab an image of their minimal Raspbian OS image from their website https://minibianpi.wordpress.com/ and write that to SD card with win32diskimager to get started.
-* The default username and password for minibian is root and raspberry
-
-After booting this image for the first time, we need to resize the partition to 2 Gb to fit the Wireless Router:
-* fdisk /dev/mmcblk0
-* Press p to view the current partition lay-out.
-* Note down the start sector of /dev/mmcblk0p2
-* Press d, then press 2 to delete partition /dev/mmcblk0p2
-* Now create a new parition with the same start sector, press n, then press p, then press 2, now enter the same start sector that u had written down.
-* Now enter +2G to expand the partition to 2 Gb, Check the p output!
-* Press w to write the new partition table.
-Now you need to reboot:
-* shutdown -r now
-After the reboot you need to resize the filesystem on the partition. The resize2fs command will resize your filesystem to the new size from the changed partition table.
-* resize2fs /dev/mmcblk0p2
-
-##### You are now ready to continue the rest of the prep:
-
-Login to your Raspberry Pi and paste below bootstrap in your shell, it will kick off the rest of the installation.
-
-* apt-get -y install curl && bash <(curl -s https://raw.githubusercontent.com/ronnyvdbr/ronnyvdbr.github.io/master/installer.sh)
+* This project is built on top of a foundation Raspbian Jessie Lite image which can be downloaded from the foundation website at https://www.raspberrypi.org/downloads/raspbian/
+* Download your copy of the image and write this to SD card with win32diskimager, boot it up in your Raspberry Pi.
+* Login to your Raspberry Pi with username 'pi' and password 'raspberry'
+* Follow the instructions in installer-jessie.sh to get everything installed.
