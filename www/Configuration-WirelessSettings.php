@@ -190,7 +190,7 @@ function ReturnReadyOperation() {
 		//Read in and validation of wpa preshared-key
 		if (!empty($_POST["txt-secmode-WPA"])) {
 		  $wpakey = test_input($_POST["txt-secmode-WPA"]);
-		  if (!preg_match("/^[a-zA-Z0-9]*$/",$wpakey)) {
+		  if (!preg_match("/^[a-zA-Z0-9$@$!%*#?&]{8,}$/",$wpakey)) {
 			  $wpakeyerr = "Wepkey field contains incorrect data, only a-zA-Z0-9 allowed!<br />"; 
 		  }
 		}
@@ -311,8 +311,12 @@ function ReturnReadyOperation() {
           
           <table width="100%" border="0"  id="secmode-WPA">
             <tr>
+              <td align="right">&nbsp;</td>
+              <td>Note: The Pre-Shared key must be at least eight characters long.</td>
+            </tr>
+            <tr>
               <td width="40%" align="right">Pre-Shared key (password):</td>
-              <td width="60%"><input name="txt-secmode-WPA" type="text" id="txt-secmode-WPA" pattern="^[a-zA-Z0-9]*$" <?php echo "value='" . $configurationsettings['wifiwpapassword'] . "'"?>></td>
+              <td width="60%"><input name="txt-secmode-WPA" type="text" id="txt-secmode-WPA" pattern="^[a-zA-Z0-9$@$!%*#?&amp;]{8,}$" <?php echo "value='" . $configurationsettings['wifiwpapassword'] . "'"?>></td>
             </tr>
           </table>
           
@@ -371,9 +375,9 @@ $("#securitymode").on('change', function() { // when the connection type selecto
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if(empty($ssiderror) && empty($visibilityerr) && empty($operationmodeerr) && empty($channelerr) && empty($channelwidtherr) && empty($securitymodeerr) && empty($wepkeyerr) && empty($wpakeyerr)) {
-
+		
+	
 		$hostapdconfig = parse_ini_file("/etc/hostapd/hostapd.conf");
-		//var_dump($hostapdconfig);
 		$hostapdconfig['ssid'] = $configurationsettings['ssid'];
 		
 		echo "<script>ReturnProgressOperation();</script>";
@@ -456,45 +460,71 @@ $("#securitymode").on('change', function() { // when the connection type selecto
 		
 		switch ($configurationsettings['wifisecurity']) {
 			case "":
+				//in case of no security, remove both wep and wpa parameters
 				foreach($hostapdconfig as $key => $value) {
 				  if (strpos($key, 'wep_default_key') !== FALSE)
 					unset($hostapdconfig[$key]);
+				  if (strpos($key, 'wep_key0') !== FALSE)
+					unset($hostapdconfig[$key]);
 				  if (strpos($key, 'wpa') !== FALSE)
+					unset($hostapdconfig[$key]);
+				  if (strpos($key, 'wpa_passphrase') !== FALSE)
 					unset($hostapdconfig[$key]);
 				}
 			break;
+
+			
 			case "WEP":
+				//remove wpa mode if configured 
+				foreach($hostapdconfig as $key => $value) {
+				  if (strpos($key, 'wpa') !== FALSE)
+					unset($hostapdconfig[$key]);
+				  if (strpos($key, 'wpa_passphrase') !== FALSE)
+					unset($hostapdconfig[$key]);
+				}
+
+				//set the wep-default key - this will activate wep security
 				if(!walk($hostapdconfig, 'wep_default_key')) {
 					$hostapdconfig["wep_default_key"] = "0";
-					$hostapdconfig["wep_key0"] = $configurationsettings['wifiwepkey'];
 				}
+				$hostapdconfig["wep_key0"] = $configurationsettings['wifiwepkey'];
 			break;
+
+			
 			case "WPA":
+				//if we are coming from wep mode, unset it in our config 
+				foreach($hostapdconfig as $key => $value) {
+				  if (strpos($key, 'wep_default_key') !== FALSE)
+					unset($hostapdconfig[$key]);
+				  if (strpos($key, 'wep_key0') !== FALSE)
+					unset($hostapdconfig[$key]);
+				}
+				
 				if(!walk($hostapdconfig, 'wpa')) {
 					$hostapdconfig["wpa"] = "3";
-					$hostapdconfig["wpa_passphrase"] = $configurationsettings['wifiwpapassword'];
 				}
+				$hostapdconfig["wpa_passphrase"] = $configurationsettings['wifiwpapassword'];
 			break;
 		}
-		//var_dump($hostapdconfig);
+		
+		logmessage("Writing configuration details to /etc/hostapd/hostapd.conf");
 		write_hostapd_conf($hostapdconfig,"/etc/hostapd/hostapd.conf"); 
 		
 		switch($configurationsettings['wifi']) {
 			case "enabled":
-				logmessage("Enabling Wireless Radio ...");
 				logmessage("Scheduling hostapd to start at boot.");
-				shell_exec("sudo update-rc.d hostapd defaults 2>&1 | sudo tee --append /var/log/raspberrywap.log");
-				logmessage("Starting hostapd.");
-				shell_exec("sudo service hostapd restart 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo systemctl enable hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				logmessage("Restarting hostapd.");
+				shell_exec("sudo systemctl restart hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				echo "<script>ReturnReadyOperation();</script>";
 
 			break;
 			case "disabled":
 				logmessage("Disabling Wireless Radio ...");
 				logmessage("Unscheduling hostapd to start at boot.");
-				shell_exec("sudo update-rc.d -f hostapd remove 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo systemctl disable hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				logmessage("Stopping hostapd.");
-				shell_exec("sudo service hostapd stop 2>&1 | sudo tee --append /var/log/raspberrywap.log");
+				shell_exec("sudo systemctl stop hostapd.service 2>&1 | sudo tee --append /var/log/raspberrywap.log");
 				echo "<script>ReturnReadyOperation();</script>";
 			break;
 		}
