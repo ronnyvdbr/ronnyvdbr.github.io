@@ -43,6 +43,7 @@ www-data ALL = (root) NOPASSWD: /bin/systemctl start hostapd.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl stop hostapd.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl enable hostapd.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl disable hostapd.service
+www-data ALL = (root) NOPASSWD: /bin/systemctl restart hostapd.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl enable dnsmasq.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl disable dnsmasq.service
 www-data ALL = (root) NOPASSWD: /bin/systemctl start dnsmasq.service
