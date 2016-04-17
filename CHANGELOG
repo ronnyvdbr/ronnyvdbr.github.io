@@ -33,6 +33,13 @@ Release v1.5
 * backup & restore functions are now working
 * password change is now working
 
+Release v1.5.1
+Fixed issue #6 and #13
+#6 - wpa password does not apply
+#13 - wpa password should be at least 8 characters long
+
+
+
 
 
 Targeted for future releases:
