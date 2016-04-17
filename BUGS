@@ -25,4 +25,9 @@ Raspberry WAP v1.4
 If the wireless access point is booted without network cable, people cannot log in to the web gui.
 
 Raspberry WAP v1.5
-to be determined ...
+Issue 6 and 13 still present.
+#6 - when saving wpa passphrase, the change is not written to config file and doensn't apply - solved - code change
+#13 - wpa key must be at least 8 characters - solved - changed regex for validation
+
+Raspberry WAP v1.5.1
+To be determined
