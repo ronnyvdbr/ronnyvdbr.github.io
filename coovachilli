@@ -1,0 +1,5 @@
+wget http://coova.github.io/coova-chilli/coova-chilli-1.3.0.tar.gz
+tar xzf coova-chilli-1.3.0.tar.gz
+cd coova-chilli-1.3.0
+./configure
+make
