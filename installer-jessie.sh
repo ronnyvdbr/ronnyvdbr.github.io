@@ -1,8 +1,11 @@
-# Our wireless router design needs an update, it needs to be modified to Raspbian Jessie.
-# Main differences will be the switch to systemd instead of sysv init, 
-# This build procedure is built on top of a foundation raspbian jessie lite image from 18-03-2016
-# Download this image from the foundation web site, write to sd card with win32 disk imager.
-# Log into  your Raspberry Pi, with the pi username and raspberry as password.
+########################################################################################
+# Installation procedure for the Raspberry Pi Wireless Access Router
+########################################################################################
+
+# This procedure was designed on top of a foundation Raspbian Jessie lite image with build date 18-03-2016
+# Download the latest Raspbian Jessie Lite image from https://downloads.raspberrypi.org/raspbian_lite_latest
+# Unzip your downloaded image, and write it to SD card with win32 disk imager.
+# Boot up your SD card in your Raspberry Pi, and Log into the Raspbian Jessie OS, with pi as username and raspberry as password.
 # Start executing below commands in sequence.
 
 ########################################################################################
