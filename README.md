@@ -14,20 +14,21 @@ The default configuration is set to obtain an IP address via DHCP from the wired
 To access the web interface, enter 'admin' as username and 'raspberry' as password.
 To login via SSH, login with username 'pi' and password 'raspberry', and use sudo for root access.
 
-Features:
-Bridge and Router with NAT functionality
-Static/Dynamic addressing
-DHCP, DNS Proxy, NTP, 
-hostapd wifi module
-802.11 B/G/N depending on your wifi adapter
-Wi-Fi Protected Access® (WPA/WPA2—PSK) and WEP
-Captive Portal (coovachilli)
-Still to be implemented:
-Port forwarding (iptables).
-Network Filter (firewall).
-Web Filter (privoxy).
-Proxy (squid, squidguard).
-Advanced wireless configuration (hostapd).
+##### Features:
+  * Bridge and Router with NAT functionality
+  * Static/Dynamic addressing
+  * DHCP, DNS Proxy, NTP, 
+  * hostapd wifi module
+  * 802.11 B/G/N depending on your wifi adapter
+  * Wi-Fi Protected Access® (WPA/WPA2—PSK) and WEP
+  * Captive Portal (coovachilli)
+
+##### Features still to be implemented:
+  * Port forwarding (iptables).
+  * Network Filter (firewall).
+  * Web Filter (privoxy).
+  * Proxy (squid, squidguard).
+  * Advanced wireless configuration (hostapd).
 
 For the ones amongst us that are not scared of entering the matrix, here's how you assemble the ssd yourself:
 
